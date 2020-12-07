@@ -202,17 +202,20 @@ class CreateMapScreen(Screen):
         rotated_text = self.canvas.create_text(300, 450, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
                                                anchor='ne', width=230, text='Otočenie nahratého obrázku postavičky:')
 
-        self.rotated_choices = ColorButton(self, 360, 490, 100, 30, 'light_blue', 'vpravo')
+        self.rotated_choices = ColorButton(self, 360, 490, 100, 30, 'light_blue', '-')
 
-        self.rotated_choices.bind(self.rotation_changed)
+        for i in range(len(self.rotate_options.checkboxes)):
+            self.rotate_options.checkboxes[i].disable = self.rotated_choices
+
+        self.rotated_choices.bind2()
+
+        self.rotated_choices.change_color("grey")
 
         path_color__text = self.canvas.create_text(300, 520, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
                                                    anchor='ne', width=230, text='Farba trajektórie\na mriežky:')
         self.path_color_choices = ColorButton(self, 360, 533, 100, 30, 'light_blue', 'čierna')
 
         self.path_color_choices.bind(self.trajectory_and_grid_color_changed)
-
-        # self.canvas.create_rectangle(440, 170, 548, 280, outline="black", width=2)
 
     def trajectory_and_grid_color_changed(self):
         actual_text = self.path_color_choices.text

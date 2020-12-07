@@ -41,10 +41,11 @@ class ObjectListItem:
         self.preview_id = 0
 
         image = Image.open('obrazky/delete.png')
-        image = image.resize((30, 30), Image.ANTIALIAS)
+        image = image.resize((35, 35), Image.ANTIALIAS)
         self.delete_img = ImageTk.PhotoImage(image)
 
-        image2 = resize_image_by_height(Image.open(img), 30)
+        image2 = Image.open(img)
+        image2 = image2.resize((35, 35), Image.ANTIALIAS)
         self.preview_img = ImageTk.PhotoImage(image2)
 
         self.draw()
@@ -56,11 +57,12 @@ class ObjectListItem:
 
     def draw(self):
         self.remove()
-        y = self.y + (self.index * 50)
+        y = self.y + (self.index * 53)
         self.delete_id = self.canvas.create_image(self.x, y, image=self.delete_img, anchor='nw')
         self.preview_id = self.canvas.create_image(self.x + 40, y, image=self.preview_img, anchor='nw')
-        self.text_id = self.canvas.create_text(self.x + 80, y, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
-                                        anchor='nw', width=330, text=self.file_name)
+        self.text_id = self.canvas.create_text(self.x + 40 + self.preview_img.width() + 20, y, fill="#114c32",
+                                               font=('Comic Sans MS', 13, 'italic'),
+                                               anchor='nw', width=330, text=self.file_name)
         self.canvas.tag_bind(self.delete_id, "<ButtonPress-1>", self.remove_and_move_others)
 
     def remove_and_move_others(self, _):

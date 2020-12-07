@@ -1,6 +1,7 @@
-import CanvasObject as co
+from CanvasObject import CanvasObject
 
-class CheckBox(co.CanvasObject):
+
+class CheckBox(CanvasObject):
     def __init__(self, parent, index, x, y, text, checked_img, unchecked_img, options,checked=False):
         self.parent, self.canvas = parent, parent.canvas
         self.index = index
@@ -10,6 +11,7 @@ class CheckBox(co.CanvasObject):
         self.imgs = [checked_img, unchecked_img]
         self.checked = checked
         self.id = None
+        self.disable = None
         self.create_checkbox()
 
     def check(self):
@@ -20,6 +22,11 @@ class CheckBox(co.CanvasObject):
                 self.options.checkboxes[self.options.checked_index].uncheck()
             self.options.checked_index = self.index
             self.create_checkbox()
+            if self.disable is not None and self.text == "žiadne":
+                self.disable.change_color("grey")
+            elif self.disable is not None and self.text != "žiadne":
+                self.disable.change_color("light_blue")
+
 
     def uncheck(self):
         self.checked = False
@@ -29,10 +36,6 @@ class CheckBox(co.CanvasObject):
 
     def click(self, _):
         self.check()
-        # if self.checked:
-        #     self.uncheck()
-        # else:
-        #     self.check()
 
     def create_checkbox(self):
         self.id = self.canvas.create_image(self.x, self.y + self.index * 40, image=self.imgs[0 if self.checked else 1],
@@ -40,6 +43,7 @@ class CheckBox(co.CanvasObject):
         self.text_id = self.canvas.create_text(self.x + 20, self.y + self.index * 40, fill="#114c32",
                                                font=('Comic Sans MS', 13, 'italic bold'), anchor='w', width=330,
                                                text=self.text)
+
         self.canvas.tag_bind(self.id, "<ButtonPress-1>", self.click)
 
     def destroy(self):

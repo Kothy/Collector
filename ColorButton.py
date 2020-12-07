@@ -9,7 +9,13 @@ class ColorButton(CanvasObject):
         self.width, self.height = width, height
         self.color = color
         self.text = text
+        self.command = None
+        self.args = None
         self.create_button()
+
+    def remove(self):
+        self.canvas.delete(self.btn_bg)
+        self.canvas.delete(self.text_obj)
 
     def create_button(self):
         image = Image.open("obrazky/buttons/" + self.color + ".png")
@@ -27,6 +33,26 @@ class ColorButton(CanvasObject):
         self.canvas.tag_bind(self.btn_bg, '<ButtonPress-1>', lambda _: command(*args))
         self.canvas.tag_bind(self.text_obj, '<ButtonPress-1>', lambda _: command(*args))
 
+    def bind2(self):
+        self.canvas.tag_bind(self.btn_bg, '<ButtonPress-1>', lambda _: self.parent.rotation_changed())
+        self.canvas.tag_bind(self.text_obj, '<ButtonPress-1>', lambda _: self.parent.rotation_changed())
+
     def change_text(self, text):
         self.text = text
         self.canvas.itemconfig(self.text_obj, text=text)
+
+    def change_state(self, state):
+        self.canvas.itemconfig(self.btn_bg, state)
+
+    def change_color(self, color):
+        self.remove()
+        self.color = color
+        self.create_button()
+        if color != "grey":
+            self.bind2()
+        else:
+            self.change_text("-")
+
+
+
+
