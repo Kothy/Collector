@@ -23,5 +23,10 @@ class ColorButton(CanvasObject):
 
         self.parts = [self.btn_bg, self.text_obj]
 
+    def bind(self, command, *args):
+        self.canvas.tag_bind(self.btn_bg, '<ButtonPress-1>', lambda _: command(*args))
+        self.canvas.tag_bind(self.text_obj, '<ButtonPress-1>', lambda _: command(*args))
+
     def change_text(self, text):
-        pass
+        self.text = text
+        self.canvas.itemconfig(self.text_obj, text=text)
