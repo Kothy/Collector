@@ -7,6 +7,7 @@ import tkinter as tk
 from tkinter import filedialog
 from ObjectList import ObjectList
 
+
 MAP_NAME_LENGTH = 15
 CHARACTER_NAME_LENGTH = 10
 FILE_TYPES = (("Png files", "*.png"), ("JPG files", "*.jpg"))
@@ -234,8 +235,3 @@ class CreateMapScreen(Screen):
         if index == len(color_choices):
             index = 0
         self.rotated_choices.change_text(color_choices[index])
-
-
-
-
-
