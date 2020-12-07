@@ -1,0 +1,15 @@
+Nazov: Mapa_1
+
+# Nastavenia postavicky #
+Meno: Emil
+Otacanie: vobec/vodorovne/zvislo
+Smerovanie: -/vpravo/vlavo/hore/dole
+Trajektoria: cierna/biela/cervena/zelena/zlta
+
+# Predmety #
+a,b,c,d
+
+# Prekazky #
+x,y
+
+

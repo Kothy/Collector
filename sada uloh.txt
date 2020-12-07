@@ -1,0 +1,26 @@
+Nazov: Sada_Uloh_1
+Mapa: Mapa_1
+
+# Nastavenie prekazok #
+a: bod/kriz/stvorec
+b: ...
+
+# Ulohy #
+Volny_prechod: ano/nie
+
+1.
+Nazov: Uloha1
+Typ: volna/pocty/cesta
+Rezim: planovaci/priamy/oba
+Riadkov: 3
+Stlpcov: 5
+Krokov: 6
+Zadanie: a,b,c,d,b,c/a?,b>3,c<=2,d=1
+Riesitelna: ano/nie
+.y.a.
+b.c..
+p...x
+
+2.
+Nazov: Uloha2
+...

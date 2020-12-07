@@ -1,0 +1,26 @@
+Format generovaneho zadania:
+
+Meno_postavicky chce pozbierať
+aspoň 2 obrazok_a,		najviac 3 obrazok_b,	(ak pre nejaký predmet a=?, nespomíname ho)
+práve 1 obrazok_c	a 	0 obrazok_d
+s použitím najviac 5 krokov. (ak počet krokov nie je udaný, bodka bude v riadky vyššie a táto veta tam nebude)
+Musí sa ale vyhnúť všetkým
+políčkam, ktoré ohrozuje
+obrazok_lisky 		alebo 	obrazok_vody	(ak sa nejaka prekazka v mape ulohy nevyskytne, nespomenieme ju)
+
+Meno_postavicky:
+"Pomôžeš mi, prosím, nájsť cestu?"
+
+Druhý typ zadania:
+
+Meno_postavicky chce pozbierať
+obrazky
+obrazky
+v tomto počte aj poradí
+s použitím najviac 15 krokov. (ak počet krokov nie je udaný, bodka bude v riadky vyššie a táto veta tam nebude)
+Musí sa ale vyhnúť všetkým
+políčkam, ktoré ohrozuje
+obrazok_lisky 		alebo 	obrazok_vody	(ak sa nejaka prekazka v mape ulohy nevyskytne, nespomenieme ju)
+
+Meno_postavicky:
+"Pomôžeš mi, prosím, naplánovať cestu?"
