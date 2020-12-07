@@ -35,9 +35,9 @@ class Collector:
         # funckia na testovanie screenov, nebude vo finalnej verzii - odkomentuj, ktoru screen chces robit, ostatne zakomentuj
         # self.main_menu_screen_init()
         # self.solve_screen_init()
-        self.create_map_screen_init()
+        # self.create_map_screen_init()
         # self.create_set_screen_init()
-        # self.create_task_screen_init()
+        self.create_task_screen_init()
 
     def main_menu_screen_init(self):
         self.menu_screen = MenuScreen(self)
@@ -52,7 +52,7 @@ class Collector:
         self.create_set_screen = CreateTaskSetScreen(self)
 
     def create_task_screen_init(self):
-        self.creat_task_screen = CreateTaskScreen(self)
+        self.creat_task_screen = CreateTaskSetScreen(self)
 
 
 Collector()
