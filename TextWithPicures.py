@@ -27,7 +27,7 @@ class TextWithImages:
         return self.canvas.bbox(txt)
 
     def textWithPictures(self, x, y, text, pictures, row_width):
-        image_height = 45
+        image_height = 38
         # self.canvas.create_rectangle(x, y - 25, x + row_width, y + 200)
 
         texts = text.split(" ")
@@ -48,7 +48,7 @@ class TextWithImages:
 
             if word == "_":
                 picture = pictures.pop(0)
-                img = ImageTk.PhotoImage(self.resize(picture, 38, 38))
+                img = ImageTk.PhotoImage(self.resize(picture, image_height, image_height))
                 self.canvas.create_image(x, y, image=img, anchor="w")
                 self.images_on_canvas.append(img)
             else:
