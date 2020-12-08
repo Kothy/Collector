@@ -6,11 +6,21 @@ from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import filedialog
 from ObjectList import ObjectList
-
+import os
+import time
+import threading
 
 MAP_NAME_LENGTH = 15
 CHARACTER_NAME_LENGTH = 10
 FILE_TYPES = (("Png files", "*.png"), ("JPG files", "*.jpg"))
+ERROR1 = 'Chyba pri ukladaní mapy: nezadaný názov mapy'
+ERROR2 = 'Chyba pri ukladaní mapy: nepovolený názov mapy'
+ERROR3 = 'Chyba pri ukladaní mapy: nezadaný názov postavičky'
+ERROR4 = 'Chyba pri ukladaní mapy: nepovolený názov postavičky'
+ERROR5 = 'Chyba pri ukladaní mapy: nezadaný obrázok postaviky'
+ERROR6 = 'Chyba pri ukladaní mapy: nezadané pozadie mapy'
+ERROR7 = 'Chyba pri ukladaní mapy: nezadané predmety'
+ERROR8 = 'Chyba pri ukladaní mapy: nezadané prekážky'
 
 
 def resize_image_by_width(img, basewidth):
@@ -46,7 +56,108 @@ class CreateMapScreen(Screen):
                                                       font=('Comic Sans MS', 20, 'italic bold'), anchor='center',
                                                       width=330, text='Vytváranie mapy')
         self.save_btn = ColorButton(self, 1205, 25, 100, 36, 'violet', 'Ulož')
+        self.save_btn.bind(self.check_inputs)
         self.menu_btn = ColorButton(self, 75, 25, 100, 36, 'green3', 'Menu')
+
+    def display_error(self, text):
+        self.canvas.itemconfig(self.saving_error_text, text=text)
+        self.canvas.itemconfig(self.saving_error_text, state=tk.NORMAL)
+        if 30 < len(text) < 40:
+            self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 16, 'italic bold'))
+        elif len(text) >= 40:
+            self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 15, 'italic bold'))
+        else:
+            self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 17, 'italic bold'))
+
+    def check_inputs(self):
+        if self.map_name.get() == "":
+            self.display_error(ERROR1)
+
+        elif not self.map_name.get().isalnum():
+            self.display_error(ERROR2)
+
+        elif self.character_name.get() == "":
+            self.display_error(ERROR3)
+
+        elif not self.character_name.get().isalnum():
+            self.display_error(ERROR4)
+
+        elif self.canvas.itemcget(self.player_file_text, 'text') == "":
+            self.display_error(ERROR5)
+
+        elif self.canvas.itemcget(self.map_file_text, 'text') == "":
+            self.display_error(ERROR6)
+
+        elif len(self.collectibles_list.items) < 1:
+            self.display_error(ERROR7)
+
+        elif len(self.obstacles_list.items) < 1:
+            self.display_error(ERROR8)
+        else:
+            self.canvas.itemconfig(self.saving_error_text, state=tk.HIDDEN)
+            threading.Thread(target=self.save_map, args=(self.map_name.get(),)).start()
+
+    def save_map(self, name):
+        dir = "mapy/" + name + "/"
+        for path in [dir, dir + "obstacles", dir + "objects"]:
+            os.mkdir(path)
+
+        while not os.path.isdir(dir):
+            pass
+
+        all_obs = "x"
+        all_col = "a"
+
+        if len(self.obstacles_list.items) == 2:
+            all_obs += ",y"
+        elif len(self.obstacles_list.items) == 3:
+            all_obs += ",y,z"
+
+        if len(self.collectibles_list.items) == 2:
+            all_col += ",b"
+        elif len(self.collectibles_list.items) == 3:
+            all_col += ",b,c"
+        elif len(self.collectibles_list.items) == 4:
+            all_col += ",b,c,d"
+
+        text = "Nazov: {}\n\n# Nastavenia postavicky #\nMeno: {}\nOtacanie: {}\nSmerovanie: {}" \
+               "\nTrajektoria: {}\n\n# Predmety #\n{}\n\n# Prekazky #\n{}"
+
+        file_txt = text.format(name, self.character_name.get(),
+                           self.rotate_options.checkboxes[self.rotate_options.checked_index].text,
+                           self.rotated_choices.text, self.path_color_choices.text, all_col, all_obs)
+
+        with open(dir + "map_settings.txt", "w") as file:
+            file.write(file_txt)
+        self.save_images(name)
+
+    def save_images(self, name):
+        dir = "mapy/" + name + "/"
+        obstacles_dir = dir + "obstacles"
+        objects_dir = dir + "objects"
+        img_char = Image.open(self.character_img_path)
+        img_map = Image.open(self.map_img_path)
+        char_filename = "character.png"
+        map_filename = "map_bg.png"
+        if img_char.size[1] > 200:
+            img_char = resize_image_by_height(img_char, 200)
+
+        img_char.save(dir + char_filename)
+        img_map.save(dir + map_filename)
+        col_names = ["a.png", "b.png", "c.png", "d.png"]
+        obs_names = ["x.png","y.png","z.png"]
+
+        for obstacle in self.obstacles_list.items:
+            img = Image.open(obstacle.file_path)
+            if img.size[1] > 200:
+                img = resize_image_by_height(img, 200)
+            img.save(obstacles_dir + '/' + obs_names.pop(0))
+
+        for obj in self.collectibles_list.items:
+            img = Image.open(obj.file_path)
+            if img.size[1] > 200:
+                img = resize_image_by_height(img, 200)
+            img.save(objects_dir + '/' + col_names.pop(0))
 
     def backgrounds_init(self):
         image = Image.new('RGBA', (570, 580), (255, 170, 79, 100))
@@ -100,8 +211,8 @@ class CreateMapScreen(Screen):
             image = Image.open(path)
             resized_img = resize_image_by_height(image, 110)
             self.character_preview_img = ImageTk.PhotoImage(resized_img)
+            self.character_preview_img2 = image
             self.character_preview = self.canvas.create_image(440, 170, image=self.character_preview_img, anchor='nw')
-
 
     def open_browser_map(self, _):
         path = self.open_file_browser()
@@ -115,6 +226,7 @@ class CreateMapScreen(Screen):
             image = Image.open(path)
             resized_img = resize_image_by_height(image, 120)
             self.map_preview_img = ImageTk.PhotoImage(resized_img)
+            self.map_preview_img2 = image
             self.map_preview = self.canvas.create_image(954, 180, image=self.map_preview_img, anchor='c')
 
     def open_browser_collectibles(self, _):
@@ -157,6 +269,7 @@ class CreateMapScreen(Screen):
 
         self.map_file_text = self.canvas.create_text(900, 85, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
                                                      anchor='nw', width=330, text='', state="hidden")
+
         self.canvas.tag_bind(self.plus_btn, '<ButtonPress-1>', self.open_browser_map)
 
         self.saving_error_text = self.canvas.create_text(70, 600, fill="darkred",
@@ -191,7 +304,7 @@ class CreateMapScreen(Screen):
         self.canvas.tag_bind(self.plus_btn, '<ButtonPress-1>', self.open_browser_character)
 
         self.player_file_text = self.canvas.create_text(245, 176, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
-                                                   anchor='nw', width=330, text='', state="hidden")
+                                                        anchor='nw', width=330, text='', state="hidden")
 
         name_text = self.canvas.create_text(300, 250, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
                                             anchor='ne', width=330, text='Meno:')

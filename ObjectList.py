@@ -36,6 +36,7 @@ class ObjectListItem:
         self.canvas = canvas
         self.list = list
         self.file_name = img.split("/")[-1]
+        self.file_path = img
         self.text_id = 0
         self.delete_id = 0
         self.preview_id = 0
@@ -47,7 +48,6 @@ class ObjectListItem:
         image2 = Image.open(img)
         image2 = image2.resize((35, 35), Image.ANTIALIAS)
         self.preview_img = ImageTk.PhotoImage(image2)
-
         self.draw()
 
     def remove(self):
