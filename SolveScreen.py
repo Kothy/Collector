@@ -45,7 +45,7 @@ class SolveScreen(Screen):
         while lines[0] != "" and lines[0] != "##!EOF##":
             map_string += lines.pop(0) + "\n"
 
-        char_name = "Ahojko"
+        char_name = "Emil"
         lines = self.remove_lines(lines, 1)
         self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name, char_name,solvable)
         # print(task_index, name, typ, regime, row, col, steps, assign, solvable, map_string)
@@ -53,7 +53,6 @@ class SolveScreen(Screen):
 
 
     def draw_task_assignment(self, name):
-        print("Bude sa kreslit zadanie")
         self.canvas.itemconfig(self.task_text_set_choice, state="hidden")
 
         with open("sady_uloh/" + name + ".txt", "r") as file:

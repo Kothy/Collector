@@ -27,7 +27,6 @@ class Task:
 
     def parse_assign(self):
         images = []
-        print(self.type)
         if self.type == "pocty":
             text = "{} chce pozbierať [niečo] {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
                 self.char_name, "s použitím najviac {} krokov".format(self.steps_count))
@@ -47,7 +46,6 @@ class Task:
             text += " a_ ."
         else:
             text += " ."
-        print(text)
 
         arr = ["x", "y", "z"]
         for obs in range(self.obstacles):
