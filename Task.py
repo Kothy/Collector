@@ -20,19 +20,54 @@ class Task:
         self.char_name = char_name
         self.collectibles = 4
 
-    def attach_postfix(self, images, map_name):
+    def attach_postfix(self, images, map_name, dir):
         for i in range(len(images)):
-            images[i] = "mapy/{}/objects/{}.png".format(map_name, images[i])
+            images[i] = "mapy/{}/{}/{}.png".format(map_name, dir,images[i])
         return images
+
+    def parse_counts(self, arr):
+        images = []
+        text = ""
+        for count in arr:
+            if not "?" in count:
+                images.append(count[0])
+                if "<=" in count:
+                    count2 = int(count.replace("<=", "")[1:])
+                    count = count.replace("<=", " najviac ").replace(str(count2), "")
+                elif ">=" in count:
+                    count2 = int(count.replace(">=", "")[1:])
+                    count = count.replace(">=", " najmenej ").replace(str(count2), "")
+                elif ">" in count:
+                    count2 = int(count.replace(">", "")[1:])
+                    count = count.replace(">", " najmenej ").replace(str(count2), "")
+                    count2 += 1
+                elif "<" in count:
+                    img = count[0]
+                    count2 = int(count.replace("<", "")[1:])
+                    count = count.replace("<", " najviac ").replace(str(count2), "")
+                    count2 -= 1
+                else:  #"="  in count
+                    count2 = int(count.replace("=", "")[1:])
+                    count = count.replace("=", " presne ").replace(str(count2), "")
+                count = count[1:] + str(count2) + " _"
+                text += count + " ,"
+        images = self.attach_postfix(images, self.map_name, "objects")
+        print(images)
+        print(text)
+        return text[:-1], images
 
     def parse_assign(self):
         images = []
         if self.type == "pocty":
-            text = "{} chce pozbierať [niečo] {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
-                self.char_name, "s použitím najviac {} krokov".format(self.steps_count))
+            counts = self.assign.split(",")
+            tex, imgs = self.parse_counts(counts)
+            images += imgs
+            text = "{} chce pozbierať{} {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
+                self.char_name, tex, "s použitím najviac {} krokov".format(self.steps_count))
+
         elif self.type == "cesta":
             images_col = self.assign.split(",")
-            images_col = self.attach_postfix(images_col, self.map_name)
+            images_col = self.attach_postfix(images_col, "obstacles",self.map_name)
             images = images + images_col
 
             text = "{} chce pozbierať {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
