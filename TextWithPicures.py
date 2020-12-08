@@ -35,7 +35,7 @@ class TextWithImages:
         id = None
         for word in texts:
             if word == "_":
-                word_w = 50
+                word_w = 45
             else:
                 id = self.canvas.create_text(x, y, fill="#0a333f",
                             font=('Comic Sans MS', 16, 'italic bold'), text=word + " ", anchor="w")
@@ -43,12 +43,12 @@ class TextWithImages:
                 word_w = w
 
             if x + word_w > x_start + row_width:
-                y += 38
+                y += 40
                 x = x_start
 
             if word == "_":
                 picture = pictures.pop(0)
-                img = ImageTk.PhotoImage(self.resize(picture, image_height, image_height))
+                img = ImageTk.PhotoImage(self.resize(picture, 38, 38))
                 self.canvas.create_image(x, y, image=img, anchor="w")
                 self.images_on_canvas.append(img)
             else:

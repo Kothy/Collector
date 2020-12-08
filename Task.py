@@ -67,7 +67,7 @@ class Task:
 
         elif self.type == "cesta":
             images_col = self.assign.split(",")
-            images_col = self.attach_postfix(images_col, "obstacles",self.map_name)
+            images_col = self.attach_postfix(images_col,self.map_name, "objects")
             images = images + images_col
 
             text = "{} chce pozbierať {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
