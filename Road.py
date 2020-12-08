@@ -1,15 +1,15 @@
 from CanvasObject import CanvasObject
-import RoadPart as rp
+from RoadPart import RoadPart
 
 
 class Road(CanvasObject):
-    def __init__(self, move_imgs, parent, parts):
-        super().__init__(parent, parts)
+    def __init__(self, move_imgs, parent):
+        self.parent, self.canvas = parent, parent.canvas
         self.move_imgs = move_imgs
         self.create_road_parts()
 
     def create_road_parts(self):
-        self.road_parts = [rp.RoadPart(i, self) for i in range(21)]
+        self.road_parts = [RoadPart(i, self) for i in range(21)]
         self.number_of_active_road_parts = 0
 
     ##        for i in range(16):           # len test, nechavam to tu, aby si videla, ako to cca vyzera

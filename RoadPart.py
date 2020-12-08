@@ -1,8 +1,9 @@
 from CanvasObject import CanvasObject
 
+
 class RoadPart(CanvasObject):
-    def __init__(self, index, parent, parts):
-        super().__init__(parent, parts)
+    def __init__(self, index, parent):
+        self.parent, self.canvas = parent, parent.canvas
         self.index = index
         self.obstacle = None
         self.border = None

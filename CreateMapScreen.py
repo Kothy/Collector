@@ -7,7 +7,6 @@ import tkinter as tk
 from tkinter import filedialog
 from ObjectList import ObjectList
 import os
-import time
 import threading
 
 MAP_NAME_LENGTH = 15

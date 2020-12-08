@@ -4,6 +4,9 @@ from CanvasObject import CanvasObject
 from PIL import Image, ImageTk
 from Keyboard import Keyboard
 from Road import Road
+from ClickableList import ClickableList
+from Task import TaskSet
+from TextWithPicures import TextWithImages
 
 
 class SolveScreen(Screen):
@@ -18,16 +21,86 @@ class SolveScreen(Screen):
         self.task_window_init()
         self.show_common()
 
+        self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
+
+    def go_to_menu(self):
+        print("Prechod do menu")
+
+    def remove_lines(self, arr, num):
+        for i in range(num):
+            arr.pop(0)
+        return arr
+
+    def read_task(self, lines, map_name):
+        task_index = int(float(lines.pop(0)))
+        name = lines.pop(0).split(":")[1].strip()
+        typ = lines.pop(0).split(":")[1].strip()
+        regime = lines.pop(0).split(":")[1].strip()
+        row = lines.pop(0).split(":")[1].strip()
+        col = lines.pop(0).split(":")[1].strip()
+        steps = lines.pop(0).split(":")[1].strip()
+        assign = lines.pop(0).split(":")[1].strip()
+        solvable = lines.pop(0).split(":")[1].strip()
+        map_string = ""
+        while lines[0] != "" and lines[0] != "##!EOF##":
+            map_string += lines.pop(0) + "\n"
+
+        char_name = "Ahojko"
+        lines = self.remove_lines(lines, 1)
+        self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name, char_name,solvable)
+        # print(task_index, name, typ, regime, row, col, steps, assign, solvable, map_string)
+        return lines
+
+
+    def draw_task_assignment(self, name):
+        print("Bude sa kreslit zadanie")
+        self.canvas.itemconfig(self.task_text_set_choice, state="hidden")
+
+        with open("sady_uloh/" + name + ".txt", "r") as file:
+            full = file.read()
+
+        lines = full.split("\n")
+        lines.append("##!EOF##")
+        tasks_set_name = lines.pop(0).split(":")[-1].strip()
+        map_name = lines.pop(0).split(":")[-1].strip()
+
+        lines = self.remove_lines(lines, 2)
+        obstacles = []
+        while lines[0] != "":
+            splitted_obs = lines.pop(0).split(":")
+            obstacles.append((splitted_obs[0], splitted_obs[1].strip()))
+
+        lines = self.remove_lines(lines, 2)
+        next_without_solve = lines.pop(0).split(":")[1].strip()
+
+        lines = self.remove_lines(lines, 1)
+
+        self.tasks_set = TaskSet(tasks_set_name, self.canvas, next_without_solve)
+        while len(lines) > 0 and lines[0] != "##!EOF##":
+             lines = self.read_task(lines, map_name)
+
+        self.tasks_set.tasks[0].parse_assign()
+        self.canvas.itemconfig(self.task_text_mode, state="normal")
+        self.draw_map(map_name)
+
+    def draw_map(self, map_name):
+        img = Image.open("mapy/{}/map.png".format(map_name))
+        img = img.resize((900, 480))
+        self.map_bg_img = ImageTk.PhotoImage(img)
+
+        self.map_bg_img_id = self.canvas.create_image(10, 60, image=self.map_bg_img, anchor='nw')
+
     def panel_init(self):
         self.task_name_text = self.canvas.create_text(530, 25, fill="#0a333f",
                                                       font=('Comic Sans MS', 20, 'italic bold'), anchor='center',
                                                       width=330, text='Uloha1')
-        self.next_task_btn = ColorButton(self, 1180, 25, 150, 36, 'violet', 'Dalsia uloha')
-        self.prev_task_btn = ColorButton(self, 1015, 25, 160, 36, 'orange', 'Predosla uloha')
+        self.next_task_btn = ColorButton(self, 1180, 25, 150, 36, 'violet', 'Ďalšia úloha')
+        self.prev_task_btn = ColorButton(self, 1015, 25, 160, 36, 'orange', 'Predošlá úloha')
         self.menu_btn = ColorButton(self, 75, 25, 100, 36, 'green3', 'Menu')
+        self.menu_btn.bind(self.go_to_menu)
 
-        self.screen_panel = CanvasObject(self,
-                                         [self.task_name_text, self.next_task_btn, self.prev_task_btn, self.menu_btn])
+        self.screen_panel = CanvasObject(self, [self.task_name_text,
+                                                self.next_task_btn, self.prev_task_btn, self.menu_btn])
 
     def map_window_init(self):
         image = Image.new('RGBA', (900, 480), (141, 202, 73, 100))
@@ -126,11 +199,11 @@ class SolveScreen(Screen):
 
         self.task_text_mode = self.canvas.create_text(930, 370, fill="#114c32",
                                                       font=('Comic Sans MS', 17, 'italic bold'), anchor='nw', width=330,
-                                                      text='Emil:\n"Pomozes mi, prosim, napalnovat cestu?"\n\n\tRezim: planovaci')
+                                                      text='Emil:\n"Pomôžeš mi, prosím, naplánovať cestu?"\n\n\tRežim: plánovací')
 
         self.task_text_set_choice = self.canvas.create_text(1095, 285, fill="#0a333f",
                                                             font=('Comic Sans MS', 20, 'italic bold'), anchor='center',
-                                                            width=330, text='Vyber sadu uloh')
+                                                            width=330, text='Vyber sadu úloh')
 
         task_text_collectibles_obj = CanvasObject(self, self.task_text_collectibles)
         solve_screen_task_collectibles = CanvasObject(self, [self.task_text_collect, task_text_collectibles_obj])
@@ -149,7 +222,8 @@ class SolveScreen(Screen):
                                                             self.solve_screen_task_obstacles,
                                                             self.solve_screen_task_mode])
 
-    def show_common(self):  # zobrazi len to, co sa netyka konkretnych uloh, ak chces vidiet vsetko, daj si do CanvasObject initu hidden=False
+    def show_common(
+            self):  # zobrazi len to, co sa netyka konkretnych uloh, ak chces vidiet vsetko, daj si do CanvasObject initu hidden=False
         starting_canvas_items = [self.menu_btn,
                                  self.solve_screen_map_bg,
                                  self.solve_screen_keyboard,
