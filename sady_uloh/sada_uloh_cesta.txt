@@ -20,3 +20,29 @@ Riesitelna: ano
 .y.a.
 b.c..
 p...x
+
+2.
+Nazov: Uloha1
+Typ: cesta
+Rezim: planovaci/priamy/oba
+Riadkov: 3
+Stlpcov: 5
+Krokov: 6
+Zadanie: a,b,c,d,b
+Riesitelna: ano
+.y.a.
+b.c..
+.p.x.
+
+3.
+Nazov: Uloha1
+Typ: cesta
+Rezim: planovaci/priamy/oba
+Riadkov: 3
+Stlpcov: 6
+Krokov: 6
+Zadanie: a,b,c
+Riesitelna: ano
+..y.a.
+.b.c.p
+....x.

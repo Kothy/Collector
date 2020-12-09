@@ -1,7 +1,7 @@
 from TextWithPicures import TextWithImages
 from PIL import Image, ImageTk
 from Map import Map
-
+import copy
 
 class Task:
     def __init__(self, parent, index, name, typ, regime, row, col,
@@ -17,10 +17,11 @@ class Task:
         self.steps_count = steps
         self.assign = assign
         self.solvable = solvable
-        self.obstacles = 0
+        self.obstacles = []
         self.map_name = map_name
         self.char_name = char_name
         self.collectibles = 0
+        self.parse_assign()
 
     def attach_postfix(self, images, map_name, dir):
         for i in range(len(images)):
@@ -53,8 +54,6 @@ class Task:
                 count = count[1:] + str(count2) + " _"
                 text += count + " ,"
         images = self.attach_postfix(images, self.map_name, "objects")
-        # print(images)
-        # print(text)
         return text[:-1], images
 
     def parse_assign(self):
@@ -76,20 +75,30 @@ class Task:
                 self.char_name,
                 "{} (v tomto počte a poradí) s použitím najviac {} krokov".format(("_ , " * len(images_col))[:-2],
                                                                                   self.steps_count))
+        else:
+            text = ""
+        if "x" in self.map_str:
+            self.obstacles.append("x")
+        if "y" in self.map_str:
+            self.obstacles.append("y")
+        if "z" in self.map_str:
+            self.obstacles.append("z")
 
-        if self.obstacles == 3:
+        if len(self.obstacles) == 3:
             text += " a _ a _ ."
-        elif self.obstacles == 2:
+        elif len(self.obstacles) == 2:
             text += " a _ ."
         else:
             text += " ."
 
-        arr = ["x", "y", "z"]
-        for obs in range(self.obstacles):
+        # arr = ["x", "y", "z"]
+        arr = copy.deepcopy(self.obstacles)
+
+        for obs in range(len(self.obstacles)):
             images.append("mapy/{}/obstacles/{}.png".format(self.map_name, arr.pop(0)))
 
-        w = 340
-        self.parent.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
+        self.assign_text = text
+        self.assign_images = images
 
     def remove_lines(self, arr, num):
         for i in range(num):
@@ -125,7 +134,7 @@ class Task:
         lines = self.remove_lines(lines, 2)
         self.collectibles = len(lines.pop(0).split(","))
         lines = self.remove_lines(lines, 2)
-        self.obstacles = len(lines.pop(0).split(","))
+        lines.pop(0).split(",")
 
         self.draw_map_bg()
         self.map = Map(self.map_name, self.map_str, self.parent.canvas, self, self.traject_and_grid_color)
@@ -143,16 +152,45 @@ class Task:
                          self.col, self.steps_count, self.assign,
                          self.solvable])
 
+    def draw(self):
+        w = 340
+        text = self.assign_text
+        images = self.assign_images
+
+        self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
+        self.map.draw_map()
+
+    def remove(self):
+        self.map.remove()
+        self.text_w_images.remove()
+
 
 class TaskSet:
     def __init__(self, name, canvas, next_without_solve, obstacles):
         self.name = name
         self.canvas = canvas
         self.tasks = []
+        self.actual = 0
         self.obstacles_arr = obstacles
         self.next = next_without_solve
 
     def add_task(self, name, typ, regime, row, col, steps, assign, maps_str, map_name, char_name, solvable):
-        self.tasks.append(
-            Task(self, len(self.tasks), name, typ, regime, row, col, steps, assign, maps_str, map_name, char_name,
-                 solvable))
+        t = Task(self, len(self.tasks), name, typ, regime, row, col, steps, assign, maps_str, map_name, char_name,
+             solvable)
+        self.tasks.append(t)
+
+    def draw_task_and_map(self):
+        self.tasks[self.actual].draw()
+
+    def remove_task_and_map(self):
+        self.tasks[self.actual].remove()
+
+    def next_task(self):
+        self.actual += 1
+        if self.actual == len(self.tasks):
+            self.actual = 0
+
+    def prev_task(self):
+        self.actual -= 1
+        if self.actual == 0:
+            self.actual = len(self.tasks) - 1

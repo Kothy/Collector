@@ -10,6 +10,6 @@ Trajektoria: zlta
 a,b,c,d
 
 # Prekazky #
-x,y
+x,y,z
 
 

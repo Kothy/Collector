@@ -21,6 +21,8 @@ class SolveScreen(Screen):
         self.show_common()
 
         self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
+        self.was_task = False
+        self.actual_task = 0
 
     def go_to_menu(self):
         print("Prechod do menu")
@@ -76,20 +78,46 @@ class SolveScreen(Screen):
         while len(lines) > 0 and lines[0] != "##!EOF##":
              lines = self.read_task(lines, map_name)
 
-        self.tasks_set.tasks[0].parse_assign()
+        print(len(self.tasks_set.tasks))
+        # self.tasks_set.tasks[self.actual_task].parse_assign()
         self.canvas.itemconfig(self.task_text_mode, state="normal")
+        self.draw_task_and_map()
+
+    def draw_task_and_map(self):
+        self.tasks_set.draw_task_and_map()
 
     def panel_init(self):
         self.task_name_text = self.canvas.create_text(530, 25, fill="#0a333f",
                                                       font=('Comic Sans MS', 20, 'italic bold'), anchor='center',
                                                       width=330, text='Uloha1')
+
         self.next_task_btn = ColorButton(self, 1180, 25, 150, 36, 'violet', 'Ďalšia úloha')
+
         self.prev_task_btn = ColorButton(self, 1015, 25, 160, 36, 'orange', 'Predošlá úloha')
         self.menu_btn = ColorButton(self, 75, 25, 100, 36, 'green3', 'Menu')
         self.menu_btn.bind(self.go_to_menu)
 
         self.screen_panel = CanvasObject(self, [self.task_name_text,
                                                 self.next_task_btn, self.prev_task_btn, self.menu_btn])
+        self.next_task_btn.change_state("normal")
+        self.prev_task_btn.change_state("normal")
+
+        self.next_task_btn.bind(self.next_task)
+        self.prev_task_btn.bind(self.prev_task)
+
+    def remove_task(self):
+        self.tasks_set.remove_task_and_map()
+
+    def next_task(self):
+        self.remove_task()
+        self.tasks_set.next_task()
+        self.draw_task_and_map()
+
+    def prev_task(self):
+        self.remove_task()
+        self.tasks_set.prev_task()
+        self.draw_task_and_map()
+
 
     def map_window_init(self):
         image = Image.new('RGBA', (900, 480), (141, 202, 73, 100))

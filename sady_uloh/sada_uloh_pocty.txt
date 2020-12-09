@@ -13,10 +13,40 @@ Nazov: Uloha1
 Typ: pocty
 Rezim: planovaci
 Riadkov: 3
+Stlpcov: 6
+Krokov: 6
+Zadanie: a?,b>3,c<=2,d=1
+Riesitelna: ano
+.y.a......
+b.c.......
+.p..x.....
+..........
+..........
+
+2.
+Nazov: Uloha1
+Typ: pocty
+Rezim: planovaci
+Riadkov: 3
 Stlpcov: 5
 Krokov: 6
 Zadanie: a?,b>3,c<=2,d=1
 Riesitelna: ano
-.y.a.
-b.c..
-p...x
+.y.a......
+b.c.......
+.p..x.....
+..........
+..........
+
+3.
+Nazov: Uloha1
+Typ: pocty
+Rezim: planovaci
+Riadkov: 3
+Stlpcov: 10
+Krokov: 6
+Zadanie: a?,b>3,c<=2,d=1
+Riesitelna: ano
+.y.a......
+b.c.......
+.p..x.....
