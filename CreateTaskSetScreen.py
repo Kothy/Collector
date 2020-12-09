@@ -6,16 +6,8 @@ from Screen import Screen
 from ColorButton import ColorButton
 from CanvasObject import CanvasObject
 from ObstacleOptions import ObstacleOptions
+from CommonFunctions import *
 from CreateMapScreen import resize_image_by_height
-
-def resize_image(img, max_width, max_height):
-    w_percent = (max_width / float(img.size[0]))
-    height = int((float(img.size[1]) * float(w_percent)))
-    if height > max_height:
-        wpercent = (max_height / float(img.size[1]))
-        width = int((float(img.size[0]) * float(wpercent)))
-        return img.resize((width, max_height), Image.ANTIALIAS)
-        return img.resize((max_width, height), Image.ANTIALIAS)
 
 class CreateTaskSetScreen(Screen):
 
@@ -61,7 +53,7 @@ class CreateTaskSetScreen(Screen):
         self.set_name.trace("w", self.set_name_text_changed)
 
     def map_preview_init(self):
-        self.map_preview = None
+        self.preview_object = None
 
         map_choice_text = self.canvas.create_text(70, 160, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
                                                   anchor='nw', width=330, text='Mapa:')
@@ -77,8 +69,8 @@ class CreateTaskSetScreen(Screen):
 
     def obstacles_init(self):
         obstacles_mode_text = self.canvas.create_text(70, 450, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
-                                                  anchor='nw', width=330, text='Režimy stráženia:')
-        self.obstacle_options = ObstacleOptions()
+                                                  anchor='nw', width=330, text='Režimy stráženia:\n(pre prekážky)')
+        self.obstacle_options = ObstacleOptions(self)
 
     def save_text_init(self):
         self.saving_error_text = self.canvas.create_text(70, 600, fill="darkred",
@@ -101,14 +93,16 @@ class CreateTaskSetScreen(Screen):
         self.map_img_path = 'mapy/'+ folder_name + '/map.png'
         self.canvas.itemconfig(self.map_file_text, text=self.split_to_name(folder_name), state="normal")
 
-        if self.map_preview is not None:
-            self.canvas.delete(self.map_preview)
+        if self.preview_object is not None:
+            self.preview_object.destroy()
 
         image = Image.open(self.map_img_path)
-        resized_img = resize_image(image, 500, 200)
+        resized_img = resize_image(image, 450, 200)
         self.map_preview_img = ImageTk.PhotoImage(resized_img)
-        self.map_preview = self.canvas.create_image(330, 320, image=self.map_preview_img, anchor='c')
+        map_preview = self.canvas.create_image(137, 320, image=self.map_preview_img, anchor='w')
+        collectibles_imgs = self.show_collectibles(folder_name)
         self.obstacle_options.fill_options(folder_name)
+        self.preview_object = CanvasObject(self, [map_preview, collectibles_imgs, self.obstacle_options], False)
 
     def open_browser_map(self):
         path = self.open_file_browser()
@@ -121,3 +115,20 @@ class CreateTaskSetScreen(Screen):
 
     def split_to_name(self, text):
         return ' '.join(text.split('_'))
+
+    def show_collectibles(self, folder_name):
+        self.create_collectible_imgs(folder_name)
+        return CanvasObject(self, [self.canvas.create_image(91, 250 + 50*i, anchor='c',
+                                                            image=self.collectibles_imgs_tk[i])
+                                               for i in range(len(self.collectibles_imgs_tk))],
+                                              hidden=False)
+
+    def create_collectible_imgs(self, folder_name):
+        self.collectibles_imgs_tk = []
+        for collectible in 'abcd':
+            try:
+                img = Image.open('mapy/' + folder_name + '/objects/' + collectible + '.png')
+                img = resize_image(img, 32, 32)
+                self.collectibles_imgs_tk.append(ImageTk.PhotoImage(img))
+            except FileNotFoundError:
+                break
