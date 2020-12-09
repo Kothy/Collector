@@ -25,3 +25,13 @@ class Screen:
             item.hide()
         else:
             self.canvas.itemconfigure(item, state='hidden')
+
+    def destroy_canvas_item(self, item):
+        if isinstance(item, CanvasObject):
+            item.destroy()
+        else:
+            self.canvas.delete(item)
+
+    def detroy(self):
+        for object in self.objects:
+            self.destroy_canvas_item(object)

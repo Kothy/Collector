@@ -20,3 +20,11 @@ class CanvasObject:
                 part.hide()
             else:
                 self.canvas.itemconfigure(part, state='hidden')
+
+    def destroy(self):
+        for part in self.parts:
+            if isinstance(part, CanvasObject):
+                part.destroy()
+            else:
+                self.canvas.delete(part)
+        self.parts = []
