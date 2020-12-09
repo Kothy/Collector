@@ -6,7 +6,6 @@ from Keyboard import Keyboard
 from Road import Road
 from ClickableList import ClickableList
 from Task import TaskSet
-from TextWithPicures import TextWithImages
 
 
 class SolveScreen(Screen):
@@ -32,6 +31,7 @@ class SolveScreen(Screen):
         return arr
 
     def read_task(self, lines, map_name):
+
         task_index = int(float(lines.pop(0)))
         name = lines.pop(0).split(":")[1].strip()
         typ = lines.pop(0).split(":")[1].strip()
@@ -47,10 +47,8 @@ class SolveScreen(Screen):
 
         char_name = "Emil"
         lines = self.remove_lines(lines, 1)
-        self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name, char_name,solvable)
-        # print(task_index, name, typ, regime, row, col, steps, assign, solvable, map_string)
+        self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name, char_name, solvable)
         return lines
-
 
     def draw_task_assignment(self, name):
         self.canvas.itemconfig(self.task_text_set_choice, state="hidden")
@@ -74,20 +72,12 @@ class SolveScreen(Screen):
 
         lines = self.remove_lines(lines, 1)
 
-        self.tasks_set = TaskSet(tasks_set_name, self.canvas, next_without_solve)
+        self.tasks_set = TaskSet(tasks_set_name, self.canvas, next_without_solve, obstacles)
         while len(lines) > 0 and lines[0] != "##!EOF##":
              lines = self.read_task(lines, map_name)
 
         self.tasks_set.tasks[0].parse_assign()
         self.canvas.itemconfig(self.task_text_mode, state="normal")
-        self.draw_map(map_name)
-
-    def draw_map(self, map_name):
-        img = Image.open("mapy/{}/map.png".format(map_name))
-        img = img.resize((900, 480))
-        self.map_bg_img = ImageTk.PhotoImage(img)
-
-        self.map_bg_img_id = self.canvas.create_image(10, 60, image=self.map_bg_img, anchor='nw')
 
     def panel_init(self):
         self.task_name_text = self.canvas.create_text(530, 25, fill="#0a333f",

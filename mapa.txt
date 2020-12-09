@@ -1,7 +1,7 @@
 Nazov: Mapa_1
 
 # Nastavenia postavicky #
-Meno: Emil
+Meno: Emilos
 Otacanie: vobec/vodorovne/zvislo
 Smerovanie: -/vpravo/vlavo/hore/dole
 Trajektoria: cierna/biela/cervena/zelena/zlta
