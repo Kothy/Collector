@@ -91,7 +91,6 @@ class Task:
         else:
             text += " ."
 
-        # arr = ["x", "y", "z"]
         arr = copy.deepcopy(self.obstacles)
 
         for obs in range(len(self.obstacles)):
@@ -166,7 +165,8 @@ class Task:
 
 
 class TaskSet:
-    def __init__(self, name, canvas, next_without_solve, obstacles):
+    def __init__(self, name, canvas, next_without_solve, obstacles, parent):
+        self.parent = parent
         self.name = name
         self.canvas = canvas
         self.tasks = []
@@ -194,3 +194,15 @@ class TaskSet:
         self.actual -= 1
         if self.actual == 0:
             self.actual = len(self.tasks) - 1
+
+    def move_player_down(self):
+        self.tasks[self.actual].map.player.move_down()
+
+    def move_player_up(self):
+        self.tasks[self.actual].map.player.move_up()
+
+    def move_player_right(self):
+        self.tasks[self.actual].map.player.move_right()
+
+    def move_player_left(self):
+        self.tasks[self.actual].map.player.move_left()

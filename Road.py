@@ -12,9 +12,9 @@ class Road(CanvasObject):
         self.road_parts = [RoadPart(i, self) for i in range(21)]
         self.number_of_active_road_parts = 0
 
-    ##        for i in range(16):           # len test, nechavam to tu, aby si videla, ako to cca vyzera
-    ##            self.add_move('basic', ['left', 'right', 'up', 'down'][i%4])
-    ##            self.road_parts[i].add_obstacle(self.move_imgs['ok'][i%4])        # tu by mal byt spracovany obrazok danej
+        # for i in range(16):           # len test, nechavam to tu, aby si videla, ako to cca vyzera
+        #     self.add_move('basic', ['left', 'right', 'up', 'down'][i%4])
+        #     self.road_parts[i].add_obstacle(self.move_imgs['ok'][i%4])        # tu by mal byt spracovany obrazok danej
 
     def add_move(self, move_type, direction):
         if self.number_of_active_road_parts > 15:
@@ -33,4 +33,5 @@ class Road(CanvasObject):
             part.hide()
 
     def show(self):
-        pass
+        for part in self.road_parts:
+            part.show()

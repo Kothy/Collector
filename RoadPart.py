@@ -18,7 +18,7 @@ class RoadPart(CanvasObject):
 
     def remove_obstacle(self):
         if self.obstacle is not None:
-            self.canvas.remove(self.obstacle)
+            self.canvas.delete(self.obstacle)
             self.obstacle = None
 
     def clicked(self, _):
@@ -42,7 +42,7 @@ class RoadPart(CanvasObject):
 
     def hide(self):
         if self.move is not None:
-            self.canvas.remove(self.move)
+            self.canvas.delete(self.move)
             self.move = None
             self.remove_obstacle()
 

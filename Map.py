@@ -114,6 +114,7 @@ class Map:
                     obj = Collectible(lines[i][j], self, i, j)
                 else:
                     obj = Player(self, i, j)
+                    self.player = obj
                 arr[i][j] = obj
 
         self.array = arr
@@ -203,6 +204,38 @@ class Player:
 
     def __repr__(self):
         return "p"
+
+    def move_down(self):
+        if self.row + 1 < self.map.rows:
+            self.row += 1
+            self.y = self.map.xs[self.row]
+            self.remove()
+            self.draw()
+            self.map.task.parent.parent.road.add_move('basic', 'down')
+
+    def move_up(self):
+        if self.row - 1 >= 0:
+            self.row -= 1
+            self.y = self.map.xs[self.row]
+            self.remove()
+            self.draw()
+            self.map.task.parent.parent.road.add_move('basic', 'up')
+
+    def move_right(self):
+        if self.col + 1 < self.map.cols:
+            self.col += 1
+            self.x = self.map.ys[self.col]
+            self.remove()
+            self.draw()
+            self.map.task.parent.parent.road.add_move('basic', 'right')
+
+    def move_left(self):
+        if self.col - 1 >= 0:
+            self.col -= 1
+            self.x = self.map.ys[self.col]
+            self.remove()
+            self.draw()
+            self.map.task.parent.parent.road.add_move('basic', 'left')
 
 
 class Blank:

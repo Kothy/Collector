@@ -19,13 +19,33 @@ class SolveScreen(Screen):
         self.road_window_init()
         self.task_window_init()
         self.show_common()
-
         self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
-        self.was_task = False
-        self.actual_task = 0
+        # self.was_task = False
+        # self.actual_task = 0
+
+    def move_down(self, _):
+        print("down")
+        self.tasks_set.move_player_down()
+        # self.road.add_move('basic', 'down')
+
+    def move_up(self, _):
+        print("up")
+        self.tasks_set.move_player_up()
+        # self.road.add_move('basic', 'up')
+
+    def move_right(self, _):
+        print("right")
+        self.tasks_set.move_player_right()
+        # self.road.add_move('basic', 'right')
+
+    def move_left(self, _):
+        print("left")
+        # self.tasks_set.move_player_left()
+
 
     def go_to_menu(self):
         print("Prechod do menu")
+        self.unbind_all()
 
     def remove_lines(self, arr, num):
         for i in range(num):
@@ -47,9 +67,9 @@ class SolveScreen(Screen):
         while lines[0] != "" and lines[0] != "##!EOF##":
             map_string += lines.pop(0) + "\n"
 
-        char_name = "Emil"
+
         lines = self.remove_lines(lines, 1)
-        self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name, char_name, solvable)
+        self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name, "", solvable)
         return lines
 
     def draw_task_assignment(self, name):
@@ -74,7 +94,7 @@ class SolveScreen(Screen):
 
         lines = self.remove_lines(lines, 1)
 
-        self.tasks_set = TaskSet(tasks_set_name, self.canvas, next_without_solve, obstacles)
+        self.tasks_set = TaskSet(tasks_set_name, self.canvas, next_without_solve, obstacles, self)
         while len(lines) > 0 and lines[0] != "##!EOF##":
              lines = self.read_task(lines, map_name)
 
@@ -85,6 +105,24 @@ class SolveScreen(Screen):
 
     def draw_task_and_map(self):
         self.tasks_set.draw_task_and_map()
+        self.parent.root.bind('<Up>', self.move_up)
+        self.parent.root.bind('<Down>', self.move_down)
+        self.parent.root.bind('<Left>', self.move_left)
+        self.parent.root.bind('<Right>', self.move_right)
+        # self.parent.root.tag_bind(self.keyboard[0], '<ButtonPress-1>', self.move_down)
+        # self.parent.root.tag_bind(self.keyboard[1], '<ButtonPress-1>', self.move_right)
+        # self.parent.root.tag_bind(self.keyboard[2], '<ButtonPress-1>', self.move_up)
+        # self.parent.root.tag_bind(self.keyboard[3], '<ButtonPress-1>', self.move_left)
+
+    def unbind_all(self):
+        self.parent.root.unbind('<Up>')
+        self.parent.root.unbind('<Down>')
+        self.parent.root.unbind('<Left>')
+        self.parent.root.unbind('<Right>')
+        # self.parent.root.tag_unbind(self.keyboard[0], '<ButtonPress-1>', self.move_down)
+        # self.parent.root.tag_unbind(self.keyboard[1], '<ButtonPress-1>', self.move_right)
+        # self.parent.root.tag_unbind(self.keyboard[2], '<ButtonPress-1>', self.move_up)
+        # self.parent.root.tag_unbind(self.keyboard[3], '<ButtonPress-1>', self.move_left)
 
     def panel_init(self):
         self.task_name_text = self.canvas.create_text(530, 25, fill="#0a333f",
@@ -99,8 +137,9 @@ class SolveScreen(Screen):
 
         self.screen_panel = CanvasObject(self, [self.task_name_text,
                                                 self.next_task_btn, self.prev_task_btn, self.menu_btn])
-        self.next_task_btn.change_state("normal")
-        self.prev_task_btn.change_state("normal")
+
+        # self.next_task_btn.change_state("normal")
+        # self.prev_task_btn.change_state("normal")
 
         self.next_task_btn.bind(self.next_task)
         self.prev_task_btn.bind(self.prev_task)
@@ -117,7 +156,6 @@ class SolveScreen(Screen):
         self.remove_task()
         self.tasks_set.prev_task()
         self.draw_task_and_map()
-
 
     def map_window_init(self):
         image = Image.new('RGBA', (900, 480), (141, 202, 73, 100))
@@ -144,6 +182,7 @@ class SolveScreen(Screen):
             self.arrows.append(ImageTk.PhotoImage(image))
             keyboard.append(self.canvas.create_image(position[0], position[1], image=self.arrows[-1], anchor='nw'))
             image = image.rotate(90)
+        self.keyboard = keyboard
 
         image = Image.open("obrazky/controls/back.png")
         image = image.resize((75, 75), Image.ANTIALIAS)
@@ -183,6 +222,7 @@ class SolveScreen(Screen):
         self.road = Road(self.move_imgs, self)
 
         self.solve_screen_road = CanvasObject(self, [self.solve_screen_road_bg, self.road, self.play])
+        self.solve_screen_road.show()
 
     def task_window_init(self):
         # texty tam su na skusku, daj ich potom odtialto prec :) self.task_text_obstacle potom vyuzi aj na info "Ziadne zadanie" v pripade volnej ulohy
@@ -239,8 +279,8 @@ class SolveScreen(Screen):
                                                             self.solve_screen_task_obstacles,
                                                             self.solve_screen_task_mode])
 
-    def show_common(
-            self):  # zobrazi len to, co sa netyka konkretnych uloh, ak chces vidiet vsetko, daj si do CanvasObject initu hidden=False
+    def show_common(self):
+        # zobrazi len to, co sa netyka konkretnych uloh, ak chces vidiet vsetko, daj si do CanvasObject initu hidden=False
         starting_canvas_items = [self.menu_btn,
                                  self.solve_screen_map_bg,
                                  self.solve_screen_keyboard,
