@@ -190,6 +190,9 @@ class ListButton:
 
         self.canvas.tag_bind(self.folderObj, '<ButtonPress-1>', self.click)
         self.canvas.tag_bind(self.hoveredObj, '<ButtonPress-1>', self.click)
+        self.canvas.tag_bind(self.textObj, '<ButtonPress-1>', self.click)
 
         self.canvas.tag_bind(self.imageObj, '<Enter>', self.enter)
+        self.canvas.tag_bind(self.textObj, '<Enter>', self.enter)
         self.canvas.tag_bind(self.hoveredObj, '<Leave>', self.leave)
+        # self.canvas.tag_bind(self.textObj, '<Leave>', self.leave)

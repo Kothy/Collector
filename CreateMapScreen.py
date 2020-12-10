@@ -63,6 +63,12 @@ class CreateMapScreen(Screen):
         self.save_btn.bind(self.check_inputs)
         self.menu_btn = ColorButton(self, 75, 25, 100, 36, 'green3', 'Menu')
 
+        self.menu_btn.bind(self.go_to_menu)
+
+    def go_to_menu(self):
+        self.destroy_screen()
+        self.parent.main_menu_screen_init()
+
     def display_error(self, text):
         self.canvas.itemconfig(self.saving_error_text, text=text)
         self.canvas.itemconfig(self.saving_error_text, state=tk.NORMAL)
@@ -352,3 +358,7 @@ class CreateMapScreen(Screen):
         if index == len(color_choices):
             index = 0
         self.rotated_choices.change_text(color_choices[index])
+
+    def destroy_screen(self):
+        self.canvas.delete("all")
+        self.parent.background_set()

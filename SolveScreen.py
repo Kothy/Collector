@@ -114,10 +114,16 @@ class SolveScreen(Screen):
         self.parent.root.unbind('<Down>')
         self.parent.root.unbind('<Left>')
         self.parent.root.unbind('<Right>')
-        self.canvas.tag_unbind(self.keyboard[0], '<ButtonPress-1>', self.move_down)
-        self.canvas.tag_unbind(self.keyboard[1], '<ButtonPress-1>', self.move_right)
-        self.canvas.tag_unbind(self.keyboard[2], '<ButtonPress-1>', self.move_up)
-        self.canvas.tag_unbind(self.keyboard[3], '<ButtonPress-1>', self.move_left)
+        self.canvas.tag_unbind(self.keyboard[0], '<ButtonPress-1>')
+        self.canvas.tag_unbind(self.keyboard[1], '<ButtonPress-1>')
+        self.canvas.tag_unbind(self.keyboard[2], '<ButtonPress-1>')
+        self.canvas.tag_unbind(self.keyboard[3], '<ButtonPress-1>')
+        self.destroy_screen()
+        self.parent.main_menu_screen_init()
+
+    def destroy_screen(self):
+        self.canvas.delete("all")
+        self.parent.background_set()
 
     def panel_init(self):
         self.task_name_text = self.canvas.create_text(530, 25, fill="#0a333f",
