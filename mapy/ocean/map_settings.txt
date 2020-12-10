@@ -1,0 +1,13 @@
+Nazov: ocean
+
+# Nastavenia postavicky #
+Meno: Nemo
+Otacanie: vlavo/vpravo
+Smerovanie: vlavo
+Trajektoria: cervena
+
+# Predmety #
+a,b,c
+
+# Prekazky #
+x,y

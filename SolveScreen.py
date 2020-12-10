@@ -6,6 +6,7 @@ from Keyboard import Keyboard
 from Road import Road
 from ClickableList import ClickableList
 from Task import TaskSet
+import time
 
 
 class SolveScreen(Screen):
@@ -20,28 +21,22 @@ class SolveScreen(Screen):
         self.task_window_init()
         self.show_common()
         self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
-        # self.was_task = False
-        # self.actual_task = 0
+        self.actual_regime = None
 
     def move_down(self, _):
-        print("down")
         self.tasks_set.move_player_down()
-        # self.road.add_move('basic', 'down')
 
     def move_up(self, _):
-        print("up")
         self.tasks_set.move_player_up()
-        # self.road.add_move('basic', 'up')
 
     def move_right(self, _):
-        print("right")
         self.tasks_set.move_player_right()
-        # self.road.add_move('basic', 'right')
 
     def move_left(self, _):
-        print("left")
-        # self.tasks_set.move_player_left()
+        self.tasks_set.move_player_left()
 
+    def step_back(self, _):
+        self.tasks_set.step_back()
 
     def go_to_menu(self):
         print("Prechod do menu")
@@ -98,7 +93,7 @@ class SolveScreen(Screen):
         while len(lines) > 0 and lines[0] != "##!EOF##":
              lines = self.read_task(lines, map_name)
 
-        print(len(self.tasks_set.tasks))
+        # print(len(self.tasks_set.tasks))
         # self.tasks_set.tasks[self.actual_task].parse_assign()
         self.canvas.itemconfig(self.task_text_mode, state="normal")
         self.draw_task_and_map()
@@ -109,20 +104,20 @@ class SolveScreen(Screen):
         self.parent.root.bind('<Down>', self.move_down)
         self.parent.root.bind('<Left>', self.move_left)
         self.parent.root.bind('<Right>', self.move_right)
-        # self.parent.root.tag_bind(self.keyboard[0], '<ButtonPress-1>', self.move_down)
-        # self.parent.root.tag_bind(self.keyboard[1], '<ButtonPress-1>', self.move_right)
-        # self.parent.root.tag_bind(self.keyboard[2], '<ButtonPress-1>', self.move_up)
-        # self.parent.root.tag_bind(self.keyboard[3], '<ButtonPress-1>', self.move_left)
+        self.canvas.tag_bind(self.keyboard[0], '<ButtonPress-1>', self.move_down)
+        self.canvas.tag_bind(self.keyboard[1], '<ButtonPress-1>', self.move_right)
+        self.canvas.tag_bind(self.keyboard[2], '<ButtonPress-1>', self.move_up)
+        self.canvas.tag_bind(self.keyboard[3], '<ButtonPress-1>', self.move_left)
 
     def unbind_all(self):
         self.parent.root.unbind('<Up>')
         self.parent.root.unbind('<Down>')
         self.parent.root.unbind('<Left>')
         self.parent.root.unbind('<Right>')
-        # self.parent.root.tag_unbind(self.keyboard[0], '<ButtonPress-1>', self.move_down)
-        # self.parent.root.tag_unbind(self.keyboard[1], '<ButtonPress-1>', self.move_right)
-        # self.parent.root.tag_unbind(self.keyboard[2], '<ButtonPress-1>', self.move_up)
-        # self.parent.root.tag_unbind(self.keyboard[3], '<ButtonPress-1>', self.move_left)
+        self.canvas.tag_unbind(self.keyboard[0], '<ButtonPress-1>', self.move_down)
+        self.canvas.tag_unbind(self.keyboard[1], '<ButtonPress-1>', self.move_right)
+        self.canvas.tag_unbind(self.keyboard[2], '<ButtonPress-1>', self.move_up)
+        self.canvas.tag_unbind(self.keyboard[3], '<ButtonPress-1>', self.move_left)
 
     def panel_init(self):
         self.task_name_text = self.canvas.create_text(530, 25, fill="#0a333f",
@@ -138,9 +133,6 @@ class SolveScreen(Screen):
         self.screen_panel = CanvasObject(self, [self.task_name_text,
                                                 self.next_task_btn, self.prev_task_btn, self.menu_btn])
 
-        # self.next_task_btn.change_state("normal")
-        # self.prev_task_btn.change_state("normal")
-
         self.next_task_btn.bind(self.next_task)
         self.prev_task_btn.bind(self.prev_task)
 
@@ -149,11 +141,13 @@ class SolveScreen(Screen):
 
     def next_task(self):
         self.remove_task()
+        self.road.clear_road()
         self.tasks_set.next_task()
         self.draw_task_and_map()
 
     def prev_task(self):
         self.remove_task()
+        self.road.clear_road()
         self.tasks_set.prev_task()
         self.draw_task_and_map()
 
@@ -164,9 +158,6 @@ class SolveScreen(Screen):
         screen_map_bg_border = self.canvas.create_rectangle(10, 60, 910, 540, outline='#b6e5da', width=2)
 
         self.solve_screen_map_bg = CanvasObject(self, [screen_map_bg, screen_map_bg_border])
-
-        # TU BY SA MALI DO OKNA ROVNO NACITAT PRIECINKY SO SADAMI ULOH (najlepsie asi do 2 alebo 3 stlpcov, kedze je to siroke okno)
-        # NA TLACIDLA POSUNUTIA BY MOHLO BYT POUZITE next_back.png z obrazkov, ak sa to bude dobre vyzerat
 
     def controls_window_init(self):
         image = Image.new('RGBA', (350, 90), (41, 175, 200, 100))
@@ -188,6 +179,7 @@ class SolveScreen(Screen):
         image = image.resize((75, 75), Image.ANTIALIAS)
         self.backspace_img = ImageTk.PhotoImage(image)
         back = self.canvas.create_image(1080, 558, image=self.backspace_img, anchor='nw')
+        self.canvas.tag_bind(back, '<ButtonPress-1>', self.step_back)
 
         image = Image.open("obrazky/controls/clear.png")
         image = image.resize((75, 75), Image.ANTIALIAS)
@@ -211,6 +203,8 @@ class SolveScreen(Screen):
         self.play_image = ImageTk.PhotoImage(image)
         self.play = self.canvas.create_image(825, 560, image=self.play_image, anchor='nw')
 
+        self.canvas.tag_bind(self.play, '<ButtonPress-1>', self.play_moves)
+
         self.move_imgs = {'basic': [], 'ok': [], 'wrong': [], 'ignored': []}
         for move_type in self.move_imgs:
             image = Image.open("obrazky/moves/" + move_type + ".png")
@@ -223,6 +217,30 @@ class SolveScreen(Screen):
 
         self.solve_screen_road = CanvasObject(self, [self.solve_screen_road_bg, self.road, self.play])
         self.solve_screen_road.show()
+        self.canvas.itemconfig(self.play, state="hidden")
+
+    def play_moves(self, _):
+        player = self.tasks_set.get_player()
+        player.planned_move = True
+        for i in range(self.road.number_of_active_road_parts):
+            # print(self.road.road_parts[i].direction)
+            move = None
+            if self.road.road_parts[i].direction == "down":
+                move = player.move_down()
+            if self.road.road_parts[i].direction == "up":
+                move = player.move_up()
+            if self.road.road_parts[i].direction == "right":
+                move = player.move_right()
+            if self.road.road_parts[i].direction == "left":
+                move = player.move_left()
+            if move is not None:
+                self.road.road_parts[i].change_color(move)
+            else:
+                self.road.road_parts[i].change_color("ok")
+            self.canvas.update()
+            time.sleep(0.7)
+        player.planned_move = False
+        # print("prehratie pohybov")
 
     def task_window_init(self):
         # texty tam su na skusku, daj ich potom odtialto prec :) self.task_text_obstacle potom vyuzi aj na info "Ziadne zadanie" v pripade volnej ulohy
@@ -256,7 +274,7 @@ class SolveScreen(Screen):
 
         self.task_text_mode = self.canvas.create_text(930, 370, fill="#114c32",
                                                       font=('Comic Sans MS', 17, 'italic bold'), anchor='nw', width=330,
-                                                      text='Emil:\n"Pomôžeš mi, prosím, naplánovať cestu?"\n\n\tRežim: plánovací')
+                                                      text='{}\n"Pomôžeš mi, prosím, naplánovať cestu?"\n\n\tRežim: priamy')
 
         self.task_text_set_choice = self.canvas.create_text(1095, 285, fill="#0a333f",
                                                             font=('Comic Sans MS', 20, 'italic bold'), anchor='center',
@@ -270,14 +288,40 @@ class SolveScreen(Screen):
         image = image.resize((32, 32), Image.ANTIALIAS)
         self.swap_mode_btn_img = ImageTk.PhotoImage(image)
         self.swap_mode_btn = self.canvas.create_image(1230, 500, image=self.swap_mode_btn_img, anchor='nw')
+        self.canvas.itemconfig(self.swap_mode_btn, state="hidden")
+        self.canvas.tag_bind(self.swap_mode_btn, '<ButtonPress-1>', self.swap_mode)
 
-        self.solve_screen_task_mode = CanvasObject(self, [self.task_text_mode, self.swap_mode_btn])
+
+        # self.solve_screen_task_mode = CanvasObject(self, [self.task_text_mode, self.swap_mode_btn])
+
+        self.solve_screen_task_mode = CanvasObject(self, [self.task_text_mode])
+
+        self.solve_screen_task_mode.show()
 
         self.solve_screen_task_window = CanvasObject(self, [self.solve_screen_task_bg, solve_screen_task_collectibles,
                                                             self.task_text_steps, self.task_text_path_info,
                                                             self.task_text_set_choice,
                                                             self.solve_screen_task_obstacles,
                                                             self.solve_screen_task_mode])
+
+    def swap_mode(self, _):
+        # print("swap mode")
+        text = self.canvas.itemcget(self.task_text_mode, 'text')
+        if "plánovací" in text:
+            text = text.replace("naplánovať", "nájsť")
+            text = text.replace("plánovací", "priamy")
+            self.canvas.itemconfig(self.task_text_mode, text=text)
+            self.canvas.itemconfig(self.play, state="hidden")
+            self.actual_regime = "priamy"
+        else:
+            text = text.replace("nájsť", "naplánovať")
+            text = text.replace("priamy","plánovací")
+            self.canvas.itemconfig(self.task_text_mode, text=text)
+            self.canvas.itemconfig(self.play, state="normal")
+            self.actual_regime = "planovaci"
+        task = self.tasks_set.get_actual_task()
+        task.map.player.reset_game()
+        self.road.clear_road()
 
     def show_common(self):
         # zobrazi len to, co sa netyka konkretnych uloh, ak chces vidiet vsetko, daj si do CanvasObject initu hidden=False
@@ -286,5 +330,6 @@ class SolveScreen(Screen):
                                  self.solve_screen_keyboard,
                                  self.solve_screen_road_bg, self.road,
                                  self.solve_screen_task_bg, self.task_text_set_choice]
+
         for item in starting_canvas_items:
             self.show_canvas_item(item)

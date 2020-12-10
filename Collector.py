@@ -21,7 +21,7 @@ class Collector:
         self.canvas = tk.Canvas(self.root, width=1300, height=650)
         self.canvas.pack()
 
-        self.canvas.bind("<Button-1>", self.click)
+        # self.canvas.bind("<Button-1>", self.click)
 
     def background_set(self):
         image = Image.open("obrazky/bg.jpg")
@@ -35,11 +35,11 @@ class Collector:
 
     def screen_init(self):
         self.screen = None
-        self.main_menu_screen_init()
+        # self.main_menu_screen_init()
         # funckia na testovanie screenov, nebude vo finalnej verzii - odkomentuj, ktoru screen chces robit, ostatne zakomentuj
-        # self.solve_screen_init()
+        self.solve_screen_init()
         # self.create_map_screen_init()
-        self.create_set_screen_init()
+        # self.create_set_screen_init()
         # self.create_task_screen_init()
 
     def main_menu_screen_init(self):
