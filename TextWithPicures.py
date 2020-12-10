@@ -1,5 +1,5 @@
 from PIL import Image, ImageTk
-
+import copy
 
 class TextWithImages:
     def __init__(self, canvas, x, y, width, text, images):
@@ -10,7 +10,8 @@ class TextWithImages:
         self.text = text
         self.images_on_canvas = []
         self.images = images
-        self.textWithPictures(x, y, text, images, width)
+        self.objects = []
+        self.textWithPictures(x, y, text, copy.deepcopy(self.images), width)
 
     def resize(self, imgName, w, h):
         img = Image.open(imgName)
@@ -29,7 +30,6 @@ class TextWithImages:
     def textWithPictures(self, x, y, text, pictures, row_width):
         image_height = 38
         # self.canvas.create_rectangle(x, y - 25, x + row_width, y + 200)
-
         texts = text.split(" ")
         x_start = x
         id = None
@@ -39,6 +39,7 @@ class TextWithImages:
             else:
                 id = self.canvas.create_text(x, y, fill="#0a333f",
                             font=('Comic Sans MS', 16, 'italic bold'), text=word + " ", anchor="w")
+                self.objects.append(id)
                 w, h, text_center_height = self.text_dims(id)
                 word_w = w
 
@@ -49,8 +50,13 @@ class TextWithImages:
             if word == "_":
                 picture = pictures.pop(0)
                 img = ImageTk.PhotoImage(self.resize(picture, image_height, image_height))
-                self.canvas.create_image(x, y, image=img, anchor="w")
+                img_id = self.canvas.create_image(x, y, image=img, anchor="w")
+                self.objects.append(img_id)
                 self.images_on_canvas.append(img)
             else:
                 self.canvas.coords(id, x, y)
             x += word_w
+
+    def remove(self):
+        for obj in self.objects:
+            self.canvas.delete(obj)

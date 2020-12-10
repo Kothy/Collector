@@ -50,7 +50,8 @@ class ColorButton(CanvasObject):
         self.canvas.itemconfig(self.text_obj, text=text)
 
     def change_state(self, state):
-        self.canvas.itemconfig(self.btn_bg, state)
+        self.canvas.itemconfig(self.btn_bg, state=state)
+        self.canvas.itemconfig(self.text_obj, state=state)
 
     def change_color(self, color):
         self.remove()

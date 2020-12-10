@@ -142,22 +142,6 @@ class ListButton:
     def get_lower_corner(self):
         return self.x + self.width / 2, self.y + self.height / 2
 
-    # def select(self):
-    #     if self.list.selected is not None:
-    #         self.list.selected.unselect()
-    #
-    #     self.is_selected = True
-    #     x1, y1 = self.get_upper_corner()
-    #     x2, y2 = self.get_lower_corner()
-    #     self.outline_id = self.canvas.create_rectangle(x1, y1, x2, y2,
-    #                                                    outline="black", width=2)
-    #     self.list.selected = self
-    #
-    # def unselect(self):
-    #     self.is_selected = False
-    #     self.list.selected = None
-    #     self.canvas.delete(self.outline_id)
-
     def remove(self):
         self.canvas.delete(self.textObj)
         self.canvas.delete(self.imageObj)
@@ -166,10 +150,8 @@ class ListButton:
         self.canvas.delete(self.hoveredObj)
 
     def click(self, _):
-        # if self.is_selected:
-        #     self.unselect()
-        # else:
-        #     self.select()
+        self.list.parent.next_task_btn.change_state("normal")
+        self.list.parent.prev_task_btn.change_state("normal")
         self.list.remove()
         self.list.parent.draw_task_assignment(self.text)
 

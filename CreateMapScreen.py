@@ -8,6 +8,7 @@ from tkinter import filedialog
 from ObjectList import ObjectList
 import os
 import threading
+import unicodedata
 
 MAP_NAME_LENGTH = 15
 CHARACTER_NAME_LENGTH = 10
@@ -32,6 +33,10 @@ def resize_image_by_height(img, hsize):
     wpercent = (hsize / float(img.size[1]))
     basewidth = int((float(img.size[0]) * float(wpercent)))
     return img.resize((basewidth, hsize), Image.ANTIALIAS)
+
+def strip_accents(s):
+   return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')
 
 
 class CreateMapScreen(Screen):
@@ -122,9 +127,9 @@ class CreateMapScreen(Screen):
         text = "Nazov: {}\n\n# Nastavenia postavicky #\nMeno: {}\nOtacanie: {}\nSmerovanie: {}" \
                "\nTrajektoria: {}\n\n# Predmety #\n{}\n\n# Prekazky #\n{}"
 
-        file_txt = text.format(name, self.character_name.get(),
-                           self.rotate_options.checkboxes[self.rotate_options.checked_index].text,
-                           self.rotated_choices.text, self.path_color_choices.text, all_col, all_obs)
+        file_txt = text.format(name, strip_accents(self.character_name.get()),
+                           strip_accents(self.rotate_options.checkboxes[self.rotate_options.checked_index].text),
+                           strip_accents(self.rotated_choices.text), strip_accents(self.path_color_choices.text), all_col, all_obs)
 
         with open(dir + "map_settings.txt", "w") as file:
             file.write(file_txt)
