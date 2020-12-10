@@ -8,6 +8,7 @@ class RoadPart(CanvasObject):
         self.obstacle = None
         self.border = None
         self.move = None
+        self.direction = None
         self.move_img = None
 
     def set_move_img(self, img):
@@ -37,8 +38,16 @@ class RoadPart(CanvasObject):
     def deselect(self):
         if self.border is None:
             return
-        self.canvas.remove(self.border)
+        self.canvas.delete(self.border)
         self.border = None
+
+    def change_color(self, color):
+        self.hide()
+        self.remove()
+        direction_dict = {'right': 0, 'up': 1, 'left': 2, 'down': 3}
+        img = self.parent.move_imgs[color][direction_dict[self.direction]]
+        self.move_img = img
+        self.show()
 
     def hide(self):
         if self.move is not None:
@@ -51,3 +60,13 @@ class RoadPart(CanvasObject):
             return
         self.move = self.canvas.create_image(25 + self.index * 50, 558, image=self.move_img, anchor='nw')
         self.canvas.tag_bind(self.move, "<Button-1>", self.clicked)
+
+    def remove(self):
+        if self.move_img is None:
+            return
+        self.canvas.delete(self.move_img)
+        if self.obstacle is not None:
+            self.canvas.delete(self.obstacle)
+
+        self.move_img = None
+        self.obstacle = None

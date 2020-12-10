@@ -3,14 +3,16 @@ from PIL import Image, ImageTk
 from Map import Map
 import copy
 
+
 class Task:
-    def __init__(self, parent, index, name, type, mode, row, col,
+    def __init__(self, parent, index, name, typ, mode, row, col,
                  steps, assign, map_str, map_name, char_name, solvable=True, parse=True):
         self.parent = parent
         self.index = index
         self.name = name
-        self.type = type
+        self.type = typ
         self.mode = mode
+        self.actual_regime = None
         self.row = row
         self.map_str = map_str
         self.col = col
@@ -125,7 +127,14 @@ class Task:
         lines = full.split("\n")
 
         lines = self.remove_lines(lines, 3)
+
         self.char_name = lines.pop(0).split(":")[1].strip()
+        # print(self.parent.parent.task_text_mode)
+
+        text = self.parent.parent.canvas.itemcget(self.parent.parent.task_text_mode, 'text')
+        if "{}" in text:
+            self.parent.parent.canvas.itemconfig(self.parent.parent.task_text_mode, text=text.format(self.char_name + ": "))
+
         self.char_rotation = lines.pop(0).split(":")[1].strip() # žiadne, vľavo/vpravo, dole/hore, všetky smery
         self.routing = lines.pop(0).split(":")[1].strip() # vpravo, vľavo, hore, dole, -
 
@@ -156,6 +165,24 @@ class Task:
         w = 340
         text = self.assign_text
         images = self.assign_images
+        if self.mode == "oba" or self.mode == "priamy":
+            self.parent.canvas.itemconfig(self.parent.parent.play, state="hidden")
+            self.parent.parent.actual_regime = "priamy"
+        else:
+            self.parent.parent.actual_regime = "planovaci"
+            self.parent.canvas.itemconfig(self.parent.parent.play, state="normal")
+
+        if self.mode == "oba":
+            self.parent.canvas.itemconfig(self.parent.parent.swap_mode_btn, state="normal")
+        else:
+            self.parent.canvas.itemconfig(self.parent.parent.swap_mode_btn, state="hidden")
+
+        if self.mode == "planovaci":
+            text = self.parent.parent.canvas.itemcget(self.parent.parent.task_text_mode, 'text')
+            if "nájsť" in text:
+                text = text.replace("nájsť", "naplánovať")
+                text = text.replace("priamy", "plánovací")
+                self.parent.parentcanvas.itemconfig(self.parent.parent.task_text_mode, text=text)
 
         self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
         self.map.draw_map()
@@ -196,6 +223,12 @@ class TaskSet:
         if self.actual == 0:
             self.actual = len(self.tasks) - 1
 
+    def get_actual_task(self):
+        return self.tasks[self.actual]
+
+    def get_player(self):
+        return self.tasks[self.actual].map.player
+
     def move_player_down(self):
         self.tasks[self.actual].map.player.move_down()
 
@@ -207,3 +240,6 @@ class TaskSet:
 
     def move_player_left(self):
         self.tasks[self.actual].map.player.move_left()
+
+    def step_back(self):
+        self.tasks[self.actual].map.player.step_back()

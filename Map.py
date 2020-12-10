@@ -30,18 +30,6 @@ def calculate_coords(i, j, rows, cols):
     return (j * one_col) + 10 + (one_row / 2), (i * one_row) + 60 + (one_col / 2)
 
 
-# def calculate_x_y(row, col, canvas, xs, ys):
-#
-#     # canvas.create_rectangle(10, 60, 10 + one_row + 20, 60 + one_col + 10, fill="blue", width=5)
-#     # return xs[i]
-#
-#     for i in range(cols):
-#         for j in range(rows):
-#             # print(i, j)
-#             x = xs[i]
-#             y = ys[j]
-#             canvas.create_oval(x + 10 , y + 10, x - 10, y - 10, fill="blue")
-
 def translate_color(color):
     if color == "black":
         return (0, 0, 0, ALPHA)
@@ -73,16 +61,13 @@ class Map:
         PART_H = int(480 / self.rows)
         PART_W = int(900 / self.cols)
 
-        image = Image.new('RGBA', (PART_W, PART_H), translate_color(self.grid_col))
-
-        self.trajectory_img = ImageTk.PhotoImage(image)
         # image = Image.new('RGBA', (200, 200), (0, 0, 0, 80))
         # image.save("obrazky/guarding_bg.png")
         # image2 = Image.open("obrazky/guarding_x.png")
         # image2 = image2.resize((200, 200))
         # image2.save("obrazky/guarding_x2.png")
 
-        image2 = Image.open("obrazky/delete.png")
+        image2 = Image.open("obrazky/guarding.png")
         image2 = image2.resize((int(PART_W), int(PART_H)), Image.ANTIALIAS)
         self.guarding_img = ImageTk.PhotoImage(image2)
 
@@ -113,12 +98,12 @@ class Map:
                 elif lines[i][j] == "a" or lines[i][j] == "b" or lines[i][j] == "c" or lines[i][j] == "d":
                     obj = Collectible(lines[i][j], self, i, j)
                 else:
-                    obj = Player(self, i, j)
-                    self.player = obj
+                    self.player = Player(self, i, j)
+                    obj = Blank(self, i,j)
+
                 arr[i][j] = obj
 
         self.array = arr
-        # print(self.array, self.rows, self.cols)
 
         for i in range(len(lines)):
             for j in range(len(lines[i])):
@@ -131,10 +116,12 @@ class Map:
         for line in self.grid_lines:
             self.canvas.delete(line)
 
-
         for i in range(len(self.array)):
             for j in range(len(self.array[i])):
                 self.array[i][j].remove()
+
+        for trajectory in self.player.trajectory:
+            self.canvas.delete(trajectory[4])
 
     def do_grid(self):
         one_row = 480 / self.rows
@@ -178,6 +165,8 @@ class Map:
             for j in range(len(self.array[i])):
                 self.array[i][j].draw()
 
+        self.player.draw()
+
     def draw_map(self):
         self.draw_grid()
         self.draw_objects()
@@ -190,14 +179,22 @@ class Player:
         self.y, self.x = self.map.xs[i], self.map.ys[j]
         self.row = i
         self.col = j
+        self.start_x = self.x
+        self.start_y = self.y
+        self.start_row = i
+        self.start_col = j
+        self.coll_collected = {}
         img = Image.open("mapy/{}/character.png".format(self.map.name))
-        # img = resize_image_to_grid(img)
+        self.trajectory = []
         img = img.resize((PART_W, PART_H))
         self.image = ImageTk.PhotoImage(img)
+        image = Image.new('RGBA', (PART_W, PART_H), translate_color(self.map.grid_col))
+        self.trajectory_img = ImageTk.PhotoImage(image)
+        self.planned_move = False
 
     def draw(self):
         self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.image, anchor='c')
-        # self.id = self.map.canvas.create_image(self.x, self.y, image=self.map.trajectory_img, anchor='c')
+        # self.id = self.map.canvas.create_image(self.x, self.y, image=self.trajectory_img, anchor='c')
 
     def remove(self):
         self.map.canvas.delete(self.img_id)
@@ -205,37 +202,133 @@ class Player:
     def __repr__(self):
         return "p"
 
+    def remove_draw_add_road_part(self, part_mode, direction):
+        if not self.planned_move:
+            self.map.task.parent.parent.road.add_move(part_mode, direction)
+        self.remove()
+        self.draw()
+        self.check_collectible(self.row, self.col)
+
+    def check_guarding_obstacle(self, row, col):
+        if col + 1 >= self.map.cols or col - 1 < 0 or row + 1 >= self.map.rows or row - 1 < 0:
+            return False
+        if (isinstance(self.map.array[row][col], Blank) and self.map.array[row][col].guarded) or \
+                (isinstance(self.map.array[row][col], Obstacle)):
+            return True
+        return False
+
+    def check_collectible(self, row, col):
+        if isinstance(self.map.array[row][col], Collectible):
+            collectible_name = self.map.array[row][col].name
+            collectible = self.map.array[row][col]
+            self.map.array[row][col].remove()
+            blank = Blank(self.map, row, col)
+            blank.was = collectible
+            self.map.array[row][col] = blank
+            if collectible_name not in self.coll_collected:
+                self.coll_collected[collectible_name] = 1
+            else:
+                self.coll_collected[collectible_name] += 1
+
     def move_down(self):
+        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move==False:
+            self.map.task.parent.parent.road.add_move("basic", "down")
+            return
+        wrong_move = self.check_guarding_obstacle(self.row + 1, self.col)
         if self.row + 1 < self.map.rows:
+            self.trajectory.append([self.row, self.col, self.x, self.y, None])
             self.row += 1
             self.y = self.map.xs[self.row]
-            self.remove()
-            self.draw()
-            self.map.task.parent.parent.road.add_move('basic', 'down')
+            self.draw_trajectory()
+            self.remove_draw_add_road_part("basic", "down")
+        else:
+            return "ignored"
+        if wrong_move:
+            return "wrong"
 
     def move_up(self):
+        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
+            self.map.task.parent.parent.road.add_move("basic", "up")
+            return
+        wrong_move = self.check_guarding_obstacle(self.row - 1, self.col)
         if self.row - 1 >= 0:
+            self.trajectory.append([self.row, self.col, self.x, self.y, None])
             self.row -= 1
             self.y = self.map.xs[self.row]
-            self.remove()
-            self.draw()
-            self.map.task.parent.parent.road.add_move('basic', 'up')
+            self.draw_trajectory()
+            self.remove_draw_add_road_part('basic', 'up')
+        else:
+            return "ignored"
+        if wrong_move:
+            return "wrong"
 
     def move_right(self):
+        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move==False:
+            self.map.task.parent.parent.road.add_move("basic", "right")
+            return
+        wrong_move = self.check_guarding_obstacle(self.row, self.col + 1)
         if self.col + 1 < self.map.cols:
+            self.trajectory.append([self.row, self.col, self.x, self.y, None])
             self.col += 1
             self.x = self.map.ys[self.col]
-            self.remove()
-            self.draw()
-            self.map.task.parent.parent.road.add_move('basic', 'right')
+            self.draw_trajectory()
+            self.remove_draw_add_road_part('basic', 'right')
+        else:
+            return "ignored"
+        if wrong_move:
+            return "wrong"
 
     def move_left(self):
+        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move==False:
+            self.map.task.parent.parent.road.add_move("basic", "left")
+            return
+        wrong_move = self.check_guarding_obstacle(self.row, self.col-1)
         if self.col - 1 >= 0:
+            self.trajectory.append([self.row, self.col + 1, self.x, self.y, None])
             self.col -= 1
             self.x = self.map.ys[self.col]
+            self.draw_trajectory()
+            self.remove_draw_add_road_part('basic', 'left')
+        else:
+            return "ignored"
+        if wrong_move:
+            return "wrong"
+
+    def step_back(self):
+        if len(self.trajectory) > 0:
+            row, col, x, y, t = self.trajectory.pop(-1)
+            self.map.canvas.delete(t)
+            self.row = row
+            self.col = col
+            self.x = x
+            self.y = y
             self.remove()
             self.draw()
-            self.map.task.parent.parent.road.add_move('basic', 'left')
+            self.map.task.parent.parent.road.remove_last_part()
+
+    def draw_trajectory(self):
+        row, col, x, y, _ = self.trajectory[-1]
+        t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.grid_col, width=4)
+        self.trajectory[-1][4] = t
+        # return self.map.canvas.create_image(x, y, image=self.trajectory_img, anchor='c')
+
+    def reset_game(self):
+        for traj in self.trajectory:
+            row, col, x, y, t = traj
+            self.map.canvas.delete(t)
+        self.trajectory = []
+        self.remove()
+        self.x = self.start_x
+        self.y = self.start_y
+        self.row = self.start_row
+        self.col = self.start_col
+        self.coll_collected = {}
+        self.draw()
+        for i in range(len(self.map.array)):
+            for j in range(len(self.map.array[i])):
+                if isinstance(self.map.array[i][j], Blank) and self.map.array[i][j].was is not None:
+                    self.map.array[i][j] = self.map.array[i][j].was
+                    self.map.array[i][j].draw()
 
 
 class Blank:
@@ -245,9 +338,10 @@ class Blank:
         self.y, self.x = self.map.xs[i], self.map.ys[j]
         self.row = i
         self.col = j
+        self.was = None
         self.guarded = False
 
-    def draw(self):pass
+    def draw(self): pass
 
     def remove(self): pass
 
@@ -266,6 +360,7 @@ class Collectible:
         img = Image.open("mapy/{}/collectibles/{}.png".format(self.map.name, self.name))
         # img = resize_image_to_grid(img)
         img = img.resize((PART_W, PART_H))
+        self.img = img
         self.image = ImageTk.PhotoImage(img)
 
     def draw(self):
@@ -291,24 +386,23 @@ class Obstacle:
         img = Image.open("mapy/{}/obstacles/{}.png".format(self.map.name, self.name))
         # img = resize_image_to_grid(img)
         img = img.resize((PART_W, PART_H))
+        self.img = img
         self.image = ImageTk.PhotoImage(img)
         self.guardians_ids = []
         self.guarded_pos = []
 
     def draw(self):
         self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.image, anchor='c')
-        # self.map.canvas.create_oval(self.x + 10, self.y + 10, self.x  - 10, self.y - 10, fill="black")
         self.draw_guardings()
 
     def draw_guardings(self):
-        # x = self.x
-        # y = self.y
         i = self.row
         j = self.col
         if self.guarding != "bod":
             for a, b in [(i-1, j), (i+1,j), (i,j+1), (i,j-1)]:
                 id = self.draw_at(a, b, self.map.guarding_img)
                 if id is not None:
+                    self.map.array[a][b].guarded = True
                     self.guarded_pos.append((a, b))
                     self.guardians_ids.append(id)
 
@@ -316,6 +410,7 @@ class Obstacle:
                 for a, b in [(i - 1, j - 1), (i + 1, j + 1), (i + 1, j - 1), (i - 1, j + 1)]:
                     id = self.draw_at(a, b, self.map.guarding_img)
                     if id is not None:
+                        self.map.array[a][b].guarded = True
                         self.guarded_pos.append((a, b))
                         self.guardians_ids.append(id)
 
