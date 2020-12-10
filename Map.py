@@ -50,7 +50,6 @@ class Map:
         self.map_string = string
         self.canvas = canvas
         self.task = task
-        print(self.task.regime)
         self.array = []
         self.grid_col = grid_col
         self.rows, self.cols = 0, 0
