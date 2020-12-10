@@ -23,10 +23,10 @@ class CreateTaskSetScreen(Screen):
         self.set_name_input_init()
         self.map_preview_init()
         self.obstacles_init()
-        self.save_text_init()
+        self.error_text_init()
         self.tasks_list_init()
         self.objects = [self.panel_obj, self.background_obj, self.name_input_obj, self.map_preview_obj,
-                        self.obstacles_obj, self.tasks_obj, self.saving_error_text]
+                        self.obstacles_obj, self.tasks_obj, self.error_text]
 
     def panel_init(self):
         task_name_text = self.canvas.create_text(650, 25, fill="#0a333f",
@@ -87,12 +87,12 @@ class CreateTaskSetScreen(Screen):
 
         self.obstacles_obj = CanvasObject(self, [obstacles_mode_text, self.obstacle_options], False)
 
-    def save_text_init(self):
-        self.saving_error_text = self.canvas.create_text(70, 600, fill="darkred",
-                                                         font=('Comic Sans MS', 17, 'italic bold'),
-                                                         anchor='nw', width=530,
-                                                         text='',
-                                                         state="normal")
+    def error_text_init(self):
+        self.error_text = self.canvas.create_text(70, 600, fill="darkred",
+                                                  font=('Comic Sans MS', 17, 'italic bold'),
+                                                  anchor='nw', width=530,
+                                                  text='',
+                                                  state="normal")
 
     def tasks_list_init(self):
         self.counter = 0
@@ -117,17 +117,17 @@ class CreateTaskSetScreen(Screen):
         if len(self.set_name.get()) > self.SET_NAME_LENGTH:
             self.set_name.set(self.set_name.get()[:-1])
         if len(self.set_name.get()) > 0:
-            self.hide_error_text()
+            self.set_error_text('')
 
     def show_map_preview(self, _):
         folder_name = self.open_browser_map()
         if folder_name is None:
             return
         if not self.map_folder_is_valid(folder_name):
-            self.show_error_text('Chyba: Preičinok s mapou nie je validný')
+            self.set_error_text('Chyba: Preičinok s mapou nie je validný')
             return
         self.folder_name = folder_name
-        self.hide_error_text()
+        self.set_error_text('')
         self.task_list.destroy()
         map_img_path = 'mapy/'+ folder_name + '/map.png'
         self.canvas.itemconfig(self.map_file_text, text=self.split_to_name(folder_name), state="normal")
@@ -176,9 +176,9 @@ class CreateTaskSetScreen(Screen):
 
     def add_task(self, _):
         if self.preview_object is None:
-            self.show_error_text('Chyba: Pred pridaním úlohy vyber mapu')
+            self.set_error_text('Chyba: Pred pridaním úlohy vyber mapu')
             return
-        self.hide_error_text()
+        self.set_error_text('')
         self.task_list.add_task(Task('parent', 'index', 'Nova Uloha' + str(self.counter), 'pocty', 'oba', 'row', 'col', 'steps', 'assign', 'map_str',
                                      'map_name', 'char_name', True, False))
         if self.task_list.is_full():
@@ -191,18 +191,18 @@ class CreateTaskSetScreen(Screen):
     def save_set(self):
         set_name = self.set_name.get()
         if set_name == '':
-            self.show_error_text('Chyba: Pred uložením zadaj názov sady úloh')
+            self.set_error_text('Chyba: Pred uložením zadaj názov sady úloh')
             return
         for char in set_name:
             if (char not in '0123456789' and char not in ' aáäbcčdďeéfghiíjklĺľmnňoóôpqrŕsštťuúvwxyýzž' and
                 char not in 'aáäbcčdďeéfghiíjklĺľmnňoóôpqrŕsštťuúvwxyýzž'.upper()):
-                self.show_error_text('Chyba: Názov sady obsahuje nepovolené znaky')
+                self.set_error_text('Chyba: Názov sady obsahuje nepovolené znaky')
                 return
         if self.task_list.is_empty():
-            self.show_error_text('Chyba: Pred uložením pridaj aspoň 1 úlohu')
+            self.set_error_text('Chyba: Pred uložením pridaj aspoň 1 úlohu')
             return
         self.create_file()
-        self.show_error_text('Sada úspešne uložená!')
+        self.set_error_text('Sada úspešne uložená!')
 
     def clicked_btn(self, btn_text):
         if btn_text == 'Ulož':
@@ -210,11 +210,8 @@ class CreateTaskSetScreen(Screen):
         if btn_text == 'Menu':
             self.parent.main_menu_screen_init()
 
-    def show_error_text(self, text):
-        self.canvas.itemconfig(self.saving_error_text, text=text)
-
-    def hide_error_text(self):
-        self.canvas.itemconfig(self.saving_error_text, text='')
+    def set_error_text(self, text):
+        self.canvas.itemconfig(self.error_text, text=text)
 
     def map_folder_is_valid(self, folder_name):
         for subpath in ('/map.png', '/character.png', '/obstacles', '/collectibles/a.png'):
