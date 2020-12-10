@@ -4,13 +4,13 @@ from Map import Map
 import copy
 
 class Task:
-    def __init__(self, parent, index, name, typ, regime, row, col,
+    def __init__(self, parent, index, name, type, mode, row, col,
                  steps, assign, map_str, map_name, char_name, solvable=True, parse=True):
         self.parent = parent
         self.index = index
         self.name = name
-        self.type = typ
-        self.regime = regime
+        self.type = type
+        self.mode = mode
         self.row = row
         self.map_str = map_str
         self.col = col
@@ -148,7 +148,7 @@ class Task:
 
     def __repr__(self):
         return " ".join([str(self.index), self.name, self.type,
-                         self.regime, self.row, self.map_str,
+                         self.mode, self.row, self.map_str,
                          self.col, self.steps_count, self.assign,
                          self.solvable])
 

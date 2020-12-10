@@ -27,7 +27,7 @@ class TaskList(CanvasObject):
         self.move_imgs = [up_img, down_img]
 
     def add_task(self, task):
-        if len(self.tasks) >= 12:
+        if len(self.tasks) >= 10:
             return
         self.tasks.append(task)
         self.parts.append(TaskListItem(self, task.name, len(self.parts), self.move_imgs, self.edit_img, self.delete_img))
@@ -39,6 +39,8 @@ class TaskList(CanvasObject):
         self.parts = self.parts[:-1]
         self.rename_parts(index)
         self.check_list_arrows()
+        if len(self.parts) == 9:
+            self.parent.task_space_freed()
 
     def edit_task(self, index):
         pass
@@ -72,9 +74,13 @@ class TaskList(CanvasObject):
     def destroy(self):
         super(TaskList, self).destroy()
         self.tasks = []
+        self.parent.task_space_freed()
 
     def is_empty(self):
         return self.parts == []
+
+    def is_full(self):
+        return len(self.parts) == 10
 
 class TaskListItem(CanvasObject):
 

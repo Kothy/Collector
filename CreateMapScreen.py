@@ -1,7 +1,7 @@
 from Screen import Screen
 from ColorButton import ColorButton
 from CanvasObject import CanvasObject
-from Option import Options
+from Options import Options
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import filedialog

@@ -9,6 +9,7 @@ from CanvasObject import CanvasObject
 from ObstacleOptions import ObstacleOptions
 from Task import Task
 from TaskList import TaskList
+from Options import Options
 from CommonFunctions import *
 from CreateMapScreen import resize_image_by_height
 
@@ -53,7 +54,7 @@ class CreateTaskSetScreen(Screen):
     def set_name_input_init(self):
         map_name_text = self.canvas.create_text(70, 80, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
                                                 anchor='nw', width=530,
-                                                text='Názov sady:\n(môže obsahovať iba písmená a čísla)')
+                                                text='Názov sady:\n(povolené znaky: písmená, čísla, medzery)')
         self.set_name = tk.StringVar()
         self.set_name_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 15, 'italic bold'), width=20,
                                        justify='right', textvariable=self.set_name)
@@ -100,10 +101,17 @@ class CreateTaskSetScreen(Screen):
                                                   anchor='nw', width=330, text='Zoznam úloh:')
         plus_task_btn = self.canvas.create_image(850, 82, image=self.plus_btn_img, anchor='nw')
         add_task_help_text = self.canvas.create_text(890, 85, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
-                                                     anchor='nw', width=330, text='<-- pridaj úlohu')
+                                                     anchor='nw', width=330, text='<-- pridaj úlohu (maximálne 10)')
         self.canvas.tag_bind(plus_task_btn, '<ButtonPress-1>', self.add_task)
 
-        self.tasks_obj = CanvasObject(self, [self.task_list, task_set_text, plus_task_btn, add_task_help_text], False)
+        self.task_add_obj = CanvasObject(self, [plus_task_btn, add_task_help_text], False)
+
+        passage_text = self.canvas.create_text(690, 560, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
+                                                anchor='nw', width=330, text='Prechod medzi úlohami:')
+        self.options = Options(self, 990, 575, ['voľný', 'po vyriešení predošlej'])
+
+        self.tasks_obj = CanvasObject(self, [self.task_list, task_set_text, self.task_add_obj, passage_text,
+                                             self.options], False)
 
     def set_name_text_changed(self, *args):
         if len(self.set_name.get()) > self.SET_NAME_LENGTH:
@@ -173,15 +181,27 @@ class CreateTaskSetScreen(Screen):
         self.hide_error_text()
         self.task_list.add_task(Task('parent', 'index', 'Nova Uloha' + str(self.counter), 'pocty', 'oba', 'row', 'col', 'steps', 'assign', 'map_str',
                                      'map_name', 'char_name', True, False))
+        if self.task_list.is_full():
+            self.task_add_obj.hide()
         self.counter += 1
 
+    def task_space_freed(self):
+        self.task_add_obj.show()
+
     def save_set(self):
-        if self.set_name.get() == '':
+        set_name = self.set_name.get()
+        if set_name == '':
             self.show_error_text('Chyba: Pred uložením zadaj názov sady úloh')
             return
+        for char in set_name:
+            if (char not in '0123456789' and char not in ' aáäbcčdďeéfghiíjklĺľmnňoóôpqrŕsštťuúvwxyýzž' and
+                char not in 'aáäbcčdďeéfghiíjklĺľmnňoóôpqrŕsštťuúvwxyýzž'.upper()):
+                self.show_error_text('Chyba: Názov sady obsahuje nepovolené znaky')
+                return
         if self.task_list.is_empty():
             self.show_error_text('Chyba: Pred uložením pridaj aspoň 1 úlohu')
             return
+        self.create_file()
         self.show_error_text('Sada úspešne uložená!')
 
     def clicked_btn(self, btn_text):
@@ -201,3 +221,29 @@ class CreateTaskSetScreen(Screen):
             if not path.exists(os.getcwd()+ '/mapy/' + folder_name + subpath):
                 return False
         return True
+
+    def create_file(self):
+        set_string = 'Názov: ' + self.set_name.get() + '\n'
+        set_string += 'Mapa: ' + self.folder_name + '\n\n# Nastavenie prekážok #\n'
+        for i in range(len(self.obstacle_options.parts)):
+            set_string += 'x' if i == 0 else ('y' if i == 1 else 'z')
+            guard_mode = self.obstacle_options.parts[i].get_selected_mode()
+            set_string += ': ' + ('bod' if guard_mode == 0 else ('kríž' if guard_mode == 1 else 'štvorec')) + '\n'
+        set_string += '\n# Úlohy #\n'
+        set_string += 'Voľný prechod: ' + ('áno' if self.options.checked_index == 0 else 'nie') + '\n\n'
+
+        for i in range(len(self.task_list.tasks)):
+            task = self.task_list.tasks[i]
+            set_string += str(i) + '.\n'
+            set_string += 'Názov: ' + task.name + '\n'
+            set_string += 'Typ: ' + task.type + '\n'
+            set_string += 'Režim: ' + task.mode + '\n'
+            set_string += 'Riadkov: ' + task.row + '\n'
+            set_string += 'Stĺpcov: ' + task.col + '\n'
+            set_string += 'Krokov: ' + task.steps_count + '\n'
+            set_string += 'Zadanie: ' + task.assign + '\n'
+            set_string += 'Riešiteľná: ' + ('áno' if task.solvable else 'nie') + '\n'
+            set_string += task.map_str + '\n\n'
+
+        with open('sady_uloh/' + self.set_name.get().replace(' ', '_') + '.txt', 'w', encoding='utf8') as file:
+            file.write(set_string)
