@@ -5,13 +5,13 @@ import copy
 
 
 class Task:
-    def __init__(self, parent, index, name, typ, regime, row, col,
+    def __init__(self, parent, index, name, typ, mode, row, col,
                  steps, assign, map_str, map_name, char_name, solvable=True, parse=True):
         self.parent = parent
         self.index = index
         self.name = name
         self.type = typ
-        self.regime = regime
+        self.mode = mode
         self.actual_regime = None
         self.row = row
         self.map_str = map_str
@@ -157,7 +157,7 @@ class Task:
 
     def __repr__(self):
         return " ".join([str(self.index), self.name, self.type,
-                         self.regime, self.row, self.map_str,
+                         self.mode, self.row, self.map_str,
                          self.col, self.steps_count, self.assign,
                          self.solvable])
 
@@ -165,19 +165,19 @@ class Task:
         w = 340
         text = self.assign_text
         images = self.assign_images
-        if self.regime == "oba" or self.regime == "priamy":
+        if self.mode == "oba" or self.mode == "priamy":
             self.parent.canvas.itemconfig(self.parent.parent.play, state="hidden")
             self.parent.parent.actual_regime = "priamy"
         else:
             self.parent.parent.actual_regime = "planovaci"
             self.parent.canvas.itemconfig(self.parent.parent.play, state="normal")
 
-        if self.regime == "oba":
+        if self.mode == "oba":
             self.parent.canvas.itemconfig(self.parent.parent.swap_mode_btn, state="normal")
         else:
             self.parent.canvas.itemconfig(self.parent.parent.swap_mode_btn, state="hidden")
 
-        if self.regime == "planovaci":
+        if self.mode == "planovaci":
             text = self.parent.parent.canvas.itemcget(self.parent.parent.task_text_mode, 'text')
             if "nájsť" in text:
                 text = text.replace("nájsť", "naplánovať")
