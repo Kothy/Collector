@@ -39,7 +39,7 @@ class Collector:
         # funckia na testovanie screenov, nebude vo finalnej verzii - odkomentuj, ktoru screen chces robit, ostatne zakomentuj
         # self.solve_screen_init()
         # self.create_map_screen_init()
-        self.create_set_screen_init()
+        # self.create_set_screen_init()
         # self.create_task_screen_init()
 
     def main_menu_screen_init(self):
@@ -47,15 +47,19 @@ class Collector:
         self.screen = MenuScreen(self)
 
     def solve_screen_init(self):
+        self.destroy_old_screen()
         self.screen = SolveScreen(self)
 
     def create_map_screen_init(self):
+        self.destroy_old_screen()
         self.screen = CreateMapScreen(self)
 
     def create_set_screen_init(self):
+        self.destroy_old_screen()
         self.screen = CreateTaskSetScreen(self)
 
     def create_task_screen_init(self):
+        self.destroy_old_screen()
         self.screen = CreateTaskSetScreen(self)
 
     def destroy_old_screen(self):
