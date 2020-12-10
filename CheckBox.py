@@ -2,7 +2,7 @@ from CanvasObject import CanvasObject
 
 
 class CheckBox(CanvasObject):
-    def __init__(self, parent, index, x, y, text, checked_img, unchecked_img, options,checked=False):
+    def __init__(self, parent, index, x, y, text, checked_img, unchecked_img, options, checked=False):
         self.parent, self.canvas = parent, parent.canvas
         self.index = index
         self.options = options
