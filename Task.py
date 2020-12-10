@@ -5,7 +5,7 @@ import copy
 
 class Task:
     def __init__(self, parent, index, name, typ, regime, row, col,
-                 steps, assign, map_str, map_name, char_name, solvable=True):
+                 steps, assign, map_str, map_name, char_name, solvable=True, parse=True):
         self.parent = parent
         self.index = index
         self.name = name
@@ -21,7 +21,8 @@ class Task:
         self.map_name = map_name
         self.char_name = char_name
         self.collectibles = 0
-        self.parse_assign()
+        if parse:
+            self.parse_assign()
 
     def attach_postfix(self, images, map_name, dir):
         for i in range(len(images)):
@@ -53,7 +54,7 @@ class Task:
                     count = count.replace("=", " presne ").replace(str(count2), "")
                 count = count[1:] + str(count2) + " _"
                 text += count + " ,"
-        images = self.attach_postfix(images, self.map_name, "objects")
+        images = self.attach_postfix(images, self.map_name, "collectibles")
         return text[:-1], images
 
     def parse_assign(self):
@@ -68,7 +69,7 @@ class Task:
 
         elif self.type == "cesta":
             images_col = self.assign.split(",")
-            images_col = self.attach_postfix(images_col,self.map_name, "objects")
+            images_col = self.attach_postfix(images_col,self.map_name, "collectibles")
             images = images + images_col
 
             text = "{} chce pozbierať {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(

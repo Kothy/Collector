@@ -44,7 +44,6 @@ class ColorButton(CanvasObject):
     def clicked(self, _):
         self.parent.clicked_btn(self.text)
 
-
     def change_text(self, text):
         self.text = text
         self.canvas.itemconfig(self.text_obj, text=text)

@@ -263,7 +263,7 @@ class Collectible:
         self.y, self.x = self.map.xs[i], self.map.ys[j]
         self.row = i
         self.col = j
-        img = Image.open("mapy/{}/objects/{}.png".format(self.map.name, self.name))
+        img = Image.open("mapy/{}/collectibles/{}.png".format(self.map.name, self.name))
         # img = resize_image_to_grid(img)
         img = img.resize((PART_W, PART_H))
         self.image = ImageTk.PhotoImage(img)

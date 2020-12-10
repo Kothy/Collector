@@ -32,6 +32,6 @@ class Screen:
         else:
             self.canvas.delete(item)
 
-    def detroy(self):
+    def destroy(self):
         for object in self.objects:
             self.destroy_canvas_item(object)

@@ -103,7 +103,7 @@ class CreateMapScreen(Screen):
 
     def save_map(self, name):
         dir = "mapy/" + name + "/"
-        for path in [dir, dir + "obstacles", dir + "objects"]:
+        for path in [dir, dir + "obstacles", dir + "collectibles"]:
             os.mkdir(path)
 
         while not os.path.isdir(dir):
@@ -138,7 +138,7 @@ class CreateMapScreen(Screen):
     def save_images(self, name):
         dir = "mapy/" + name + "/"
         obstacles_dir = dir + "obstacles"
-        objects_dir = dir + "objects"
+        objects_dir = dir + "collectibles"
         img_char = Image.open(self.character_img_path)
         img_map = Image.open(self.map_img_path)
         char_filename = "character.png"

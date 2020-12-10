@@ -11,7 +11,7 @@ class Collector:
     def __init__(self):
         self.canvas_init()
         self.background_set()
-        self.screens_init()
+        self.screen_init()
         self.root.mainloop()
 
     def canvas_init(self):
@@ -33,28 +33,34 @@ class Collector:
         self.panel_img = ImageTk.PhotoImage(image)
         self.panel = self.canvas.create_image(0, 0, image=self.panel_img, anchor='nw')
 
-    def screens_init(self):
+    def screen_init(self):
+        self.screen = None
+        self.main_menu_screen_init()
         # funckia na testovanie screenov, nebude vo finalnej verzii - odkomentuj, ktoru screen chces robit, ostatne zakomentuj
-        # self.main_menu_screen_init()
-        self.solve_screen_init()
+        # self.solve_screen_init()
         # self.create_map_screen_init()
-        # self.create_set_screen_init()
+        self.create_set_screen_init()
         # self.create_task_screen_init()
 
     def main_menu_screen_init(self):
-        self.menu_screen = MenuScreen(self)
+        self.destroy_old_screen()
+        self.screen = MenuScreen(self)
 
     def solve_screen_init(self):
-        self.solve_screen = SolveScreen(self)
+        self.screen = SolveScreen(self)
 
     def create_map_screen_init(self):
-        self.create_map_screen = CreateMapScreen(self)
+        self.screen = CreateMapScreen(self)
 
     def create_set_screen_init(self):
-        self.create_set_screen = CreateTaskSetScreen(self)
+        self.screen = CreateTaskSetScreen(self)
 
     def create_task_screen_init(self):
-        self.creat_task_screen = CreateTaskSetScreen(self)
+        self.screen = CreateTaskSetScreen(self)
+
+    def destroy_old_screen(self):
+        if self.screen is not None:
+            self.screen.destroy()
 
     def click(self, event):
         print(event.x, event.y)

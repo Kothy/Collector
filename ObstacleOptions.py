@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 class ObstacleOptions(CanvasObject):
 
     def __init__(self, parent):
-        self.parent, self.canvas = parent, parent.canvas
+        super(ObstacleOptions, self).__init__(parent, [], False)
         self.mode_imgs = []
         self.obstacle_imgs = []
 

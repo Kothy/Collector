@@ -1,4 +1,5 @@
 import os
+from os import path
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
@@ -23,14 +24,18 @@ class CreateTaskSetScreen(Screen):
         self.obstacles_init()
         self.save_text_init()
         self.tasks_list_init()
+        self.objects = [self.panel_obj, self.background_obj, self.name_input_obj, self.map_preview_obj,
+                        self.obstacles_obj, self.tasks_obj, self.saving_error_text]
 
     def panel_init(self):
-        self.task_name_text = self.canvas.create_text(650, 25, fill="#0a333f",
+        task_name_text = self.canvas.create_text(650, 25, fill="#0a333f",
                                                       font=('Comic Sans MS', 20, 'italic bold'), anchor='center',
                                                       width=330, text='Vytváranie sady úloh')
-        self.save_btn = ColorButton(self, 1205, 25, 100, 36, 'violet', 'Ulož')
-        self.menu_btn = ColorButton(self, 75, 25, 100, 36, 'green3', 'Menu')
-        self.save_btn.bind_clicked()
+        save_btn = ColorButton(self, 1205, 25, 100, 36, 'violet', 'Ulož')
+        menu_btn = ColorButton(self, 75, 25, 100, 36, 'green3', 'Menu')
+        save_btn.bind_clicked()
+        menu_btn.bind_clicked()
+        self.panel_obj = CanvasObject(self, [task_name_text, save_btn, menu_btn], hidden=False)
 
     def backgrounds_init(self):
         image = Image.new('RGBA', (570, 580), (255, 170, 79, 100))
@@ -43,7 +48,7 @@ class CreateTaskSetScreen(Screen):
         right_bg = self.canvas.create_image(665, 60, image=self.right_bg_img, anchor='nw')
         right_bg_border = self.canvas.create_rectangle(665, 60, 665 + 570, 640, outline='#b6e5da', width=2)
 
-        self.background = CanvasObject(self, [left_bg, left_bg_border, right_bg, right_bg_border], hidden=False)
+        self.background_obj = CanvasObject(self, [left_bg, left_bg_border, right_bg, right_bg_border], hidden=False)
 
     def set_name_input_init(self):
         map_name_text = self.canvas.create_text(70, 80, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
@@ -52,8 +57,10 @@ class CreateTaskSetScreen(Screen):
         self.set_name = tk.StringVar()
         self.set_name_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 15, 'italic bold'), width=20,
                                        justify='right', textvariable=self.set_name)
-        self.canvas.create_window(345, 95, window=self.set_name_entry)
+        name_entry_window = self.canvas.create_window(345, 95, window=self.set_name_entry)
         self.set_name.trace("w", self.set_name_text_changed)
+
+        self.name_input_obj = CanvasObject(self, [map_name_text, name_entry_window], hidden=False)
 
     def map_preview_init(self):
         self.preview_object = None
@@ -64,16 +71,20 @@ class CreateTaskSetScreen(Screen):
         image = Image.open('obrazky/plus.png')
         image = image.resize((28, 28), Image.ANTIALIAS)
         self.plus_btn_img = ImageTk.PhotoImage(image)
-        self.plus_map_btn = self.canvas.create_image(150, 163, image=self.plus_btn_img, anchor='nw')
+        plus_map_btn = self.canvas.create_image(150, 163, image=self.plus_btn_img, anchor='nw')
 
         self.map_file_text = self.canvas.create_text(190, 165, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
                                                      anchor='nw', width=330, text='<-- vyber mapu', state="normal")
-        self.canvas.tag_bind(self.plus_map_btn, '<ButtonPress-1>', self.show_map_preview)
+        self.canvas.tag_bind(plus_map_btn, '<ButtonPress-1>', self.show_map_preview)
+
+        self.map_preview_obj = CanvasObject(self, [map_choice_text, plus_map_btn, self.map_file_text], hidden=False)
 
     def obstacles_init(self):
         obstacles_mode_text = self.canvas.create_text(70, 450, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
                                                   anchor='nw', width=330, text='Režimy stráženia:\n(pre prekážky)')
         self.obstacle_options = ObstacleOptions(self)
+
+        self.obstacles_obj = CanvasObject(self, [obstacles_mode_text, self.obstacle_options], False)
 
     def save_text_init(self):
         self.saving_error_text = self.canvas.create_text(70, 600, fill="darkred",
@@ -87,10 +98,12 @@ class CreateTaskSetScreen(Screen):
         self.task_list = TaskList(self)
         task_set_text = self.canvas.create_text(690, 80, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
                                                   anchor='nw', width=330, text='Zoznam úloh:')
-        self.plus_task_btn = self.canvas.create_image(850, 82, image=self.plus_btn_img, anchor='nw')
+        plus_task_btn = self.canvas.create_image(850, 82, image=self.plus_btn_img, anchor='nw')
         add_task_help_text = self.canvas.create_text(890, 85, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
                                                      anchor='nw', width=330, text='<-- pridaj úlohu')
-        self.canvas.tag_bind(self.plus_task_btn, '<ButtonPress-1>', self.add_task)
+        self.canvas.tag_bind(plus_task_btn, '<ButtonPress-1>', self.add_task)
+
+        self.tasks_obj = CanvasObject(self, [self.task_list, task_set_text, plus_task_btn, add_task_help_text], False)
 
     def set_name_text_changed(self, *args):
         if len(self.set_name.get()) > self.SET_NAME_LENGTH:
@@ -102,21 +115,27 @@ class CreateTaskSetScreen(Screen):
         folder_name = self.open_browser_map()
         if folder_name is None:
             return
+        if not self.map_folder_is_valid(folder_name):
+            self.show_error_text('Chyba: Preičinok s mapou nie je validný')
+            return
+        self.folder_name = folder_name
         self.hide_error_text()
         self.task_list.destroy()
-        self.map_img_path = 'mapy/'+ folder_name + '/map.png'
+        map_img_path = 'mapy/'+ folder_name + '/map.png'
         self.canvas.itemconfig(self.map_file_text, text=self.split_to_name(folder_name), state="normal")
 
         if self.preview_object is not None:
             self.preview_object.destroy()
+            self.objects = self.objects[:-1]
 
-        image = Image.open(self.map_img_path)
-        resized_img = resize_image(image, 450, 200)
-        self.map_preview_img = ImageTk.PhotoImage(resized_img)
+        image = Image.open(map_img_path)
+        image = resize_image(image, 450, 200)
+        self.map_preview_img = ImageTk.PhotoImage(image)
         map_preview = self.canvas.create_image(137, 320, image=self.map_preview_img, anchor='w')
         collectibles_imgs = self.show_collectibles(folder_name)
         self.obstacle_options.fill_options(folder_name)
         self.preview_object = CanvasObject(self, [map_preview, collectibles_imgs, self.obstacle_options], False)
+        self.objects.append(self.preview_object)
 
     def open_browser_map(self):
         path = self.open_file_browser()
@@ -141,7 +160,7 @@ class CreateTaskSetScreen(Screen):
         self.collectibles_imgs_tk = []
         for collectible in 'abcd':
             try:
-                img = Image.open('mapy/' + folder_name + '/objects/' + collectible + '.png')
+                img = Image.open('mapy/' + folder_name + '/collectibles/' + collectible + '.png')
                 img = resize_image(img, 32, 32)
                 self.collectibles_imgs_tk.append(ImageTk.PhotoImage(img))
             except FileNotFoundError:
@@ -153,7 +172,7 @@ class CreateTaskSetScreen(Screen):
             return
         self.hide_error_text()
         self.task_list.add_task(Task('parent', 'index', 'Nova Uloha' + str(self.counter), 'pocty', 'oba', 'row', 'col', 'steps', 'assign', 'map_str',
-                                     'map_name', 'char_name'))
+                                     'map_name', 'char_name', True, False))
         self.counter += 1
 
     def save_set(self):
@@ -168,9 +187,17 @@ class CreateTaskSetScreen(Screen):
     def clicked_btn(self, btn_text):
         if btn_text == 'Ulož':
             self.save_set()
+        if btn_text == 'Menu':
+            self.parent.main_menu_screen_init()
 
     def show_error_text(self, text):
         self.canvas.itemconfig(self.saving_error_text, text=text)
 
     def hide_error_text(self):
         self.canvas.itemconfig(self.saving_error_text, text='')
+
+    def map_folder_is_valid(self, folder_name):
+        for subpath in ('/map.png', '/character.png', '/obstacles', '/collectibles/a.png'):
+            if not path.exists(os.getcwd()+ '/mapy/' + folder_name + subpath):
+                return False
+        return True
