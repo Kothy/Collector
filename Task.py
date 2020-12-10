@@ -10,8 +10,8 @@ class Task:
         self.type = typ
         self.regime = regime
         self.row = row
-        self.map = map_str
         self.col = col
+        self.map = map_str
         self.steps_count = steps
         self.assign = assign
         self.solvable = solvable

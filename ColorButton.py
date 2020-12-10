@@ -37,6 +37,14 @@ class ColorButton(CanvasObject):
         self.canvas.tag_bind(self.btn_bg, '<ButtonPress-1>', lambda _: self.parent.rotation_changed())
         self.canvas.tag_bind(self.text_obj, '<ButtonPress-1>', lambda _: self.parent.rotation_changed())
 
+    def bind_clicked(self):
+        self.canvas.tag_bind(self.btn_bg, '<ButtonPress-1>', self.clicked)
+        self.canvas.tag_bind(self.text_obj, '<ButtonPress-1>', self.clicked)
+
+    def clicked(self, _):
+        self.parent.clicked_btn(self.text)
+
+
     def change_text(self, text):
         self.text = text
         self.canvas.itemconfig(self.text_obj, text=text)
