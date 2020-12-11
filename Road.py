@@ -20,15 +20,18 @@ class Road(CanvasObject):
         if self.number_of_active_road_parts > 15:
             return
         direction_dict = {'right': 0, 'up': 1, 'left': 2, 'down': 3}
+        self.road_parts[self.number_of_active_road_parts].hide()
         self.road_parts[self.number_of_active_road_parts].set_move_img(
             self.move_imgs[move_type][direction_dict[direction]])
         self.road_parts[self.number_of_active_road_parts].show()
+        self.road_parts[self.number_of_active_road_parts].color = move_type
         self.road_parts[self.number_of_active_road_parts].direction = direction
         self.number_of_active_road_parts += 1
 
     def remove_last_part(self):
-        self.road_parts[self.number_of_active_road_parts - 1].hide()
-        self.number_of_active_road_parts -= 1
+        if self.number_of_active_road_parts > 0:
+            self.road_parts[self.number_of_active_road_parts - 1].hide()
+            self.number_of_active_road_parts -= 1
 
     def road_part_clicked(self, index):
         pass
@@ -45,3 +48,18 @@ class Road(CanvasObject):
         for part in self.road_parts:
             part.hide()
         self.number_of_active_road_parts = 0
+
+    def clear_wrong_ingnored(self):
+        active = self.number_of_active_road_parts
+        for i in range(active):
+            road_p = self.road_parts[i]
+            color = self.road_parts[i].color
+            if color == "wrong" or color == "ignored":
+                road_p.hide()
+                road_p.remove()
+
+    def wrong_ignored_in_road(self):
+        for part in self.road_parts:
+            if part.color == "wrong" or part.color == "ignored":
+                return True
+        return False

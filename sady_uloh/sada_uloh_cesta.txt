@@ -22,7 +22,7 @@ b.c..
 p...x
 
 2.
-Nazov: Uloha1
+Nazov: Uloha2
 Typ: cesta
 Rezim: oba
 Riadkov: 3
@@ -35,7 +35,7 @@ b.c..
 .p.x.
 
 3.
-Nazov: Uloha1
+Nazov: Uloha3
 Typ: cesta
 Rezim: oba
 Riadkov: 3

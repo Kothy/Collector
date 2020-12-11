@@ -23,19 +23,46 @@ class SolveScreen(Screen):
         self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
         self.actual_regime = None
 
+    def check_move(self, move, dir):
+        if self.actual_regime == "priamy" and move == "wrong":
+            self.road.add_move(move, dir)
+            self.road.number_of_active_road_parts -= 1
+
     def move_down(self, _):
-        self.tasks_set.move_player_down()
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
+        move = self.tasks_set.move_player_down()
+        self.check_move(move, "down")
 
     def move_up(self, _):
-        self.tasks_set.move_player_up()
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
+        move = player.move_up()
+        self.check_move(move, "up")
 
     def move_right(self, _):
-        self.tasks_set.move_player_right()
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
+        move = player.move_right()
+        self.check_move(move, "right")
 
     def move_left(self, _):
-        self.tasks_set.move_player_left()
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
+        move = move = player.move_left()
+        self.check_move(move, "left")
 
     def step_back(self, _):
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
+        if self.actual_regime == "planovaci":
+            self.road.remove_last_part()
+            return
         self.tasks_set.step_back()
 
     def go_to_menu(self):
@@ -146,12 +173,18 @@ class SolveScreen(Screen):
         self.tasks_set.remove_task_and_map()
 
     def next_task(self):
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
         self.remove_task()
         self.road.clear_road()
         self.tasks_set.next_task()
         self.draw_task_and_map()
 
     def prev_task(self):
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
         self.remove_task()
         self.road.clear_road()
         self.tasks_set.prev_task()
@@ -192,9 +225,28 @@ class SolveScreen(Screen):
         self.clear_image = ImageTk.PhotoImage(image)
         clear = self.canvas.create_image(1185, 558, image=self.clear_image, anchor='nw')
 
+        self.canvas.tag_bind(clear, '<ButtonPress-1>', self.clear_road)
+
         self.solve_screen_keyboard = CanvasObject(self,
                                                   [screen_keys_bg, screen_keys_bg_border, Keyboard(self, keyboard),
                                                    back, clear])
+
+
+    def clear_road(self, _):
+        print("stlacena metlicka")
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
+
+        if self.actual_regime == "priamy":
+            player = self.tasks_set.get_player()
+            player.reset_game()
+        else:
+            if self.road.wrong_ignored_in_road() == True:
+                self.road.clear_wrong_ingnored()
+            else:
+                self.road.clear_road()
+
 
     def road_window_init(self):
         image = Image.new('RGBA', (900, 90), (41, 175, 200, 100))
@@ -227,9 +279,21 @@ class SolveScreen(Screen):
 
     def play_moves(self, _):
         player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
         player.planned_move = True
+        player.remove_trajectory()
         for i in range(self.road.number_of_active_road_parts):
-            # print(self.road.road_parts[i].direction)
+            self.road.road_parts[i].change_color("basic")
+
+        self.canvas.update()
+        time.sleep(1)
+        ignored = False
+        print("Startujem z: ", player.row, player.col)
+        for i in range(self.road.number_of_active_road_parts):
+            if ignored == True:
+                self.road.road_parts[i].change_color("ignored")
+                continue
             move = None
             if self.road.road_parts[i].direction == "down":
                 move = player.move_down()
@@ -241,12 +305,15 @@ class SolveScreen(Screen):
                 move = player.move_left()
             if move is not None:
                 self.road.road_parts[i].change_color(move)
+                if move == "wrong":
+                    self.road.road_parts[i].change_color("wrong")
+                    ignored = True
             else:
                 self.road.road_parts[i].change_color("ok")
             self.canvas.update()
             time.sleep(0.7)
+        player.reset_game(plan=True)
         player.planned_move = False
-        # print("prehratie pohybov")
 
     def task_window_init(self):
         # texty tam su na skusku, daj ich potom odtialto prec :) self.task_text_obstacle potom vyuzi aj na info "Ziadne zadanie" v pripade volnej ulohy
@@ -312,6 +379,9 @@ class SolveScreen(Screen):
 
     def swap_mode(self, _):
         # print("swap mode")
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
         text = self.canvas.itemcget(self.task_text_mode, 'text')
         if "plánovací" in text:
             text = text.replace("naplánovať", "nájsť")
@@ -327,6 +397,7 @@ class SolveScreen(Screen):
             self.actual_regime = "planovaci"
         task = self.tasks_set.get_actual_task()
         task.map.player.reset_game()
+        task.map.player.remove_trajectory()
         self.road.clear_road()
 
     def show_common(self):

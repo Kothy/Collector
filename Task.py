@@ -185,6 +185,9 @@ class Task:
                 self.parent.parentcanvas.itemconfig(self.parent.parent.task_text_mode, text=text)
 
         self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
+
+        self.parent.canvas.itemconfig(self.parent.parent.task_name_text, text=str(self.index + 1)+". " + self.name)
+        self.parent.canvas.itemconfig(self.parent.parent.task_name_text, state="normal")
         self.map.draw_map()
 
     def remove(self):
