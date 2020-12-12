@@ -2,7 +2,7 @@ Nazov: Sada_Uloh_1
 Mapa: Mapa_Zberatela
 
 # Nastavenie prekazok #
-x: bod
+x: stvorec
 y: kriz
 
 # Ulohy #
@@ -11,7 +11,7 @@ Volny_prechod: ano
 1.
 Nazov: Uloha1
 Typ: pocty
-Rezim: oba
+Rezim: priamy
 Riadkov: 3
 Stlpcov: 6
 Krokov: 6
@@ -26,7 +26,7 @@ b.c.......
 2.
 Nazov: Uloha1
 Typ: pocty
-Rezim: oba
+Rezim: priamy
 Riadkov: 3
 Stlpcov: 5
 Krokov: 6
@@ -41,7 +41,7 @@ b.c.......
 3.
 Nazov: Uloha1
 Typ: pocty
-Rezim: oba
+Rezim: priamy
 Riadkov: 3
 Stlpcov: 10
 Krokov: 6

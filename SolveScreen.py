@@ -23,38 +23,88 @@ class SolveScreen(Screen):
         self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
         self.actual_regime = None
 
-    def check_move(self, move, dir):
+    def check_move(self, move, dir, obsta):
+        map_name = self.tasks_set.get_actual_task().map.name
+        active = self.road.number_of_active_road_parts
         if self.actual_regime == "priamy" and move == "wrong":
             self.road.add_move(move, dir)
+
+            if obsta == "x" or obsta == "y" or obsta == "z":
+                self.road.road_parts[active].add_obstacle("mapy/{}/obstacles/{}.png".format(map_name, obsta))
+            elif obsta == "guarding":
+                self.road.road_parts[active].add_obstacle("obrazky/guarding.png")
+            else:
+                self.road.road_parts[active].add_obstacle("obrazky/guarding.png")
+
             self.road.number_of_active_road_parts -= 1
 
+        elif self.actual_regime == "priamy" and move == "ok" and obsta is not None:
+            active = self.road.number_of_active_road_parts
+            self.road.road_parts[active - 1].add_obstacle("mapy/{}/collectibles/{}.png".format(map_name, obsta))
+
+    def check_changed(self, index, removed=False):
+        rp = self.road.road_parts[index]
+        active = self.road.number_of_active_road_parts
+        if rp.color == "ok" or rp.color == "wrong":
+            for i in range(index, active):
+                self.road.road_parts[i].change_color("basic")
+        self.road.selected_parts = []
+
+    def change_direction(self, direction):
+
+        for part in self.road.selected_parts:
+            rp = self.road.road_parts[part]
+            rp.change_direction(direction)
+            self.check_changed(part)
+
+
     def move_down(self, _):
+        if self.road.number_of_active_road_parts >=16:
+            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
-        move = self.tasks_set.move_player_down()
-        self.check_move(move, "down")
+        if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
+            self.change_direction("down")
+            return
+        move, obsta = player.move_down()
+        self.check_move(move, "down", obsta)
 
     def move_up(self, _):
+        if self.road.number_of_active_road_parts >= 16:
+            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
-        move = player.move_up()
-        self.check_move(move, "up")
+        if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
+            self.change_direction("up")
+            return
+        move, obsta = player.move_up()
+        self.check_move(move, "up", obsta)
 
     def move_right(self, _):
+        if self.road.number_of_active_road_parts >= 16:
+            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
-        move = player.move_right()
-        self.check_move(move, "right")
+        if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
+            self.change_direction("right")
+            return
+        move, obsta = player.move_right()
+        self.check_move(move, "right", obsta)
 
     def move_left(self, _):
+        if self.road.number_of_active_road_parts >= 16:
+            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
-        move = move = player.move_left()
-        self.check_move(move, "left")
+        if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
+            self.change_direction("left")
+            return
+        move, obsta = player.move_left()
+        self.check_move(move, "left", obsta)
 
     def step_back(self, _):
         player = self.tasks_set.get_player()
@@ -88,7 +138,6 @@ class SolveScreen(Screen):
         map_string = ""
         while lines[0] != "" and lines[0] != "##!EOF##":
             map_string += lines.pop(0) + "\n"
-
 
         lines = self.remove_lines(lines, 1)
         self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name, "", solvable)
@@ -231,7 +280,6 @@ class SolveScreen(Screen):
                                                   [screen_keys_bg, screen_keys_bg_border, Keyboard(self, keyboard),
                                                    back, clear])
 
-
     def clear_road(self, _):
         print("stlacena metlicka")
         player = self.tasks_set.get_player()
@@ -242,11 +290,20 @@ class SolveScreen(Screen):
             player = self.tasks_set.get_player()
             player.reset_game()
         else:
+            if len(self.road.selected_parts) == 1:
+                part_index = self.road.selected_parts[0]
+                part_color = self.road.road_parts[part_index].color
+                self.road.remove_all_selected()
+                active = self.road.number_of_active_road_parts
+                if part_color == "ok" or part_color == "wrong":
+                    for i in range(part_index, active):
+                        self.road.road_parts[i].change_color("basic")
+                return
+
             if self.road.wrong_ignored_in_road() == True:
                 self.road.clear_wrong_ingnored()
             else:
                 self.road.clear_road()
-
 
     def road_window_init(self):
         image = Image.new('RGBA', (900, 90), (41, 175, 200, 100))
@@ -287,32 +344,45 @@ class SolveScreen(Screen):
             self.road.road_parts[i].change_color("basic")
 
         self.canvas.update()
-        time.sleep(1)
+        time.sleep(0.5)
         ignored = False
-        print("Startujem z: ", player.row, player.col)
+        # print("Startujem z: ", player.row, player.col)
         for i in range(self.road.number_of_active_road_parts):
             if ignored == True:
                 self.road.road_parts[i].change_color("ignored")
                 continue
+
             move = None
+            obsta = None
             if self.road.road_parts[i].direction == "down":
-                move = player.move_down()
+                move, obsta = player.move_down()
             if self.road.road_parts[i].direction == "up":
-                move = player.move_up()
+                move, obsta = player.move_up()
             if self.road.road_parts[i].direction == "right":
-                move = player.move_right()
+                move, obsta = player.move_right()
             if self.road.road_parts[i].direction == "left":
-                move = player.move_left()
+                move, obsta = player.move_left()
             if move is not None:
                 self.road.road_parts[i].change_color(move)
+                map_name = self.tasks_set.get_actual_task().map.name
                 if move == "wrong":
                     self.road.road_parts[i].change_color("wrong")
+                    if obsta == "x" or obsta == "y" or obsta == "z":
+                        self.road.road_parts[i].add_obstacle("mapy/{}/obstacles/{}.png".format(map_name, obsta))
+                    elif obsta == "guarding":
+                        self.road.road_parts[i].add_obstacle("obrazky/guarding.png")
+                    else:
+                        self.road.road_parts[i].add_obstacle("obrazky/guarding.png")
                     ignored = True
+
+                elif move == "ok" and obsta is not None:
+                    self.road.road_parts[i].add_obstacle("mapy/{}/collectibles/{}.png".format(map_name, obsta))
             else:
                 self.road.road_parts[i].change_color("ok")
             self.canvas.update()
             time.sleep(0.7)
         player.reset_game(plan=True)
+
         player.planned_move = False
 
     def task_window_init(self):
@@ -378,7 +448,6 @@ class SolveScreen(Screen):
                                                             self.solve_screen_task_mode])
 
     def swap_mode(self, _):
-        # print("swap mode")
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return

@@ -1,0 +1,48 @@
+Nazov: Sada_Uloh_1
+Mapa: ocean
+
+# Nastavenie prekazok #
+x: stvorec
+y: kriz
+
+# Ulohy #
+Volny_prechod: ano
+
+1.
+Nazov: Uloha1
+Typ: cesta
+Rezim: oba
+Riadkov: 3
+Stlpcov: 5
+Krokov: 6
+Zadanie: a,b,c
+Riesitelna: ano
+.y.a.
+b.c..
+p...x
+
+2.
+Nazov: Uloha2
+Typ: cesta
+Rezim: oba
+Riadkov: 3
+Stlpcov: 5
+Krokov: 6
+Zadanie: a,b,c,b,b,b
+Riesitelna: ano
+.y.a.
+b.c..
+.p.x.
+
+3.
+Nazov: Uloha3
+Typ: cesta
+Rezim: oba
+Riadkov: 3
+Stlpcov: 6
+Krokov: 6
+Zadanie: a,b,c,a,a
+Riesitelna: ano
+..y.a.
+.b.c.p
+....x.
