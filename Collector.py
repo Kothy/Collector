@@ -36,7 +36,6 @@ class Collector:
     def screen_init(self):
         self.screen = None
         self.main_menu_screen_init()
-        # funckia na testovanie screenov, nebude vo finalnej verzii - odkomentuj, ktoru screen chces robit, ostatne zakomentuj
         # self.solve_screen_init()
         # self.create_map_screen_init()
         # self.create_set_screen_init()
