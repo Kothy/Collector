@@ -16,6 +16,7 @@ aby pomer strán mapy zostal zachovaný
 neskôr bude pridané "masové" upravovanie / vymazávanie" alebo zrušená možnosť viacnásobného označenia)
 - zobrazenie prekážky pod šípkou
 - bude opravené vysvecovanie tlačidiel pri vstúpeni z myšou na neho
+- voľná úloha zatiaľ nefunguje vôbec
 
 Pri vytváraní mapy:
 - zvolenie farby mriežky (odlišné od trajektórie)
