@@ -38,14 +38,20 @@ class GuardMode(CanvasObject):
 
     def draw_mode(self):
         self.id = self.canvas.create_image(self.x, self.y, image=self.img, anchor='c')
-        self.border = self.canvas.create_rectangle(self.x - 20, self.y - 20, self.x + 20, self.y + 20,
-                                                  outline='darkviolet', width=3,
-                                                  state='hidden' if self.index != 0 else 'normal')
-        self.parts = [self.id, self.border]
+        self.border = None
+        self.parts = [self.id]
+        if self.index == 0:
+            self.selected(None)
 
     def selected(self, _):
+        if self.border is not None:
+            return
         self.parent.mode_clicked(self.index)
-        self.canvas.itemconfigure(self.border, state='normal')
+        self.border = self.canvas.create_rectangle(self.x - 20, self.y - 20, self.x + 20, self.y + 20,
+                                                   outline='darkviolet', width=3)
+        self.parts.append(self.border)
 
     def deselect(self):
-        self.canvas.itemconfigure(self.border, state='hidden')
+        self.canvas.delete(self.border)
+        self.border = None
+        self.parts = self.parts[:-1]

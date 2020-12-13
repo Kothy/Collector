@@ -57,7 +57,7 @@ class CreateTaskSetScreen(Screen):
                                                 text='Názov sady:\n(povolené znaky: písmená, čísla, medzery)')
         self.set_name = tk.StringVar()
         self.set_name_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 15, 'italic bold'), width=20,
-                                       justify='right', textvariable=self.set_name)
+                                       justify='center', textvariable=self.set_name)
         name_entry_window = self.canvas.create_window(345, 95, window=self.set_name_entry)
         self.set_name.trace("w", self.set_name_text_changed)
 
@@ -95,14 +95,13 @@ class CreateTaskSetScreen(Screen):
                                                   state="normal")
 
     def tasks_list_init(self):
-        self.counter = 0
         self.task_list = TaskList(self)
         task_set_text = self.canvas.create_text(690, 80, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
                                                   anchor='nw', width=330, text='Zoznam úloh:')
         plus_task_btn = self.canvas.create_image(850, 82, image=self.plus_btn_img, anchor='nw')
         add_task_help_text = self.canvas.create_text(890, 85, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
                                                      anchor='nw', width=330, text='<-- pridaj úlohu (maximálne 10)')
-        self.canvas.tag_bind(plus_task_btn, '<ButtonPress-1>', self.add_task)
+        self.canvas.tag_bind(plus_task_btn, '<ButtonPress-1>', self.create_task)
 
         self.task_add_obj = CanvasObject(self, [plus_task_btn, add_task_help_text], False)
 
@@ -174,16 +173,18 @@ class CreateTaskSetScreen(Screen):
             except FileNotFoundError:
                 break
 
-    def add_task(self, _):
+    def create_task(self, _):
         if self.preview_object is None:
             self.set_error_text('Chyba: Pred pridaním úlohy vyber mapu')
             return
         self.set_error_text('')
-        self.task_list.add_task(Task('parent', 'index', 'Nova Uloha' + str(self.counter), 'pocty', 'oba', 'row', 'col', 'steps', 'assign', 'map_str',
-                                     'map_name', 'char_name', True, False))
+        self.hide()
+        self.parent.create_task_screen_init(self.folder_name)
+
+    def add_task(self, task):
+        self.task_list.add_task(task)
         if self.task_list.is_full():
             self.task_add_obj.hide()
-        self.counter += 1
 
     def task_space_freed(self):
         self.task_add_obj.show()

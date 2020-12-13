@@ -35,3 +35,11 @@ class Screen:
     def destroy(self):
         for object in self.objects:
             self.destroy_canvas_item(object)
+
+    def hide(self):
+        for object in self.objects:
+            self.hide_canvas_item(object)
+
+    def show(self):
+        for object in self.objects:
+            self.show_canvas_item(object)

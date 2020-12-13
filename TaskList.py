@@ -82,6 +82,10 @@ class TaskList(CanvasObject):
     def is_full(self):
         return len(self.parts) == 10
 
+    def show(self):
+        super(TaskList, self).show()
+        self.check_list_arrows()
+
 class TaskListItem(CanvasObject):
 
     def __init__(self, parent, task_name, index, move_imgs, edit_img, delete_img):
