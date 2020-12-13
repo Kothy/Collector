@@ -17,6 +17,7 @@ neskôr bude pridané "masové" upravovanie / vymazávanie" alebo zrušená mož
 - zobrazenie prekážky pod šípkou
 
 Pri vytváraní mapy:
+- pomocné popisy ako vo výtváraní úloh
 - zvolenie farby mriežky (odlišné od trajektórie)
 - zakázanie vytvorenia mapy s názvom, ktoré už existuje
 
