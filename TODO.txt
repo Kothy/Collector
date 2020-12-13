@@ -1,0 +1,63 @@
+Zatiaľ nefunguje (bude sa ešte implementovať):
+
+Pri riešení úloh:
+- zatiaľ sa mapa zdeformuje (resizne) vždy na jednu veľkosť, neskôr bude toto prerobené tak,
+aby pomer strán mapy zostal zachovaný
+- overovanie správnosti riešenia
+- nastavenie, že sa dá ísť na ďalšiu úlohu až po vyriešení aktuálnej
+- zabezpečenie proti nesprávnym súborom
+- otáčanie postavičky podľa pohybov
+- označenie a úprava viacerých šípok naraz (pri označení viacerých šípok sa s nimi nedá nič robiť,
+neskôr bude pridané "masové" upravovanie / vymazávanie" alebo zrušená možnosť viacnásobného označenia)
+
+Pri vytváraní mapy:
+- zvolenie farby mriežky (odlišné od trajektórie)
+
+Pri vytváraní sady úloh:
+- kontrola, či sada s rovnakým názvom už existuje
+- kontrola, či je vytváraná úloha riešiteľná a s tým súvisiace nastavenie predchodu na ďalšiu úlohu pri riešení
+(malo by byť zakázané povoliť prechod na ďalšiu úlohu pri vyriešení predchádzajúcej, ak sada obsahuje neriešiteľnú
+úlohu)
+- zatiaľ nevykresľuje mriežku na náhľade mapy a nedajú sa do nej teda ani v editore pridávať
+objekty => jediný spôsob, ako teda definovať rozloženie mapy pre danú úlohu je priamo v textovom súbore,
+ktorý sa vytvorí po uložení sady do zložky sady_uloh a má nasledovnú štruktúru:
+
+Nazov: Sada_Uloh_1
+Mapa: Mapa_1
+
+# Nastavenie prekazok #
+a: bod/kriz/stvorec
+b: ...
+
+# Ulohy #
+Volny_prechod: ano/nie
+
+1.
+Nazov: Uloha1
+Typ: volna/pocty/cesta
+Rezim: planovaci/priamy/oba
+Riadkov: 3
+Stlpcov: 5
+Krokov: 6
+Zadanie: abcdbc/a=?,b>3,c<=2,d=1
+Riesitelna: ano/nie
+.y.a.
+b.c..
+p...x
+
+2.
+Nazov: Uloha2
+...
+
+-----> na konci kazdej ulohy je zapis rozlozenia jej mapy - momentalne sa tam ukladaju len
+bodky, ktore zodpovedaju zadanemu poctu riadkov a stlpcov... pre 1. ulohu by sme teda videli:
+.....
+.....
+.....
+---> kazda bodka predstavuje jedno policko, pricom
+.   -   prazdne
+p   -   pociatocne suradnice postavicky
+a/b/c/d     -   predmety na zbieranie (pismenka zodpovedajú nazvom prekazok v subore vybranej mapy)
+x/y/z       -   prekazky (pismenka opat zodpovedaju nazvom suborov s obrazkami prekazok --> pozri subor mapy)
+POZOR: postavicka ani predmety by nemali byt umiestnene v zonach ohrozenia prekazok
+
