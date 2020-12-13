@@ -15,6 +15,7 @@ aby pomer strán mapy zostal zachovaný
 - označenie a úprava viacerých šípok naraz (pri označení viacerých šípok sa s nimi nedá nič robiť,
 neskôr bude pridané "masové" upravovanie / vymazávanie" alebo zrušená možnosť viacnásobného označenia)
 - zobrazenie prekážky pod šípkou
+- bude opravené vysvecovanie tlačidiel pri vstúpeni z myšou na neho
 
 Pri vytváraní mapy:
 - zvolenie farby mriežky (odlišné od trajektórie)

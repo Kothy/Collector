@@ -17,7 +17,7 @@ class Collector:
     def canvas_init(self):
         self.root = tk.Tk()
         self.root.title("Zberateľ")
-        ##        self.root.resizable(False, False)
+        self.root.resizable(False, False)
         self.canvas = tk.Canvas(self.root, width=1300, height=650)
         self.canvas.pack()
 
