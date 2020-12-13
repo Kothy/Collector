@@ -1,7 +1,8 @@
 Zatiaľ nefunguje:
 Overovanie správnosti odpovede
-Nastavenie, že sa dá ísť na ďalšiu úlohu až po vyriešení aktuálnej
-Program neodchytáva chyby v súboroch
+Nastavenie, že sa dá ísť na ďalšiu úlohu až po vyriešení aktuálnej.
+zabezpečie proti nesprávnym súborom.
+Otáčanie postavičky podľa pohybov.
 
 
 Obmedzenia:

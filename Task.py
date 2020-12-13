@@ -149,7 +149,7 @@ class Task:
         self.map = Map(self.map_name, self.map_str, self.parent.canvas, self, self.traject_and_grid_color)
 
     def draw_map_bg(self):
-        img = Image.open("mapy/{}/map_bg.png".format(self.map_name))
+        img = Image.open("mapy/{}/map.png".format(self.map_name))
         img = img.resize((900, 480))
         self.map_bg_img = ImageTk.PhotoImage(img)
 
@@ -229,17 +229,17 @@ class TaskSet:
     def get_player(self):
         return self.tasks[self.actual].map.player
 
-    def move_player_down(self):
-        self.tasks[self.actual].map.player.move_down()
-
-    def move_player_up(self):
-        self.tasks[self.actual].map.player.move_up()
-
-    def move_player_right(self):
-        self.tasks[self.actual].map.player.move_right()
-
-    def move_player_left(self):
-        self.tasks[self.actual].map.player.move_left()
+    # def move_player_down(self):
+    #     self.tasks[self.actual].map.player.move_down()
+    #
+    # def move_player_up(self):
+    #     self.tasks[self.actual].map.player.move_up()
+    #
+    # def move_player_right(self):
+    #     self.tasks[self.actual].map.player.move_right()
+    #
+    # def move_player_left(self):
+    #     self.tasks[self.actual].map.player.move_left()
 
     def step_back(self):
         self.tasks[self.actual].map.player.step_back()
