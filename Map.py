@@ -69,7 +69,8 @@ class Map:
         # image2.save("obrazky/guarding_x2.png")
 
         image2 = Image.open("obrazky/guarding.png")
-        image2 = image2.resize((int(PART_W), int(PART_H)), Image.ANTIALIAS)
+        # image2 = image2.resize((int(PART_W), int(PART_H)), Image.ANTIALIAS)
+        image2 = resize_image(image2, PART_W, PART_H)
         self.guarding_img = ImageTk.PhotoImage(image2)
 
     def find_guarding(self, name):
