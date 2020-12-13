@@ -2,10 +2,9 @@ from CanvasObject import CanvasObject
 
 
 class CheckBox(CanvasObject):
-    def __init__(self, parent, index, x, y, text, checked_img, unchecked_img, options, checked=False):
+    def __init__(self, parent, index, x, y, text, checked_img, unchecked_img, checked=False):
         self.parent, self.canvas = parent, parent.canvas
         self.index = index
-        self.options = options
         self.x, self.y = x, y
         self.text = text
         self.imgs = [checked_img, unchecked_img]
@@ -18,9 +17,6 @@ class CheckBox(CanvasObject):
         if not self.checked:
             self.checked = True
             self.destroy()
-            if self.options.checked_index is not None:
-                self.options.checkboxes[self.options.checked_index].uncheck()
-            self.options.checked_index = self.index
             self.create_checkbox()
             if self.disable is not None and self.text == "žiadne":
                 self.disable.change_color("grey")
@@ -30,11 +26,11 @@ class CheckBox(CanvasObject):
 
     def uncheck(self):
         self.checked = False
-        self.options.checked_index = None
         self.destroy()
         self.create_checkbox()
 
     def click(self, _):
+        self.parent.checkbox_clicked(self.index)
         self.check()
 
     def create_checkbox(self):
@@ -45,6 +41,9 @@ class CheckBox(CanvasObject):
                                                text=self.text)
 
         self.canvas.tag_bind(self.id, "<ButtonPress-1>", self.click)
+        self.canvas.tag_bind(self.text_id, "<ButtonPress-1>", self.click)
+
+        self.parts = [self.id, self.text_id]
 
     def destroy(self):
         if self.id is not None:

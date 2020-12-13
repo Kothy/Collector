@@ -148,7 +148,7 @@ class CreateMapScreen(Screen):
         img_char = Image.open(self.character_img_path)
         img_map = Image.open(self.map_img_path)
         char_filename = "character.png"
-        map_filename = "map_bg.png"
+        map_filename = "map.png"
         if img_char.size[1] > 200:
             img_char = resize_image_by_height(img_char, 200)
 
