@@ -134,6 +134,8 @@ class SolveScreen(Screen):
         row = lines.pop(0).split(":")[1].strip()
         col = lines.pop(0).split(":")[1].strip()
         steps = lines.pop(0).split(":")[1].strip()
+        if steps == "":
+            steps = 15
         assign = lines.pop(0).split(":")[1].strip()
         solvable = lines.pop(0).split(":")[1].strip()
         map_string = ""
@@ -151,6 +153,8 @@ class SolveScreen(Screen):
             full = file.read()
 
         lines = full.split("\n")
+        if lines[-1] == "":
+            lines.pop(-1)
         lines.append("##!EOF##")
         tasks_set_name = lines.pop(0).split(":")[-1].strip()
         map_name = lines.pop(0).split(":")[-1].strip()

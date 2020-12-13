@@ -15,7 +15,7 @@ Rezim: oba
 Riadkov: 3
 Stlpcov: 5
 Krokov: 6
-Zadanie: a,b,c
+Zadanie: abc
 Riesitelna: ano
 .y.a.
 b....
@@ -28,7 +28,7 @@ Rezim: oba
 Riadkov: 3
 Stlpcov: 5
 Krokov: 6
-Zadanie: a,b,c,b,b,b
+Zadanie: abcbbb
 Riesitelna: ano
 .y.ac
 b....
@@ -41,7 +41,7 @@ Rezim: oba
 Riadkov: 3
 Stlpcov: 6
 Krokov: 6
-Zadanie: a,b,c,a,a
+Zadanie: abcaa
 Riesitelna: ano
 ..y.ap
 .b....
@@ -54,7 +54,7 @@ Rezim: oba
 Riadkov: 5
 Stlpcov: 8
 Krokov: 6
-Zadanie: a,b,c,a,a
+Zadanie: abcaa
 Riesitelna: ano
 ..y.ap..
 .b......

@@ -70,8 +70,14 @@ class Task:
                 self.char_name, tex, "s použitím najviac {} krokov".format(self.steps_count))
 
         elif self.type == "cesta":
-            images_col = self.assign.split(",")
-            images_col = self.attach_postfix(images_col, self.map_name, "collectibles")
+            # images_col = self.assign.split(",")
+            images_col = self.assign.strip()
+            path = []
+            for part in images_col:
+                path.append(part)
+
+            # images_col = self.attach_postfix(images_col, self.map_name, "collectibles")
+            images_col = self.attach_postfix(path, self.map_name, "collectibles")
             images = images + images_col
 
             text = "{} chce pozbierať {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
