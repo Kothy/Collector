@@ -14,7 +14,7 @@ Typ: cesta
 Rezim: oba
 Riadkov: 3
 Stlpcov: 5
-Krokov: 6
+Krokov:
 Zadanie: abcdbc
 Riesitelna: ano
 .y.a.

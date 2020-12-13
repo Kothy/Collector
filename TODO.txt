@@ -16,6 +16,8 @@ aby pomer strán mapy zostal zachovaný
 - označenie a úprava viacerých šípok naraz (pri označení viacerých šípok sa s nimi nedá nič robiť,
 neskôr bude pridané "masové" upravovanie / vymazávanie" alebo zrušená možnosť viacnásobného označenia)
 - zobrazenie prekážky pod šípkou
+- bude opravené vysvecovanie tlačidiel pri vstúpeni z myšou na neho
+- voľná úloha zatiaľ nefunguje vôbec
 
 Pri vytváraní mapy:
 - pomocné popisy ako vo výtváraní úloh
