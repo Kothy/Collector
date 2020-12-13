@@ -3,6 +3,9 @@ Zatiaľ nefunguje (bude sa ešte implementovať):
 Pri riešení úloh:
 - zatiaľ sa mapa zdeformuje (resizne) vždy na jednu veľkosť, neskôr bude toto prerobené tak,
 aby pomer strán mapy zostal zachovaný
+- zadanie úlohy bude mať krajšie formátovanie
+- pod časťou cesty, ktorá sa nemôže vykonať, sa bude zobrazovať príčina (prekážka), ktorá v pohybe
+bráni, nie X
 - overovanie správnosti riešenia
 - nastavenie, že sa dá ísť na ďalšiu úlohu až po vyriešení aktuálnej
 - zabezpečenie proti nesprávnym súborom

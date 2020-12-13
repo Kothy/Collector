@@ -18,8 +18,8 @@ Krokov:
 Zadanie: a<2,b>1,c=?
 Riesitelna: ano
 .x..
-p.a.
 ....
+p.a.
 
 2.
 Nazov: Erikova uloha cesta
