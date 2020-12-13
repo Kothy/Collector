@@ -71,13 +71,13 @@ class Task:
 
         elif self.type == "cesta":
             images_col = self.assign.split(",")
-            images_col = self.attach_postfix(images_col,self.map_name, "collectibles")
+            images_col = self.attach_postfix(images_col, self.map_name, "collectibles")
             images = images + images_col
 
             text = "{} chce pozbierať {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
                 self.char_name,
-                "{} (v tomto počte a poradí) s použitím najviac {} krokov".format(("_ , " * len(images_col))[:-2],
-                                                                                  self.steps_count))
+                "{} (v tomto počte a poradí) s použitím najviac {} krokov".format(("_ " * len(images_col)),# [:-2]
+                                                                                    self.steps_count))
         else:
             text = ""
         if "x" in self.map_str:
@@ -149,7 +149,7 @@ class Task:
         self.map = Map(self.map_name, self.map_str, self.parent.canvas, self, self.traject_and_grid_color)
 
     def draw_map_bg(self):
-        img = Image.open("mapy/{}/map.png".format(self.map_name))
+        img = Image.open("mapy/{}/map_bg.png".format(self.map_name))
         img = img.resize((900, 480))
         self.map_bg_img = ImageTk.PhotoImage(img)
 
@@ -171,18 +171,15 @@ class Task:
         else:
             self.parent.parent.actual_regime = "planovaci"
             self.parent.canvas.itemconfig(self.parent.parent.play, state="normal")
+            text2 = self.parent.parent.canvas.itemcget(self.parent.parent.task_text_mode, 'text')
+            text2 = text2.replace("nájsť", "naplánovať")
+            text2 = text2.replace("priamy", "plánovací")
+            self.parent.parent.canvas.itemconfig(self.parent.parent.task_text_mode, text=text2)
 
         if self.mode == "oba":
             self.parent.canvas.itemconfig(self.parent.parent.swap_mode_btn, state="normal")
         else:
             self.parent.canvas.itemconfig(self.parent.parent.swap_mode_btn, state="hidden")
-
-        if self.mode == "planovaci":
-            text = self.parent.parent.canvas.itemcget(self.parent.parent.task_text_mode, 'text')
-            if "nájsť" in text:
-                text = text.replace("nájsť", "naplánovať")
-                text = text.replace("priamy", "plánovací")
-                self.parent.parentcanvas.itemconfig(self.parent.parent.task_text_mode, text=text)
 
         self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
 

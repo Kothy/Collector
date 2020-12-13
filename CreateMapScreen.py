@@ -260,10 +260,10 @@ class CreateMapScreen(Screen):
         self.character_name = tk.StringVar()
         self.map_name = tk.StringVar()
         self.map_name_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 15, 'italic bold'), width=20,
-                                       justify='right', textvariable=self.map_name)
+                                       justify='center', textvariable=self.map_name)
         self.canvas.create_window(345, 95, window=self.map_name_entry)
         self.char_name_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 13, 'italic bold'), width=10,
-                                        justify="right", textvariable=self.character_name)
+                                        justify="center", textvariable=self.character_name)
 
         self.map_name.trace("w", self.map_name_text_changed)
         self.character_name.trace("w", self.char_name_text_changed)

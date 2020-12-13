@@ -210,21 +210,21 @@ class Player:
             self.map.task.parent.parent.road.add_move(part_mode, direction)
         self.remove()
         self.draw()
-        self.check_collectible(self.row, self.col)
+        colectible = self.check_collectible(self.row, self.col)
+        return colectible
 
     def check_guarding_obstacle(self, row, col):
         if not (col >= 0 and row>=0 and row<self.map.rows and col<self.map.cols):
-            return True
+            return True, "out"
         if (isinstance(self.map.array[row][col], Blank) and self.map.array[row][col].guarded):
-            return True
+            return True, "guarded"
         if (isinstance(self.map.array[row][col], Obstacle)):
-            return True
-        return False
+            return True, self.map.array[row][col].name
+        return False, None
 
     def check_collectible(self, row, col):
         if isinstance(self.map.array[row][col], Collectible):
             collectible_name = self.map.array[row][col].name
-            # collectible = self.map.array[row][col]
             self.map.array[row][col].remove()
             self.map.array[row][col].remove()
             blank = Blank(self.map, row, col)
@@ -233,6 +233,8 @@ class Player:
                 self.coll_collected[collectible_name] = 1
             else:
                 self.coll_collected[collectible_name] += 1
+            return collectible_name
+        return None
 
     def hide(self):
         self.map.canvas.itemconfig(self.img_id, state="hidden")
@@ -243,70 +245,74 @@ class Player:
     def move_down(self):
         if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move==False:
             self.map.task.parent.parent.road.add_move("basic", "down")
-            return
-        wrong_move = self.check_guarding_obstacle(self.row + 1, self.col)
+            return None, None
+        wrong_move, obsta = self.check_guarding_obstacle(self.row + 1, self.col)
         if wrong_move:
-            return "wrong"
+            return "wrong", obsta
         if self.row + 1 < self.map.rows:
             row, col = self.row + 1, self.col
             self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col]])
             self.row += 1
             self.y = self.map.xs[self.row]
             self.draw_trajectory()
-            self.remove_draw_add_road_part("ok", "down")
+            colectible = self.remove_draw_add_road_part("ok", "down")
+            return "ok", colectible
         else:
-            return "wrong"
+            return "wrong", obsta
 
     def move_up(self):
         if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
             self.map.task.parent.parent.road.add_move("basic", "up")
-            return
-        wrong_move = self.check_guarding_obstacle(self.row - 1, self.col)
+            return None, None
+        wrong_move, obsta = self.check_guarding_obstacle(self.row - 1, self.col)
         if wrong_move:
-            return "wrong"
+            return "wrong", obsta
         if self.row - 1 >= 0:
             row, col = self.row - 1, self.col
             self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col]])
             self.row -= 1
             self.y = self.map.xs[self.row]
             self.draw_trajectory()
-            self.remove_draw_add_road_part('ok', 'up')
+            colectible = self.remove_draw_add_road_part('ok', 'up')
+            return "ok", colectible
         else:
-            return "wrong"
+            return "wrong", obsta
 
     def move_right(self):
-        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move==False:
+        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
             self.map.task.parent.parent.road.add_move("basic", "right")
-            return
-        wrong_move = self.check_guarding_obstacle(self.row, self.col + 1)
+            return None, None
+        wrong_move, obsta = self.check_guarding_obstacle(self.row, self.col + 1)
         if wrong_move:
-            return "wrong"
+            return "wrong", obsta
         if self.col + 1 < self.map.cols:
             row, col = self.row, self.col + 1
             self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col]])
             self.col += 1
             self.x = self.map.ys[self.col]
             self.draw_trajectory()
-            self.remove_draw_add_road_part('ok', 'right')
+            colectible = self.remove_draw_add_road_part('ok', 'right')
+            return "ok", colectible
         else:
-            return "wrong"
+            return "wrong", obsta
 
     def move_left(self):
         if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
             self.map.task.parent.parent.road.add_move("basic", "left")
-            return
-        wrong_move = self.check_guarding_obstacle(self.row, self.col-1)
+            return None, None
+        wrong_move, obsta = self.check_guarding_obstacle(self.row, self.col-1)
         if wrong_move:
-            return "wrong"
+            return "wrong", obsta
         if self.col - 1 >= 0:
             row, col = self.row, self.col-1
             self.trajectory.append([self.row, self.col + 1, self.x, self.y, None, self.map.array[row][col]])
             self.col -= 1
             self.x = self.map.ys[self.col]
             self.draw_trajectory()
-            self.remove_draw_add_road_part('ok', 'left')
+            colectible = self.remove_draw_add_road_part('ok', 'left')
+            return "ok", colectible
         else:
-            return "wrong"
+            return "wrong", obsta
 
     def remove_trajectory(self):
         while self.trajectory_lines:
@@ -314,11 +320,9 @@ class Player:
 
     def step_back(self, plan=False):
         if len(self.trajectory) > 0:
-            # print(self.map.array)
             row, col, x, y, t, obj = self.trajectory.pop(-1)
             self.map.array[obj.row][obj.col] = obj
             obj.draw()
-            # print(self.map.array)
             self.row = row
             self.col = col
             self.x = x
@@ -329,15 +333,18 @@ class Player:
                 self.map.canvas.delete(t)
                 self.map.task.parent.parent.road.remove_last_part()
 
+        if plan == True:
+            for traj in self.trajectory_lines:
+                self.map.canvas.tag_raise(traj)
+            self.map.canvas.tag_raise(self.img_id)
+
     def draw_trajectory(self):
         row, col, x, y, _, obj = self.trajectory[-1]
         t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.grid_col, width=10)
         self.trajectory[-1][4] = t
         self.trajectory_lines.append(t)
-        # return self.map.canvas.create_image(x, y, image=self.trajectory_img, anchor='c')
 
     def reset_game(self, plan=False):
-
         while len(self.trajectory) > 0:
             self.step_back(plan)
 
@@ -347,25 +354,6 @@ class Player:
         self.x = self.start_x
         self.y = self.start_y
         self.trajectory = []
-        # print("Zaciatocna pozicia: ",self.row, self.col)
-        # for traj in self.trajectory:
-        #     row, col, x, y, t, obj = traj
-        #     self.map.canvas.delete(t)
-        #     self.map.array[row][col] = obj
-        #     obj.draw()
-        # self.trajectory = []
-        # self.remove()
-        # self.x = self.start_x
-        # self.y = self.start_y
-        # self.row = self.start_row
-        # self.col = self.start_col
-        # self.coll_collected = {}
-        # self.draw()
-        # for i in range(len(self.map.array)):
-        #     for j in range(len(self.map.array[i])):
-        #         if isinstance(self.map.array[i][j], Blank) and self.map.array[i][j].was is not None:
-        #             self.map.array[i][j] = self.map.array[i][j].was
-        #             self.map.array[i][j].draw()
 
 
 class Blank:
