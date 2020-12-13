@@ -227,7 +227,7 @@ class CreateTaskSetScreen(Screen):
 
     def create_file(self):
         set_string = 'Nazov: ' + self.set_name.get() + '\n'
-        set_string += 'Mapa: ' + self.folder_name + '\n\n# Nastavenie prekazok #\n'
+        set_string += 'Mapa: ' + '_'.join(self.folder_name.split(' ')) + '\n\n# Nastavenie prekazok #\n'
         for i in range(len(self.obstacle_options.parts)):
             set_string += 'x' if i == 0 else ('y' if i == 1 else 'z')
             guard_mode = self.obstacle_options.parts[i].get_selected_mode()

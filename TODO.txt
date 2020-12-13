@@ -1,9 +1,11 @@
 Zatiaľ nefunguje (bude sa ešte implementovať):
 
 Pri riešení úloh:
+- spätná väzba: Zvuky (pri zobraní predmetu, pri zaseknutí na nepovolenom pohybe, pri prejdení úlohy)
 - zatiaľ sa mapa zdeformuje (resizne) vždy na jednu veľkosť, neskôr bude toto prerobené tak,
 aby pomer strán mapy zostal zachovaný
 - zadanie úlohy bude mať krajšie formátovanie
+- tlačidlá na posúvanie úloh sú momentálne v cykle, ale nebudú (budú sa objavovať podľa poradia úlohy)
 - pod časťou cesty, ktorá sa nemôže vykonať, sa bude zobrazovať príčina (prekážka), ktorá v pohybe
 bráni, nie X
 - overovanie správnosti riešenia
