@@ -1,4 +1,5 @@
 from PIL import ImageTk, Image
+from CommonFunctions import *
 
 PART_W = 0
 PART_H = 0
@@ -189,7 +190,8 @@ class Player:
         self.coll_collected = {}
         img = Image.open("mapy/{}/character.png".format(self.map.name))
         self.trajectory = []
-        img = img.resize((PART_W, PART_H))
+        # img = img.resize((PART_W, PART_H))
+        img = resize_image(img, PART_W, PART_H)
         self.image = ImageTk.PhotoImage(img)
         image = Image.new('RGBA', (PART_W, PART_H), translate_color(self.map.grid_col))
         self.trajectory_img = ImageTk.PhotoImage(image)
@@ -384,7 +386,8 @@ class Collectible:
         self.col = j
         img = Image.open("mapy/{}/collectibles/{}.png".format(self.map.name, self.name))
         # img = resize_image_to_grid(img)
-        img = img.resize((PART_W, PART_H))
+        # img = img.resize((PART_W, PART_H))
+        img = resize_image(img, PART_W, PART_H)
         self.img = img
         self.image = ImageTk.PhotoImage(img)
 
@@ -410,7 +413,8 @@ class Obstacle:
         self.col = j
         img = Image.open("mapy/{}/obstacles/{}.png".format(self.map.name, self.name))
         # img = resize_image_to_grid(img)
-        img = img.resize((PART_W, PART_H))
+        # img = img.resize((PART_W, PART_H))
+        img = resize_image(img, PART_W, PART_H)
         self.img = img
         self.image = ImageTk.PhotoImage(img)
         self.guardians_ids = []

@@ -9,9 +9,11 @@ aby pomer strán mapy zostal zachovaný
 - otáčanie postavičky podľa pohybov
 - označenie a úprava viacerých šípok naraz (pri označení viacerých šípok sa s nimi nedá nič robiť,
 neskôr bude pridané "masové" upravovanie / vymazávanie" alebo zrušená možnosť viacnásobného označenia)
+- zobrazenie prekážky pod šípkou
 
 Pri vytváraní mapy:
 - zvolenie farby mriežky (odlišné od trajektórie)
+- zakázanie vytvorenia mapy s názvom, ktoré už existuje
 
 Pri vytváraní sady úloh:
 - kontrola, či sada s rovnakým názvom už existuje

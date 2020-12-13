@@ -108,6 +108,7 @@ class CreateMapScreen(Screen):
             threading.Thread(target=self.save_map, args=(self.map_name.get(),)).start()
 
     def save_map(self, name):
+        name =  strip_accents(name)
         dir = "mapy/" + name + "/"
         for path in [dir, dir + "obstacles", dir + "collectibles"]:
             os.mkdir(path)

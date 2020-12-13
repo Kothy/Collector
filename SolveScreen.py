@@ -22,6 +22,7 @@ class SolveScreen(Screen):
         self.show_common()
         self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
         self.actual_regime = None
+        self.task_not_draw = True
 
     def check_move(self, move, dir, obsta):
         map_name = self.tasks_set.get_actual_task().map.name
@@ -115,6 +116,9 @@ class SolveScreen(Screen):
 
     def go_to_menu(self):
         # print("Prechod do menu")
+        if self.task_not_draw:
+            self.unbind_all()
+            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
@@ -126,7 +130,7 @@ class SolveScreen(Screen):
         return arr
 
     def read_task(self, lines, map_name):
-
+        self.task_not_draw = False
         task_index = int(float(lines.pop(0)))
         name = lines.pop(0).split(":")[1].strip()
         typ = lines.pop(0).split(":")[1].strip()
@@ -143,7 +147,7 @@ class SolveScreen(Screen):
             map_string += lines.pop(0) + "\n"
 
         lines = self.remove_lines(lines, 1)
-        self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name, "", solvable)
+        self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name.replace(" ", "_"), "", solvable)
         return lines
 
     def draw_task_assignment(self, name):

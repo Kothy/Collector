@@ -1,0 +1,15 @@
+Nazov: Mapa_Zberatela_kopia
+
+# Nastavenia postavicky #
+Meno: Emilos
+Otacanie: dole/hore
+Smerovanie: -
+Trajektoria: zlta
+
+# Predmety #
+a,b,c,d
+
+# Prekazky #
+x,y,z
+
+
