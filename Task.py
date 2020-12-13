@@ -129,7 +129,6 @@ class Task:
         lines = self.remove_lines(lines, 3)
 
         self.char_name = lines.pop(0).split(":")[1].strip()
-        # print(self.parent.parent.task_text_mode)
 
         text = self.parent.parent.canvas.itemcget(self.parent.parent.task_text_mode, 'text')
         if "{}" in text:
@@ -149,7 +148,7 @@ class Task:
         self.map = Map(self.map_name, self.map_str, self.parent.canvas, self, self.traject_and_grid_color)
 
     def draw_map_bg(self):
-        img = Image.open("mapy/{}/map_bg.png".format(self.map_name))
+        img = Image.open("mapy/{}/map.png".format(self.map_name))
         img = img.resize((900, 480))
         self.map_bg_img = ImageTk.PhotoImage(img)
 

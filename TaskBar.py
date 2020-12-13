@@ -83,6 +83,9 @@ class TaskBar(CanvasObject):
     def clear_clicked(self, _):
         self.path.destroy()
 
+    def get_counts(self):
+        ','.join(item.get_string() for item in self.count_bar.parts)
+
 class CountBarItem(CanvasObject):
 
     def __init__(self, parent, img, x, y, index):
@@ -127,6 +130,11 @@ class CountBarItem(CanvasObject):
         if self.parts[1].text == 'neurčené':
             self.parts[2].hide()
 
+    def get_string(self):
+        word_to_sign = {'neurčené': '?', 'práve': '=', 'viac ako': '>', 'menej ako': '<'}
+        return 'abcd'[self.index] + word_to_sign[self.parts[1].text] + \
+               ('' if self.parts[1].text != 'neurčené' else self.set_count.get())
+
 class Path(CanvasObject):
 
     def __init__(self, parent, imgs):
@@ -150,6 +158,9 @@ class Path(CanvasObject):
     def destroy(self):
         super(Path, self).destroy()
         self.path = []
+
+    def get_path(self):
+        return ''.join(['abcd'[i] for i in self.path])
 
 class PathBarItem(CanvasObject):
 

@@ -13,8 +13,9 @@ class CreateTaskScreen(Screen):
 
     SET_NAME_LENGTH = 28
 
-    def __init__(self, parent, folder):
+    def __init__(self, parent, folder, task=None):
         self.folder = folder
+        self.task = task
         super(CreateTaskScreen, self).__init__(parent)
 
     def load_screen(self):
@@ -213,18 +214,26 @@ class CreateTaskScreen(Screen):
         if text == 'Späť':
             self.parent.close_task_screen()
         elif text == 'Ulož':
-            self.parent.close_task_screen(Task(self.parent, 'index', self.set_name.get(),
-                                               self.task_type_options.checked_index, self.task_mode_btn.text,
-                                               self.set_rows.get(),
-                                               self.set_cols.get(), self.set_steps.get(),
-                                               'assign',
-                                               'map_str', 'map_name', 'char_name', True, False))
+            self.parent.close_task_screen(self.create_task())
         elif text == 'oba':
             self.task_mode_btn.change_text('priamy')
         elif text == 'priamy':
             self.task_mode_btn.change_text('plánovací')
         elif text == 'plánovací':
             self.task_mode_btn.change_text('oba')
+
+    def create_task(self):
+        task_type = ['voľná', 'počty', 'cesta'][self.task_type_options.checked_index]
+        if task_type == 'voľná':
+            assignment = ''
+        elif task_type == 'počty':
+            assignment = self.task_bar.get_counts()
+        else:
+            assignment = self.task_bar.path.get_path()
+        map = [['.','.','.','a','.','.'],['.','.','x','.','y','b']]
+        return Task(self.parent, 'index', self.set_name.get(), task_type,
+                    self.task_mode_btn.text, self.set_rows.get(), self.set_cols.get(),
+                    self.set_steps.get(), assignment, map, None, None, True, False)
 
     def options_changed(self, index):
         self.task_bar.set_bar(index)

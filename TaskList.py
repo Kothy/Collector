@@ -90,9 +90,14 @@ class TaskListItem(CanvasObject):
 
     def __init__(self, parent, task_name, index, move_imgs, edit_img, delete_img):
         self.parent, self.canvas = parent, parent.canvas
-        self.index, self.name = index, task_name
+        self.index, self.name = index, self.checked_task_name(task_name)
         self.move_imgs, self.edit_img, self.delete_img = move_imgs, edit_img, delete_img
         self.create_task()
+
+    def checked_task_name(self, name):
+        if len(name) > 20:
+            return name[:17] + '...'
+        return name
 
     def create_task(self):
         self.parts = [
@@ -121,8 +126,8 @@ class TaskListItem(CanvasObject):
         self.parent.move_task_up(self.index+1)
 
     def rename(self, new_name, index):
-        self.name, self.index = new_name, index
-        self.canvas.itemconfig(self.parts[0], text=str(index + 1) + '. ' + new_name)
+        self.name, self.index = self.checked_task_name(new_name), index
+        self.canvas.itemconfig(self.parts[0], text=str(index + 1) + '. ' + self.name)
 
     def show_up_arrow(self):
         self.canvas.itemconfig(self.parts[1], state='normal')
