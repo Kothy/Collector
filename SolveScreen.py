@@ -114,7 +114,10 @@ class SolveScreen(Screen):
         self.tasks_set.step_back()
 
     def go_to_menu(self):
-        print("Prechod do menu")
+        # print("Prechod do menu")
+        player = self.tasks_set.get_player()
+        if player.planned_move == True:
+            return
         self.unbind_all()
 
     def remove_lines(self, arr, num):
@@ -223,6 +226,8 @@ class SolveScreen(Screen):
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
+
+        player.remove_trajectory()
         self.remove_task()
         self.road.clear_road()
         self.tasks_set.next_task()
@@ -279,7 +284,7 @@ class SolveScreen(Screen):
                                                    back, clear])
 
     def clear_road(self, _):
-        print("stlacena metlicka")
+        # print("stlacena metlicka")
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
