@@ -51,57 +51,55 @@ class SolveScreen(Screen):
         self.road.selected_parts = []
 
     def change_direction(self, direction):
-
         for part in self.road.selected_parts:
             rp = self.road.road_parts[part]
             rp.change_direction(direction)
             self.check_changed(part)
 
-
     def move_down(self, _):
-        if self.road.number_of_active_road_parts >=16:
-            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("down")
             return
+        if self.road.number_of_active_road_parts >=16:
+            return
         move, obsta = player.move_down()
         self.check_move(move, "down", obsta)
 
     def move_up(self, _):
-        if self.road.number_of_active_road_parts >= 16:
-            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("up")
             return
+        if self.road.number_of_active_road_parts >=16:
+            return
         move, obsta = player.move_up()
         self.check_move(move, "up", obsta)
 
     def move_right(self, _):
-        if self.road.number_of_active_road_parts >= 16:
-            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("right")
             return
+        if self.road.number_of_active_road_parts >=16:
+            return
         move, obsta = player.move_right()
         self.check_move(move, "right", obsta)
 
     def move_left(self, _):
-        if self.road.number_of_active_road_parts >= 16:
-            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("left")
+            return
+        if self.road.number_of_active_road_parts >=16:
             return
         move, obsta = player.move_left()
         self.check_move(move, "left", obsta)
