@@ -1,0 +1,11 @@
+Zatiaľ nefunguje:
+Overovanie správnosti odpovede
+Nastavenie, že sa dá ísť na ďalšiu úlohu až po vyriešení aktuálnej.
+zabezpečie proti nesprávnym súborom.
+Otáčanie postavičky podľa pohybov.
+
+
+Obmedzenia:
+- ak je označená jedna šípka v ceste, dá sa prepísať alebo vymazať v plánovacom režime
+- ak je označených viac šípok a stlačí sa metlička alebo ľubovoľná šípka, nestane sa nič
+
