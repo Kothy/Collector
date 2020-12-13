@@ -178,13 +178,18 @@ class CreateTaskSetScreen(Screen):
             self.set_error_text('Chyba: Pred pridaním úlohy vyber mapu')
             return
         self.set_error_text('')
-        self.hide()
         self.parent.create_task_screen_init(self.folder_name)
 
     def add_task(self, task):
         self.task_list.add_task(task)
         if self.task_list.is_full():
             self.task_add_obj.hide()
+
+    def edit_task(self, task):
+        self.parent.create_task_screen_init(self.folder_name, task)
+
+    def task_edited(self, task):
+        self.task_list.task_edited(task)
 
     def task_space_freed(self):
         self.task_add_obj.show()
@@ -221,26 +226,26 @@ class CreateTaskSetScreen(Screen):
         return True
 
     def create_file(self):
-        set_string = 'Názov: ' + self.set_name.get() + '\n'
-        set_string += 'Mapa: ' + self.folder_name + '\n\n# Nastavenie prekážok #\n'
+        set_string = 'Nazov: ' + self.set_name.get() + '\n'
+        set_string += 'Mapa: ' + self.folder_name + '\n\n# Nastavenie prekazok #\n'
         for i in range(len(self.obstacle_options.parts)):
             set_string += 'x' if i == 0 else ('y' if i == 1 else 'z')
             guard_mode = self.obstacle_options.parts[i].get_selected_mode()
-            set_string += ': ' + ('bod' if guard_mode == 0 else ('kríž' if guard_mode == 1 else 'štvorec')) + '\n'
-        set_string += '\n# Úlohy #\n'
-        set_string += 'Voľný prechod: ' + ('áno' if self.options.checked_index == 0 else 'nie') + '\n\n'
+            set_string += ': ' + ('bod' if guard_mode == 0 else ('kriz' if guard_mode == 1 else 'stvorec')) + '\n'
+        set_string += '\n# Ulohy #\n'
+        set_string += 'Volny prechod: ' + ('ano' if self.options.checked_index == 0 else 'nie') + '\n\n'
 
         for i in range(len(self.task_list.tasks)):
             task = self.task_list.tasks[i]
-            set_string += str(i) + '.\n'
-            set_string += 'Názov: ' + task.name + '\n'
-            set_string += 'Typ: ' + task.type + '\n'
-            set_string += 'Režim: ' + task.mode + '\n'
+            set_string += str(i+1) + '.\n'
+            set_string += 'Nazov: ' + task.name + '\n'
+            set_string += 'Typ: ' + ['volna', 'pocty', 'cesta'][task.type] + '\n'
+            set_string += 'Rezim: ' + ('planovaci' if task.mode == 'plánovací' else task.mode) + '\n'
             set_string += 'Riadkov: ' + task.row + '\n'
-            set_string += 'Stĺpcov: ' + task.col + '\n'
+            set_string += 'Stlpcov: ' + task.col + '\n'
             set_string += 'Krokov: ' + task.steps_count + '\n'
             set_string += 'Zadanie: ' + task.assign + '\n'
-            set_string += 'Riešiteľná: ' + ('áno' if task.solvable else 'nie') + '\n'
+            set_string += 'Riesitelna: ' + ('ano' if task.solvable else 'nie') + '\n'
             set_string += task.map_str + '\n\n'
 
         with open('sady_uloh/' + self.set_name.get().replace(' ', '_') + '.txt', 'w', encoding='utf8') as file:

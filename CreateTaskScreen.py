@@ -20,6 +20,7 @@ class CreateTaskScreen(Screen):
 
     def load_screen(self):
         self.panel_init()
+        self.error_text_init()
         self.backgrounds_init()
         self.task_name_init()
         self.task_type_init()
@@ -27,10 +28,9 @@ class CreateTaskScreen(Screen):
         self.map_sizes_init()
         self.map_init()
         self.task_bar_init()
-        self.error_text_init()
         self.objects = [self.panel_obj, self.background_obj, self.name_input_obj, self.task_type_obj,
-                      self.add_to_map_obj, self.cols_input_obj, self.rows_input_obj, self.map_obj,
-                      self.task_bar_obj, self.error_text]
+                        self.add_to_map_obj, self.cols_input_obj, self.rows_input_obj, self.map_obj,
+                        self.task_bar_obj, self.error_text]
 
     def panel_init(self):
         task_name_text = self.canvas.create_text(650, 25, fill="#0a333f",
@@ -71,6 +71,10 @@ class CreateTaskScreen(Screen):
         self.set_name_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 15, 'italic bold'), width=38,
                                        justify='center', textvariable=self.set_name)
         name_entry_window = self.canvas.create_window(455, 95, window=self.set_name_entry)
+
+        if self.task is not None:
+            self.set_name.set(self.task.name)
+
         self.set_name.trace("w", self.set_name_text_changed)
 
         self.name_input_obj = CanvasObject(self, [task_name_text, name_entry_window], hidden=False)
@@ -82,12 +86,17 @@ class CreateTaskScreen(Screen):
         self.task_mode_btn = ColorButton(self, 1025, 95, 110, 30, 'light_blue', 'oba')
         self.task_mode_btn.bind_clicked()
 
+        if self.task is not None:
+            self.task_mode_btn.change_text(self.task.mode)
+
         task_type_text = self.canvas.create_text(790, 120, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
                                                  anchor='nw', width=530,
                                                  text='Typ úlohy:')
         self.task_type_options = Options(self, 935, 138, ['voľná (bez zadania)',
                                                           'počty predmetov',
-                                                          'postupnosť predmetov'], 0, True)
+                                                          'postupnosť predmetov'],
+                                         0 if self.task is None else self.task.type,
+                                         True)
 
         steps_text = self.canvas.create_text(790, 240, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
                                                  anchor='nw', width=530,
@@ -97,6 +106,10 @@ class CreateTaskScreen(Screen):
         self.set_steps_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 15, 'italic bold'), width=2,
                                        justify='center', textvariable=self.set_steps)
         steps_entry_window = self.canvas.create_window(965, 256, window=self.set_steps_entry)
+
+        if self.task is not None:
+            self.set_steps.set(self.task.steps_count)
+
         self.set_steps.trace("w", self.set_steps_text_changed)
 
         steps_help_text = self.canvas.create_text(990, 245, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
@@ -142,6 +155,10 @@ class CreateTaskScreen(Screen):
         self.set_rows_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 15, 'italic bold'), width=2,
                                        justify='center', textvariable=self.set_rows)
         rows_entry_window = self.canvas.create_window(255, 135, window=self.set_rows_entry)
+
+        if self.task is not None:
+            self.set_rows.set(self.task.row)
+
         self.set_rows.trace("w", self.set_rows_text_changed)
 
         self.rows_input_obj = CanvasObject(self, [rows_text, rows_entry_window], hidden=False)
@@ -153,6 +170,10 @@ class CreateTaskScreen(Screen):
         self.set_cols_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 15, 'italic bold'), width=2,
                                        justify='center', textvariable=self.set_cols)
         cols_entry_window = self.canvas.create_window(600, 135, window=self.set_cols_entry)
+
+        if self.task is not None:
+            self.set_cols.set(self.task.col)
+
         self.set_cols.trace("w", self.set_cols_text_changed)
 
         self.cols_input_obj = CanvasObject(self, [cols_text, cols_entry_window], hidden=False)
@@ -173,14 +194,21 @@ class CreateTaskScreen(Screen):
         assignment_line = self.canvas.create_line(205, 560, 205, 635, fill='#b6e5da', width=4)
         self.task_bar = TaskBar(self, self.folder)
 
+        if self.task is not None:
+            self.options_changed(self.task.type)
+            self.task_bar.fill(self.task.assign, self.task.type)
+
         self.task_bar_obj = CanvasObject(self, [task_bar_text, assignment_line, self.task_bar], False)
 
     def error_text_init(self):
-        self.error_text = self.canvas.create_text(790, 500, fill="darkred",
-                                                  font=('Comic Sans MS', 17, 'italic bold'),
+        self.error_text = self.canvas.create_text(780, 505, fill="darkred",
+                                                  font=('Comic Sans MS', 15, 'italic bold'),
                                                   anchor='nw', width=530,
                                                   text='',
                                                   state="normal")
+
+    def task_bar_changed(self):
+        self.set_error_text('')
 
     def set_name_text_changed(self, *args):
         if len(self.set_name.get()) > self.SET_NAME_LENGTH:
@@ -212,9 +240,9 @@ class CreateTaskScreen(Screen):
 
     def clicked_btn(self, text):
         if text == 'Späť':
-            self.parent.close_task_screen()
+            self.parent.delete_task_screen()
         elif text == 'Ulož':
-            self.parent.close_task_screen(self.create_task())
+            self.create_task()
         elif text == 'oba':
             self.task_mode_btn.change_text('priamy')
         elif text == 'priamy':
@@ -223,17 +251,42 @@ class CreateTaskScreen(Screen):
             self.task_mode_btn.change_text('oba')
 
     def create_task(self):
-        task_type = ['voľná', 'počty', 'cesta'][self.task_type_options.checked_index]
-        if task_type == 'voľná':
+        name = self.set_name.get()
+        if name == '':
+            self.set_error_text('Chyba: Zadaj názov úlohy')
+            return
+        rows, cols = self.set_rows.get(), self.set_cols.get()
+        if rows == '':
+            self.set_error_text('Chyba: Mapa musí mať aspoň 1 riadok')
+            return
+        if cols == '':
+            self.set_error_text('Chyba: Mapa musí mať aspoň 1 stĺpec')
+            return
+        if int(rows)*int(cols) < 2:
+            self.set_error_text('Chyba: Mapa musí mať aspoň 2 políčka')
+            return
+        task_type = self.task_type_options.checked_index
+        if task_type == 0:
             assignment = ''
-        elif task_type == 'počty':
+        elif task_type == 1:
             assignment = self.task_bar.get_counts()
+            if '<,' in assignment or '>,' in assignment or '=,' in assignment:
+                self.set_error_text('Chyba: V zadaní chýba niektorá z hodnôť')
+                return
+            if not self.task_bar.assignment_is_valid():
+                self.set_error_text('Chyba: Urči aspoň 1 predmet na zozbieranie')
+                return
         else:
             assignment = self.task_bar.path.get_path()
-        map = [['.','.','.','a','.','.'],['.','.','x','.','y','b']]
-        return Task(self.parent, 'index', self.set_name.get(), task_type,
-                    self.task_mode_btn.text, self.set_rows.get(), self.set_cols.get(),
+            if assignment == '':
+                self.set_error_text('Chyba: Pridaj do zadania aspoň 1 predmet')
+                return
+        map = '\n'.join(['.'*int(cols) for i in range(int(rows))])
+
+        task = Task(self.parent, None if self.task is None else self.task.index, name, task_type,
+                    self.task_mode_btn.text, rows, cols,
                     self.set_steps.get(), assignment, map, None, None, True, False)
+        self.parent.close_task_screen(task)
 
     def options_changed(self, index):
         self.task_bar.set_bar(index)

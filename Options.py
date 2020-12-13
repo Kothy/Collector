@@ -6,7 +6,7 @@ class Options(CanvasObject):
     def __init__(self, parent, x, y, texts, checked_id=0, let_parent_know_about_changed=False):
         self.parent, self.canvas = parent, parent.canvas
         self.x, self.y = x, y
-        self.checked_index = 0
+        self.checked_index = checked_id
         self.let_parent_know_about_changes = let_parent_know_about_changed
         self.create_checkboxes(texts, checked_id)
 

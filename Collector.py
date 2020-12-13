@@ -57,14 +57,21 @@ class Collector:
         self.destroy_old_screen()
         self.screen = CreateTaskSetScreen(self)
 
-    def create_task_screen_init(self, folder):
-        self.task_screen = CreateTaskScreen(self, folder)
+    def create_task_screen_init(self, folder, task=None):
+        self.screen.hide()
+        self.task_screen = CreateTaskScreen(self, folder, task)
 
-    def close_task_screen(self, task=None):
+    def close_task_screen(self, task):
+        self.delete_task_screen()
+        if task is not None:
+            if task.index is None:
+                self.screen.add_task(task)
+            else:
+                self.screen.task_edited(task)
+
+    def delete_task_screen(self):
         self.task_screen.destroy()
         self.task_screen = None
-        if task is not None:
-            self.screen.add_task(task)
         self.screen.show()
 
     def destroy_old_screen(self):

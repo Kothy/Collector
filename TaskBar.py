@@ -84,7 +84,38 @@ class TaskBar(CanvasObject):
         self.path.destroy()
 
     def get_counts(self):
-        ','.join(item.get_string() for item in self.count_bar.parts)
+        return ','.join(item.get_string() for item in self.count_bar.parts)
+
+    def assignment_is_valid(self):
+        for item in self.count_bar.parts:
+            btn_text = item.get_button_text()
+            if btn_text in ('neurčené', 'menej ako'):
+                continue
+            count = int(item.get_count_text())
+            if (btn_text == 'práve' and count > 0) or (btn_text == 'viac ako' and count >= 0):
+                return True
+        return False
+
+    def fill(self, assignment, type):
+        if type == 0:
+            return
+        if type == 1:
+            split = assignment.split(',')
+            for i in range(len(split)):
+                item = split[i]
+                if item[1] == '<':
+                    self.count_bar.parts[i].set_item('menej ako', item[2])
+                elif item[1] == '>':
+                    self.count_bar.parts[i].set_item('viac ako', item[2])
+                elif item[2] == '?':
+                    self.count_bar.parts[i].set_item('neurčené', '')
+                else:
+                    self.count_bar.parts[i].set_item('práve', item[2])
+        elif type == 2:
+            self.path.set_path(assignment)
+
+    def task_bar_changed(self):
+        self.parent.task_bar_changed()
 
 class CountBarItem(CanvasObject):
 
@@ -110,10 +141,16 @@ class CountBarItem(CanvasObject):
 
     def set_count_text_changed(self, *args):
         count = self.set_count.get()
-        if len(count) > 2 or (len(count) > 0 and count[-1] not in '0123456789') or (len(count) == 2 and count[0] == '0'):
+        if (len(count) > 2 or
+                (len(count) > 0 and count[-1] not in '0123456789') or
+                (len(count) == 2 and count[0] == '0') or
+                (self.get_button_text() == 'menej ako' and len(count) == 1 and count[0] == '0')):
             self.set_count.set(count[:-1])
+        else:
+            self.parent.task_bar_changed()
 
     def clicked_btn(self, text):
+        self.parent.task_bar_changed()
         if text == 'neurčené':
             self.parts[2].show()
             self.parts[1].change_text('viac ako')
@@ -127,13 +164,25 @@ class CountBarItem(CanvasObject):
 
     def show(self):
         super(CountBarItem, self).show()
-        if self.parts[1].text == 'neurčené':
+        if self.get_button_text() == 'neurčené':
             self.parts[2].hide()
 
     def get_string(self):
-        word_to_sign = {'neurčené': '?', 'práve': '=', 'viac ako': '>', 'menej ako': '<'}
+        word_to_sign = {'neurčené': '=', 'práve': '=', 'viac ako': '>', 'menej ako': '<'}
         return 'abcd'[self.index] + word_to_sign[self.parts[1].text] + \
-               ('' if self.parts[1].text != 'neurčené' else self.set_count.get())
+               ('?' if self.get_button_text() == 'neurčené' else self.set_count.get())
+
+    def set_item(self, button_text, count):
+        self.parts[1].change_text(button_text)
+        if button_text != 'neurčené':
+            self.parts[2].show()
+        self.set_count.set(count)
+
+    def get_button_text(self):
+        return self.parts[1].text
+
+    def get_count_text(self):
+        return self.set_count.get()
 
 class Path(CanvasObject):
 
@@ -143,6 +192,7 @@ class Path(CanvasObject):
         self.path = []
 
     def add_item(self, index):
+        self.parent.task_bar_changed()
         if len(self.path) > 11:
             return
         self.path.append(index)
@@ -161,6 +211,10 @@ class Path(CanvasObject):
 
     def get_path(self):
         return ''.join(['abcd'[i] for i in self.path])
+
+    def set_path(self, path):
+        for char in path:
+            self.add_item({'a': 0, 'b': 1, 'c': 2, 'd': 3}[char])
 
 class PathBarItem(CanvasObject):
 

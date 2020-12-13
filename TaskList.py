@@ -43,7 +43,12 @@ class TaskList(CanvasObject):
             self.parent.task_space_freed()
 
     def edit_task(self, index):
-        pass
+        self.tasks[index].index = index
+        self.parent.edit_task(self.tasks[index])
+
+    def task_edited(self, task):
+        self.tasks[task.index] = task
+        self.parts[task.index].rename(task.name, task.index)
 
     def rename_parts(self, index, swap=False):
         if swap:
