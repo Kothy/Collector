@@ -33,3 +33,5 @@ v pravom dolnom rohu. Pri klávesnici sa tiež nachádza "krok späť" a intelig
 
 
 Časti, ktoré ešte nefungujú, sú popísané v súbore TODO.txt
+
+Žiadne vytvorené sady úloh nie sú zmysluplné.

@@ -4,6 +4,7 @@ Pri riešení úloh:
 - spätná väzba: Zvuky (pri zobraní predmetu, pri zaseknutí na nepovolenom pohybe, pri prejdení úlohy)
 - zatiaľ sa mapa zdeformuje (resizne) vždy na jednu veľkosť, neskôr bude toto prerobené tak,
 aby pomer strán mapy zostal zachovaný
+- vyznačenie ohrozených políčok bude graficky prerobené
 - zadanie úlohy bude mať krajšie formátovanie
 - tlačidlá na posúvanie úloh sú momentálne v cykle, ale nebudú (budú sa objavovať a miznúť podľa poradia úlohy)
 - pod časťou cesty, ktorá sa nemôže vykonať, sa bude zobrazovať príčina (prekážka), ktorá v pohybe bráni, nie X
