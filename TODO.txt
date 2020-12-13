@@ -5,9 +5,8 @@ Pri riešení úloh:
 - zatiaľ sa mapa zdeformuje (resizne) vždy na jednu veľkosť, neskôr bude toto prerobené tak,
 aby pomer strán mapy zostal zachovaný
 - zadanie úlohy bude mať krajšie formátovanie
-- tlačidlá na posúvanie úloh sú momentálne v cykle, ale nebudú (budú sa objavovať podľa poradia úlohy)
-- pod časťou cesty, ktorá sa nemôže vykonať, sa bude zobrazovať príčina (prekážka), ktorá v pohybe
-bráni, nie X
+- tlačidlá na posúvanie úloh sú momentálne v cykle, ale nebudú (budú sa objavovať a miznúť podľa poradia úlohy)
+- pod časťou cesty, ktorá sa nemôže vykonať, sa bude zobrazovať príčina (prekážka), ktorá v pohybe bráni, nie X
 - overovanie správnosti riešenia
 - nastavenie, že sa dá ísť na ďalšiu úlohu až po vyriešení aktuálnej
 - zabezpečenie proti nesprávnym súborom
@@ -21,11 +20,12 @@ Pri vytváraní mapy:
 Pri vytváraní sady úloh:
 - kontrola, či sada s rovnakým názvom už existuje
 - kontrola, či je vytváraná úloha riešiteľná a s tým súvisiace nastavenie predchodu na ďalšiu úlohu pri riešení
-(malo by byť zakázané povoliť prechod na ďalšiu úlohu pri vyriešení predchádzajúcej, ak sada obsahuje neriešiteľnú
+(malo by byť zakázané povoliť prechod na ďalšiu úlohu len pri vyriešení predchádzajúcej, ak sada obsahuje neriešiteľnú
 úlohu)
 - zatiaľ nevykresľuje mriežku na náhľade mapy a nedajú sa do nej teda ani v editore pridávať
-objekty => jediný spôsob, ako teda definovať rozloženie mapy pre danú úlohu je priamo v textovom súbore,
+objekty => jediný spôsob, ako teda momentálne definovať rozloženie mapy pre danú úlohu je priamo v textovom súbore,
 ktorý sa vytvorí po uložení sady do zložky sady_uloh a má nasledovnú štruktúru:
+_____________________________________________
 
 Nazov: Sada_Uloh_1
 Mapa: Mapa_1
@@ -54,6 +54,7 @@ p...x
 Nazov: Uloha2
 ...
 
+_________________________________________
 -----> na konci kazdej ulohy je zapis rozlozenia jej mapy - momentalne sa tam ukladaju len
 bodky, ktore zodpovedaju zadanemu poctu riadkov a stlpcov... pre 1. ulohu by sme teda videli:
 .....
@@ -62,7 +63,9 @@ bodky, ktore zodpovedaju zadanemu poctu riadkov a stlpcov... pre 1. ulohu by sme
 ---> kazda bodka predstavuje jedno policko, pricom
 .   -   prazdne
 p   -   pociatocne suradnice postavicky
-a/b/c/d     -   predmety na zbieranie (pismenka zodpovedajú nazvom prekazok v subore vybranej mapy)
-x/y/z       -   prekazky (pismenka opat zodpovedaju nazvom suborov s obrazkami prekazok --> pozri subor mapy)
+a/b/c/d     -   predmety na zbieranie (pismenka zodpovedajú nazvom predmetov v zlozke collectibles vybranej mapy)
+x/y/z       -   prekazky (pismenka opat zodpovedaju nazvom suborov s obrazkami prekazok --> subory sa ukladaju ako x.png, atd)
 POZOR: postavicka ani predmety by nemali byt umiestnene v zonach ohrozenia prekazok
+Poznamka: lomitka su moznosti (napr. Zadanie je bud postupnost predmetov abcbadba alebo udanie poctov a=?,b>3,c<=2,d=1)
 
+--> Celu sadu teda mozno definovat aj bez pomoci editora iba pomocou textoveho suboru
