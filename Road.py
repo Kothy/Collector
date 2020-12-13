@@ -65,14 +65,18 @@ class Road(CanvasObject):
         dirs = []
         for part in self.road_parts:
             if part.index not in self.selected_parts and part.move is not None:
-                dirs.append((part.color, part.direction))
+                dirs.append([part.color, part.direction, None])
+                if part.obstacle is not None:
+                    dirs[-1][2] = part.obstacle_img
 
         self.clear_road()
         self.road_parts = []
         self.create_road_parts()
 
-        for color, dir in dirs:
+        for color, dir, obs in dirs:
             self.add_move(color, dir)
+            if obs is not None:
+                self.road_parts[self.number_of_active_road_parts - 1].add_obstacle(obs)
 
         self.selected_parts = []
 

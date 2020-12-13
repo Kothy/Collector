@@ -12,20 +12,26 @@ class RoadPart(CanvasObject):
         self.direction = None
         self.move_img = None
         self.color = "basic"
+        self.obstacle_img = None
 
     def set_move_img(self, img):
         self.move_img = img
 
     def add_obstacle(self, obstacle_img):
-        img = Image.open(obstacle_img)
-        img = img.resize((30, 30))
-        self.obstacle_img = ImageTk.PhotoImage(img)
+        if isinstance(obstacle_img, str):
+            img = Image.open(obstacle_img)
+            img = img.resize((30, 30))
+            self.obstacle_img = ImageTk.PhotoImage(img)
+        else:
+            self.obstacle_img = obstacle_img
+
         self.obstacle = self.canvas.create_image(25 + self.index * 50, 600, image=self.obstacle_img, anchor='nw')
 
     def remove_obstacle(self):
         if self.obstacle is not None:
             self.canvas.delete(self.obstacle)
             self.obstacle = None
+            self.obstacle_img = None
 
     def clicked(self, _):
         if self.border is None:
@@ -94,3 +100,4 @@ class RoadPart(CanvasObject):
         self.color = None
         self.move_img = None
         self.obstacle = None
+        self.obstacle_img = None
