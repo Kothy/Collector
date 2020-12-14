@@ -68,7 +68,8 @@ class ClickableList:
 
     def deselect_all(self):
         for button in self.buttons:
-            button.leave(None)
+            if button.selected == True:
+                button.leave(None)
 
     def draw_page_buttons(self):
         x = self.x + self.width / 2
@@ -79,7 +80,7 @@ class ClickableList:
         self.canvas.tag_bind(self.next_arrow_obj, '<ButtonPress-1>', self.next_page)
 
     def generate_colors(self):
-        return ["green2", "green3", "green4", "light_blue", "blue", "violet"]
+        return ["green4", "green3", "green2", "light_blue", "blue", "violet"]
 
     def draw(self):
         y = self.y + self.top_pad
@@ -146,6 +147,7 @@ class ListButton:
         self.shifted = False
         self.alt_x = self.x + self.width + 58 + 30
         self.color = "green3"
+        self.selected = False
         self.load_images()
 
     def get_upper_corner(self):
@@ -187,8 +189,10 @@ class ListButton:
         self.list.deselect_all()
         self.canvas.itemconfigure(self.imageObj, state="hidden")
         self.canvas.itemconfigure(self.hoveredObj, state='normal')
+        self.selected = True
 
     def leave(self, _):
+        self.selected = False
         self.canvas.itemconfigure(self.hoveredObj, state='hidden')
         self.canvas.itemconfigure(self.imageObj, state="normal")
 
