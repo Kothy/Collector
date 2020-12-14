@@ -18,18 +18,18 @@ class Collector:
         self.root = tk.Tk()
         self.root.title("Zberateľ")
         self.root.resizable(False, False)
-        self.canvas = tk.Canvas(self.root, width=1275, height=650)
+        self.canvas = tk.Canvas(self.root, width=1280, height=650)
         self.canvas.pack()
 
         # self.canvas.bind("<Button-1>", self.click)
 
     def background_set(self):
         image = Image.open("obrazky/bg.jpg")
-        image = image.resize((1275, 600), Image.ANTIALIAS)
+        image = image.resize((1280, 600), Image.ANTIALIAS)
         self.bg_img = ImageTk.PhotoImage(image)
         self.bg = self.canvas.create_image(0, 50, image=self.bg_img, anchor='nw')
         image = Image.open("obrazky/panel.jpg")
-        image = image.resize((1275, 50), Image.ANTIALIAS)
+        image = image.resize((1280, 50), Image.ANTIALIAS)
         self.panel_img = ImageTk.PhotoImage(image)
         self.panel = self.canvas.create_image(0, 0, image=self.panel_img, anchor='nw')
 
