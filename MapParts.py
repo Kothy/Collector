@@ -53,12 +53,16 @@ class Obstacle:
         self.col = j
         img = Image.open("mapy/{}/obstacles/{}.png".format(self.map.name, self.name))
         img = resize_image(img, self.map.part_w, self.map.part_h)
+        img_sizes = img.size
+        img2 = Image.open("obrazky/obstacle_bg.png").resize((img_sizes[0], img_sizes[1]))
+        self.bg_img = ImageTk.PhotoImage(img2)
         self.img = img
         self.image = ImageTk.PhotoImage(img)
         self.guardians_ids = []
         self.guarded_pos = []
 
     def draw(self):
+        self.bg_img_id = self.map.canvas.create_image(self.x, self.y, image=self.bg_img, anchor='c')
         self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.image, anchor='c')
         self.draw_guardings()
 
@@ -95,6 +99,7 @@ class Obstacle:
 
     def remove(self):
         self.map.canvas.delete(self.img_id)
+        self.map.canvas.delete(self.bg_img_id)
         for guard in self.guardians_ids:
             self.map.canvas.delete(guard)
 

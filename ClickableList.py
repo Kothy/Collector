@@ -80,7 +80,7 @@ class ClickableList:
         self.canvas.tag_bind(self.next_arrow_obj, '<ButtonPress-1>', self.next_page)
 
     def generate_colors(self):
-        return ["green4", "green3", "green2", "light_blue", "blue", "violet"]
+        return ["red2", "orange", "yellow2", "green2", "blue", "violet"]
 
     def draw(self):
         y = self.y + self.top_pad
@@ -148,6 +148,7 @@ class ListButton:
         self.alt_x = self.x + self.width + 58 + 30
         self.color = "green3"
         self.selected = False
+        self.text_color = 'white' if self.color in ('violet', 'red', 'blue', 'green3', 'green4') else '#0a333f'
         self.load_images()
 
     def get_upper_corner(self):
@@ -169,8 +170,15 @@ class ListButton:
         self.list.remove()
         self.list.parent.draw_task_assignment(self.text)
 
+    def choose_text_color(self):
+        if self.color in ('violet', 'red', 'blue', 'green3', 'green4', "red2"):
+            self.text_color = "white"
+        else:
+            self.text_color = '#0a333f'
+
     def change_color(self, color):
         self.color = color
+        self.choose_text_color()
         self.load_images()
 
     def load_images(self):
@@ -179,7 +187,7 @@ class ListButton:
         img3 = Image.open('obrazky/buttons/green.png')
         img3 = img3.resize((self.width, self.height), Image.ANTIALIAS)
         img2 = Image.open('obrazky/folder_icon.png')
-        img2 = img2.resize((self.height, self.height), Image.ANTIALIAS)
+        img2 = img2.resize((self.height + 10, self.height), Image.ANTIALIAS)
 
         self.image = ImageTk.PhotoImage(img)
         self.folder_img = ImageTk.PhotoImage(img2)
@@ -204,9 +212,9 @@ class ListButton:
 
         self.hoveredObj = self.canvas.create_image(x, self.y, image=self.hovered_img, anchor="c")
         self.imageObj = self.canvas.create_image(x, self.y, image=self.image, anchor="c")
-        self.folderObj = self.canvas.create_image(x - self.width / 2.1 - fih, self.y, image=self.folder_img,
+        self.folderObj = self.canvas.create_image(x - self.width / 2.2- fih, self.y, image=self.folder_img,
                                                   anchor="c")
-        self.textObj = self.canvas.create_text(x, self.y, font=("Comic Sans MS", 15), fill="white", text=self.text,
+        self.textObj = self.canvas.create_text(x, self.y, font=("Comic Sans MS", 15), fill=self.text_color, text=self.text,
                                                anchor="c")
 
         self.canvas.tag_bind(self.folderObj, '<ButtonPress-1>', self.click)
