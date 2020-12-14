@@ -170,6 +170,8 @@ class CreateMapScreen(Screen):
                 img = resize_image_by_height(img, 200)
             img.save(objects_dir + '/' + col_names.pop(0))
 
+        self.display_error("Mapa úspešne uložená.")
+
     def backgrounds_init(self):
         image = Image.new('RGBA', (570, 580), (255, 170, 79, 100))
         self.left_bg_img = ImageTk.PhotoImage(image)
@@ -191,11 +193,11 @@ class CreateMapScreen(Screen):
         if len(self.character_name.get()) > CHARACTER_NAME_LENGTH:
             self.character_name.set(self.character_name.get()[:-1])
 
-    def open_file_browser(self, multiple_files=False):
+    def open_file_browser(self, title ,multiple_files=False):
         if multiple_files:
-            return filedialog.askopenfilenames(initialdir="/", title="Select a File", filetypes=FILE_TYPES)
+            return filedialog.askopenfilenames(initialdir="/", title=title, filetypes=FILE_TYPES)
         else:
-            return filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=FILE_TYPES)
+            return filedialog.askopenfilename(initialdir="/", title=title, filetypes=FILE_TYPES)
 
     def shorten_text(self, text, max_len):
         if len(text) < max_len:
@@ -211,7 +213,7 @@ class CreateMapScreen(Screen):
         return s[:h - mod] + s[h + 1:]
 
     def open_browser_character(self, _):
-        path = self.open_file_browser()
+        path = self.open_file_browser("Vyber obrázkok pre postavičku")
         if path:
             file_name = path.split("/")[-1]
             self.character_img_path = path
@@ -226,7 +228,7 @@ class CreateMapScreen(Screen):
             self.character_preview = self.canvas.create_image(440, 170, image=self.character_preview_img, anchor='nw')
 
     def open_browser_map(self, _):
-        path = self.open_file_browser()
+        path = self.open_file_browser("Vyber obrázkok pre mapu")
         if path:
             file_name = path.split("/")[-1]
             self.map_img_path = path
@@ -241,13 +243,13 @@ class CreateMapScreen(Screen):
             self.map_preview = self.canvas.create_image(954, 180, image=self.map_preview_img, anchor='c')
 
     def open_browser_collectibles(self, _):
-        path = self.open_file_browser(multiple_files=True)
+        path = self.open_file_browser("Vyber obrázky pre predmety", multiple_files=True)
         if path and len(path) <= 4 - len(self.collectibles_list.items):
             for item in path:
                 self.collectibles_list.add_item(item)
 
     def open_browser_obstacles(self, _):
-        path = self.open_file_browser(multiple_files=True)
+        path = self.open_file_browser("Vyber obrázky pre prekážky", multiple_files=True)
         if path and len(path) <= 3 - len(self.obstacles_list.items):
             for item in path:
                 self.obstacles_list.add_item(item)

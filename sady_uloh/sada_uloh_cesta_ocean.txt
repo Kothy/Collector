@@ -9,7 +9,7 @@ y: kriz
 Volny_prechod: ano
 
 1.
-Nazov: Uloha1
+Nazov: Prva
 Typ: cesta
 Rezim: oba
 Riadkov: 3
@@ -22,7 +22,7 @@ b....
 pc..x
 
 2.
-Nazov: Uloha2
+Nazov: Druha
 Typ: cesta
 Rezim: oba
 Riadkov: 3
@@ -35,9 +35,9 @@ b....
 .p.x.
 
 3.
-Nazov: Uloha3
+Nazov: Tretia
 Typ: cesta
-Rezim: oba
+Rezim: planovaci
 Riadkov: 3
 Stlpcov: 6
 Krokov: 6
@@ -48,7 +48,7 @@ Riesitelna: ano
 .c..x.
 
 4.
-Nazov: Uloha4
+Nazov: Stvrta
 Typ: cesta
 Rezim: oba
 Riadkov: 5

@@ -84,8 +84,10 @@ class Task:
                 self.char_name,
                 "{} (v tomto počte a poradí) s použitím najviac {} krokov".format(("_ " * len(images_col)),# [:-2]
                                                                                     self.steps_count))
+
         else:
             text = ""
+
         if "x" in self.map_str:
             self.obstacles.append("x")
         if "y" in self.map_str:
@@ -186,7 +188,8 @@ class Task:
         else:
             self.parent.canvas.itemconfig(self.parent.parent.swap_mode_btn, state="hidden")
 
-        self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
+        if self.type != "volna":
+            self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
 
         self.parent.canvas.itemconfig(self.parent.parent.task_name_text, text=str(self.index + 1)+". " + self.name)
         self.parent.canvas.itemconfig(self.parent.parent.task_name_text, state="normal")

@@ -1,0 +1,26 @@
+Nazov: Moja Sada
+Mapa: Mapa_Zberatela
+
+# Nastavenie prekazok #
+x: stvorec
+y: kriz
+z: bod
+
+# Ulohy #
+Volny prechod: ano
+
+1.
+Nazov: Prva
+Typ: volna
+Rezim: oba
+Riadkov: 5
+Stlpcov: 10
+Krokov: 
+Zadanie: 
+Riesitelna: ano
+p........z
+..........
+.....x....
+..........
+y........a
+

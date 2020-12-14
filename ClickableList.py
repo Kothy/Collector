@@ -42,9 +42,7 @@ class ClickableList:
         self.pages = []
         self.load_buttons()
         self.draw_page_buttons()
-        # x1, y1 = self.x, self.y
-        # x2, y2 = self.x + self.width, self.y + self.height
-        # self.canvas.create_rectangle(x1, y1, x2, y2, outline="black", width=2)
+
         self.selected = None
         self.draw()
 
@@ -68,6 +66,10 @@ class ClickableList:
             self.pages.append((i, i + self.on_one_page - 1))
             i += self.on_one_page
 
+    def deselect_all(self):
+        for button in self.buttons:
+            button.leave(None)
+
     def draw_page_buttons(self):
         x = self.x + self.width / 2
         y = self.y + self.height - 40
@@ -76,6 +78,9 @@ class ClickableList:
         self.canvas.tag_bind(self.prev_arrow_obj, '<ButtonPress-1>', self.prev_page)
         self.canvas.tag_bind(self.next_arrow_obj, '<ButtonPress-1>', self.next_page)
 
+    def generate_colors(self):
+        return ["green2", "green3", "green4", "light_blue", "blue", "violet"]
+
     def draw(self):
         y = self.y + self.top_pad
         middle = False
@@ -83,18 +88,24 @@ class ClickableList:
         end_i = self.pages[self.current_page][1]
         middle_i = (self.current_page * self.on_one_page) + int(self.on_one_page/2)
 
+        colors = self.generate_colors()
         for i in range(len(self.buttons)):
             if i >= start_i and i <= end_i and i < middle_i:
+                # lava strana
                 self.buttons[i].y = y
+                self.buttons[i].change_color(colors.pop(0))
                 self.buttons[i].draw()
                 y += self.line_h
 
             elif i >= middle_i and i <= end_i:
+                # prava strana
                 if not middle:
                     middle = True
                     y = self.y + self.top_pad
+                    colors = self.generate_colors()
                 self.buttons[i].y = y
                 self.buttons[i].shifted = True
+                self.buttons[i].change_color(colors.pop(0))
                 self.buttons[i].draw()
                 y += self.line_h
 
@@ -134,6 +145,7 @@ class ListButton:
         self.outline_id = 0
         self.shifted = False
         self.alt_x = self.x + self.width + 58 + 30
+        self.color = "green3"
         self.load_images()
 
     def get_upper_corner(self):
@@ -155,8 +167,12 @@ class ListButton:
         self.list.remove()
         self.list.parent.draw_task_assignment(self.text)
 
+    def change_color(self, color):
+        self.color = color
+        self.load_images()
+
     def load_images(self):
-        img = Image.open('obrazky/buttons/green3.png')
+        img = Image.open('obrazky/buttons/{}.png'.format(self.color))
         img = img.resize((self.width, self.height), Image.ANTIALIAS)
         img3 = Image.open('obrazky/buttons/green.png')
         img3 = img3.resize((self.width, self.height), Image.ANTIALIAS)
@@ -168,6 +184,7 @@ class ListButton:
         self.hovered_img = ImageTk.PhotoImage(img3)
 
     def enter(self, _):
+        self.list.deselect_all()
         self.canvas.itemconfigure(self.imageObj, state="hidden")
         self.canvas.itemconfigure(self.hoveredObj, state='normal')
 
@@ -195,4 +212,4 @@ class ListButton:
         self.canvas.tag_bind(self.imageObj, '<Enter>', self.enter)
         self.canvas.tag_bind(self.textObj, '<Enter>', self.enter)
         self.canvas.tag_bind(self.hoveredObj, '<Leave>', self.leave)
-        # self.canvas.tag_bind(self.textObj, '<Leave>', self.leave)
+        self.canvas.tag_bind(self.textObj, '<Leave>', self.leave)
