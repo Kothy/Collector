@@ -15,6 +15,7 @@ CHARACTER_NAME_LENGTH = 10
 FILE_TYPES = (("Png files", "*.png"), ("JPG files", "*.jpg"))
 ERROR1 = 'Chyba pri ukladaní mapy: nezadaný názov mapy'
 ERROR2 = 'Chyba pri ukladaní mapy: nepovolený názov mapy'
+ERROR30 = 'Chyba pri ukladaní mapy: názov mapy už existuje'
 ERROR3 = 'Chyba pri ukladaní mapy: nezadaný názov postavičky'
 ERROR4 = 'Chyba pri ukladaní mapy: nepovolený názov postavičky'
 ERROR5 = 'Chyba pri ukladaní mapy: nezadaný obrázok postaviky'
@@ -69,6 +70,10 @@ class CreateMapScreen(Screen):
         self.destroy_screen()
         self.parent.main_menu_screen_init()
 
+    def check_if_exist_map_name(self, name):
+        maps = [f.path.replace("mapy/", "") for f in os.scandir("mapy/") if f.is_dir()]
+        return name in maps
+
     def display_error(self, text):
         self.canvas.itemconfig(self.saving_error_text, text=text)
         self.canvas.itemconfig(self.saving_error_text, state=tk.NORMAL)
@@ -80,16 +85,22 @@ class CreateMapScreen(Screen):
             self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 17, 'italic bold'))
 
     def check_inputs(self):
-        if self.map_name.get() == "":
+        self.check_if_exist_map_name(self.map_name.get())
+        map_name = strip_accents(self.map_name.get())
+        char_name = self.map_name.get()
+        if map_name == "":
             self.display_error(ERROR1)
 
-        elif not self.map_name.get().isalnum():
+        elif not map_name.isalnum():
             self.display_error(ERROR2)
 
-        elif self.character_name.get() == "":
+        elif self.check_if_exist_map_name(map_name):
+            self.display_error(ERROR30)
+
+        elif char_name == "":
             self.display_error(ERROR3)
 
-        elif not self.character_name.get().isalnum():
+        elif not char_name.isalnum():
             self.display_error(ERROR4)
 
         elif self.canvas.itemcget(self.player_file_text, 'text') == "":
