@@ -85,7 +85,6 @@ class CreateMapScreen(Screen):
             self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 17, 'italic bold'))
 
     def check_inputs(self):
-        self.check_if_exist_map_name(self.map_name.get())
         map_name = strip_accents(self.map_name.get())
         char_name = self.map_name.get()
         if map_name == "":
