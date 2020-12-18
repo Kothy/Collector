@@ -222,8 +222,9 @@ class SolveScreen(Screen):
         self.menu_btn.bind(self.go_to_menu)
 
         self.screen_panel = CanvasObject(self, [self.task_name_text,
-                                                self.next_task_btn, self.prev_task_btn, self.menu_btn])
+                                                self.next_task_btn, self.menu_btn])
 
+        self.prev_task_btn.hide()
         self.next_task_btn.bind(self.next_task)
         self.prev_task_btn.bind(self.prev_task)
 
@@ -235,20 +236,29 @@ class SolveScreen(Screen):
         if player.planned_move == True:
             return
 
-        player.remove_trajectory()
-        self.remove_task()
-        self.road.clear_road()
-        self.tasks_set.next_task()
-        self.draw_task_and_map()
+        if self.tasks_set.actual < len(self.tasks_set.tasks) - 1:
+            self.prev_task_btn.show()
+            player.remove_trajectory()
+            self.remove_task()
+            self.road.clear_road()
+            self.tasks_set.next_task()
+            self.draw_task_and_map()
+            if self.tasks_set.actual == len(self.tasks_set.tasks) - 1:
+                self.next_task_btn.hide()
 
     def prev_task(self):
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return
-        self.remove_task()
-        self.road.clear_road()
-        self.tasks_set.prev_task()
-        self.draw_task_and_map()
+
+        if self.tasks_set.actual > 0:
+            self.next_task_btn.show()
+            self.remove_task()
+            self.road.clear_road()
+            self.tasks_set.prev_task()
+            self.draw_task_and_map()
+            if self.tasks_set.actual == 0:
+                self.prev_task_btn.hide()
 
     def map_window_init(self):
         image = Image.new('RGBA', (900, 480), (141, 202, 73, 100))

@@ -1,5 +1,5 @@
 from Map import *
-
+from MapParts import *
 
 class Player:
     def __init__(self, map, i, j):
@@ -18,12 +18,71 @@ class Player:
         img = Image.open("mapy/{}/character.png".format(self.map.name))
         img = resize_image(img, self.map.part_w, self.map.part_h)
         self.image = ImageTk.PhotoImage(img)
-        # image = Image.new('RGBA', (self.map.part_w, self.map.part_h), translate_color(self.map.grid_col, 100))
-        # self.trajectory_img = ImageTk.PhotoImage(image)
+        self.images = {"vlavo": None,
+                       "vpravo": None,
+                       "dole": None,
+                       "hore": None}
+        self.actual_rotation = None
+        # img.rotate(90, expand=True).show()
+        self.routing = self.map.task.routing # vpravo, vľavo, hore, dole, -
+        self.rotation = self.map.task.char_rotation # žiadne, vľavo/vpravo, dole/hore, všetky smery
+
+        # print("Otacanie: ", self.rotation)
+        # print("Pociatocne otocenie: ", self.routing)
+
+        if self.routing == "hore":
+            rotating = ["vlavo", "dole", "vpravo"]
+            self.images["hore"] = ImageTk.PhotoImage(img)
+            self.actual_rotation = "hore"
+
+        elif self.routing == "vlavo":
+            rotating = ["dole", "vpravo", "hore"]
+            self.images["vlavo"] = ImageTk.PhotoImage(img)
+            self.actual_rotation = "vlavo"
+
+        elif self.routing == "dole":
+            rotating = ["vpravo", "hore", "vlavo"]
+            self.images["dole"] = ImageTk.PhotoImage(img)
+            self.actual_rotation = "dole"
+
+        elif self.routing == "vpravo":
+            rotating = ["hore", "vlavo", "dole"]
+            self.images["vpravo"] = ImageTk.PhotoImage(img)
+            self.actual_rotation = "vpravo"
+
+        else:
+            rotating = ["vlavo", "dole", "vpravo"]
+            self.images["hore"] = ImageTk.PhotoImage(img)
+            self.actual_rotation = "hore"
+
+        angle = 90
+        for move in rotating:
+            self.images[move] = ImageTk.PhotoImage(img.rotate(angle, expand=True))
+            angle += 90
+
         self.planned_move = False
 
+    def turn_right(self):
+        if self.rotation == "vlavo/vpravo" or self.rotation == "vsetky smery":
+            self.actual_rotation = "vpravo"
+
+    def turn_left(self):
+        if self.rotation == "vlavo/vpravo" or self.rotation == "vsetky smery":
+            self.actual_rotation = "vlavo"
+
+    def turn_up(self):
+        if self.rotation == "dole/hore" or self.rotation == "vsetky smery":
+            self.actual_rotation = "hore"
+
+    def turn_down(self):
+        if self.rotation == "dole/hore" or self.rotation == "vsetky smery":
+            self.actual_rotation = "dole"
+
     def draw(self):
-        self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.image, anchor='c')
+        if self.rotation == "-":
+            self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.image, anchor='c')
+        else:
+            self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.images[self.actual_rotation], anchor='c')
 
     def remove(self):
         self.map.canvas.delete(self.img_id)
@@ -80,6 +139,7 @@ class Player:
             self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col]])
             self.row += 1
             self.y = self.map.xs[self.row]
+            self.turn_down()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part("ok", "down")
             return "ok", colectible
@@ -98,6 +158,7 @@ class Player:
             self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col]])
             self.row -= 1
             self.y = self.map.xs[self.row]
+            self.turn_up()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'up')
             return "ok", colectible
@@ -116,6 +177,7 @@ class Player:
             self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col]])
             self.col += 1
             self.x = self.map.ys[self.col]
+            self.turn_right()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'right')
             return "ok", colectible
@@ -134,6 +196,7 @@ class Player:
             self.trajectory.append([self.row, self.col + 1, self.x, self.y, None, self.map.array[row][col]])
             self.col -= 1
             self.x = self.map.ys[self.col]
+            self.turn_left()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'left')
             return "ok", colectible

@@ -222,32 +222,24 @@ class TaskSet:
         self.tasks[self.actual].remove()
 
     def next_task(self):
-        self.actual += 1
-        if self.actual == len(self.tasks):
-            self.actual = 0
+        if self.actual < len(self.tasks) - 1:
+            self.actual += 1
+            return True
+        else:
+            return False
 
     def prev_task(self):
-        self.actual -= 1
-        if self.actual == 0:
-            self.actual = len(self.tasks) - 1
+        if self.actual > 0:
+            self.actual -= 1
+            return True
+        else:
+            return False
 
     def get_actual_task(self):
         return self.tasks[self.actual]
 
     def get_player(self):
         return self.tasks[self.actual].map.player
-
-    # def move_player_down(self):
-    #     self.tasks[self.actual].map.player.move_down()
-    #
-    # def move_player_up(self):
-    #     self.tasks[self.actual].map.player.move_up()
-    #
-    # def move_player_right(self):
-    #     self.tasks[self.actual].map.player.move_right()
-    #
-    # def move_player_left(self):
-    #     self.tasks[self.actual].map.player.move_left()
 
     def step_back(self):
         self.tasks[self.actual].map.player.step_back()

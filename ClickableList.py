@@ -166,7 +166,7 @@ class ListButton:
 
     def click(self, _):
         self.list.parent.next_task_btn.change_state("normal")
-        self.list.parent.prev_task_btn.change_state("normal")
+        # self.list.parent.prev_task_btn.change_state("normal")
         self.list.remove()
         self.list.parent.draw_task_assignment(self.text)
 
