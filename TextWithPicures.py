@@ -36,6 +36,10 @@ class TextWithImages:
         for word in texts:
             if word == "_":
                 word_w = 45
+            elif word == "\n":
+                x = x_start
+                y += 40
+                continue
             else:
                 id = self.canvas.create_text(x, y, fill="#0a333f",
                             font=('Comic Sans MS', 16, 'italic bold'), text=word + " ", anchor="w")

@@ -2,18 +2,7 @@ from PIL import Image, ImageTk
 from os import listdir
 from os.path import isfile, join
 import math
-
-
-def resize_image_by_width(img, basewidth):
-    wpercent = (basewidth / float(img.size[0]))
-    hsize = int((float(img.size[1]) * float(wpercent)))
-    return img.resize((basewidth, hsize), Image.ANTIALIAS)
-
-
-def resize_image_by_height(img, hsize):
-    wpercent = (hsize / float(img.size[1]))
-    basewidth = int((float(img.size[0]) * float(wpercent)))
-    return img.resize((basewidth, hsize), Image.ANTIALIAS)
+from CommonFunctions import resize_image_by_height, resize_image_by_width
 
 
 class ClickableList:

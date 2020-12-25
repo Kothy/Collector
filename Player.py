@@ -1,5 +1,5 @@
-from Map import *
 from MapParts import *
+
 
 class Player:
     def __init__(self, map, i, j):
@@ -15,20 +15,17 @@ class Player:
         self.trajectory_lines = []
         self.coll_collected = {}
         self.trajectory = []
+        self.steps_count = 0
         img = Image.open("mapy/{}/character.png".format(self.map.name))
         img = resize_image(img, self.map.part_w, self.map.part_h)
         self.image = ImageTk.PhotoImage(img)
-        self.images = {"vlavo": None,
-                       "vpravo": None,
-                       "dole": None,
-                       "hore": None}
+        self.images = {"vlavo": None, "vpravo": None,
+                       "dole": None, "hore": None}
+        self.coll_path = []
         self.actual_rotation = None
-        # img.rotate(90, expand=True).show()
-        self.routing = self.map.task.routing # vpravo, vľavo, hore, dole, -
-        self.rotation = self.map.task.char_rotation # žiadne, vľavo/vpravo, dole/hore, všetky smery
 
-        # print("Otacanie: ", self.rotation)
-        # print("Pociatocne otocenie: ", self.routing)
+        self.routing = self.map.task.routing  # vpravo, vľavo, hore, dole, -
+        self.rotation = self.map.task.char_rotation  # žiadne, vľavo/vpravo, dole/hore, všetky smery
 
         if self.routing == "hore":
             rotating = ["vlavo", "dole", "vpravo"]
@@ -82,7 +79,8 @@ class Player:
         if self.rotation == "-":
             self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.image, anchor='c')
         else:
-            self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.images[self.actual_rotation], anchor='c')
+            self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.images[self.actual_rotation],
+                                                       anchor='c')
 
     def remove(self):
         self.map.canvas.delete(self.img_id)
@@ -99,11 +97,11 @@ class Player:
         return colectible
 
     def check_guarding_obstacle(self, row, col):
-        if not (col >= 0 and row>=0 and row<self.map.rows and col<self.map.cols):
+        if not (col >= 0 and row >= 0 and row < self.map.rows and col < self.map.cols):
             return True, "out"
-        if (isinstance(self.map.array[row][col], Blank) and self.map.array[row][col].guarded):
+        if isinstance(self.map.array[row][col], Blank) and self.map.array[row][col].guarded:
             return True, self.map.array[row][col].guarded_by
-        if (isinstance(self.map.array[row][col], Obstacle)):
+        if isinstance(self.map.array[row][col], Obstacle):
             return True, self.map.array[row][col].name
         return False, None
 
@@ -114,6 +112,7 @@ class Player:
             self.map.array[row][col].remove()
             blank = Blank(self.map, row, col)
             self.map.array[row][col] = blank
+            self.coll_path.append(collectible_name)
             if collectible_name not in self.coll_collected:
                 self.coll_collected[collectible_name] = 1
             else:
@@ -128,7 +127,7 @@ class Player:
         self.map.canvas.itemconfig(self.img_id, state="normal")
 
     def move_down(self):
-        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move==False:
+        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
             self.map.task.parent.parent.road.add_move("basic", "down")
             return None, None
         wrong_move, obsta = self.check_guarding_obstacle(self.row + 1, self.col)
@@ -142,6 +141,8 @@ class Player:
             self.turn_down()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part("ok", "down")
+            # print(self.coll_path)
+            self.steps_count += 1
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -161,6 +162,8 @@ class Player:
             self.turn_up()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'up')
+            # print(self.coll_path)
+            self.steps_count += 1
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -180,6 +183,8 @@ class Player:
             self.turn_right()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'right')
+            # print(self.coll_path)
+            self.steps_count += 1
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -188,17 +193,19 @@ class Player:
         if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
             self.map.task.parent.parent.road.add_move("basic", "left")
             return None, None
-        wrong_move, obsta = self.check_guarding_obstacle(self.row, self.col-1)
+        wrong_move, obsta = self.check_guarding_obstacle(self.row, self.col - 1)
         if wrong_move:
             return "wrong", obsta
         if self.col - 1 >= 0:
-            row, col = self.row, self.col-1
+            row, col = self.row, self.col - 1
             self.trajectory.append([self.row, self.col + 1, self.x, self.y, None, self.map.array[row][col]])
             self.col -= 1
             self.x = self.map.ys[self.col]
             self.turn_left()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'left')
+            # print(self.coll_path)
+            self.steps_count += 1
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -211,7 +218,10 @@ class Player:
         if len(self.trajectory) > 0:
             row, col, x, y, t, obj = self.trajectory.pop(-1)
             self.map.array[obj.row][obj.col] = obj
+            if isinstance(obj, Collectible):
+                self.coll_path.remove(obj.name)
             obj.draw()
+            self.steps_count -= 1
             self.row = row
             self.col = col
             self.x = x
@@ -238,8 +248,10 @@ class Player:
             self.step_back(plan)
 
         self.coll_collected = {}
+        self.coll_path = []
         self.row = self.start_row
         self.col = self.start_col
         self.x = self.start_x
         self.y = self.start_y
+        self.steps_count = 0
         self.trajectory = []

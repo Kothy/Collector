@@ -19,6 +19,7 @@ class Task:
         self.col = col
         self.steps_count = steps
         self.assign = assign
+        # print("zadanie je: ", self.assign)
         self.solvable = solvable
         self.obstacles = []
         self.map_name = map_name
@@ -67,7 +68,7 @@ class Task:
             counts = self.assign.split(",")
             tex, imgs = self.parse_counts(counts)
             images += imgs
-            text = "{} chce pozbierať{} {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
+            text = "{} chce pozbierať \n {} {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
                 self.char_name, tex, "s použitím najviac {} krokov".format(self.steps_count))
 
         elif self.type == "cesta":
@@ -81,7 +82,7 @@ class Task:
             images_col = self.attach_postfix(path, self.map_name, "collectibles")
             images = images + images_col
 
-            text = "{} chce pozbierať {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
+            text = "{} chce pozbierať \n {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
                 self.char_name,
                 "{} (v tomto počte a poradí) s použitím najviac {} krokov".format(("_ " * len(images_col)),# [:-2]
                                                                                     self.steps_count))
