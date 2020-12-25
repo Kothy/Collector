@@ -17,21 +17,23 @@ class Map:
         self.array = []
         self.grid_col = grid_col
         self.rows, self.cols = 0, 0
+        self.width = self.task.map_bg_w
+        self.height = self.task.map_bg_h
         self.read_map()
 
-    def calculate_dims(self):
-        global PART_W, PART_H
-
-        PART_H = int(480 / self.rows)
-        PART_W = int(900 / self.cols)
-
-        self.part_h = PART_H
-        self.part_w = PART_W
-
-        image2 = Image.open("obrazky/guarding.png")
-
-        image2 = resize_image(image2, PART_W, PART_H)
-        self.guarding_img = ImageTk.PhotoImage(image2)
+    # def calculate_dims(self):
+    #     global PART_W, PART_H
+    #
+    #     PART_H = int(480 / self.rows)
+    #     PART_W = int(900 / self.cols)
+    #
+    #     self.part_h = PART_H
+    #     self.part_w = PART_W
+    #
+    #     image2 = Image.open("obrazky/guarding.png")
+    #
+    #     image2 = resize_image(image2, PART_W, PART_H)
+    #     self.guarding_img = ImageTk.PhotoImage(image2)
 
     def find_guarding(self, name):
         for guard in self.task.parent.obstacles_arr:
@@ -46,9 +48,9 @@ class Map:
 
         self.rows = len(lines)
         self.cols = len(lines[0])
-        self.do_grid()
+        self.do_grid2()
 
-        self.calculate_dims()
+        self.calculate_dims2()
         arr = [[None for _ in range(self.cols)] for _ in range(self.rows)]
 
         for i in range(len(lines)):
@@ -87,18 +89,69 @@ class Map:
 
         self.player.remove()
 
-    def do_grid(self):
-        one_row = 480 / self.rows
-        one_col = 900 / self.cols
+    # def do_grid(self):
+    #     one_row = 480 / self.rows
+    #     one_col = 900 / self.cols
+    #
+    #     y = 60
+    #     xs = []
+    #     ys = []
+    #     for row in range(self.rows + 1):
+    #         ys.append(y + (one_row/2))
+    #         y += one_row
+    #
+    #     x = 10
+    #     for row in range(self.cols + 1):
+    #         xs.append(x + (one_col/2))
+    #         x += one_col
+    #
+    #     self.xs = ys
+    #     self.ys = xs
+    #
+    # def draw_grid(self):
+    #     one_row = 480 / self.rows
+    #     one_col = 900 / self.cols
+    #     self.grid_lines = []
+    #
+    #     x1 = 10
+    #     x2 = 910
+    #     y = 60
+    #     for row in range(self.rows + 1):
+    #         self.grid_lines.append(self.canvas.create_line(x1, y, x2, y, width=5, fill=self.grid_col))
+    #         y += one_row
+    #
+    #     x = 10
+    #     y1, y2 = 60, 540
+    #     for row in range(self.cols + 1):
+    #         self.grid_lines.append(self.canvas.create_line(x, y1, x, y2, width=5, fill=self.grid_col))
+    #         x += one_col
 
-        y = 60
+    def calculate_dims2(self):
+        global PART_W, PART_H
+
+        PART_H = int(self.height / self.rows)
+        PART_W = int(self.width / self.cols)
+
+        self.part_h = PART_H
+        self.part_w = PART_W
+
+        image2 = Image.open("obrazky/guarding.png")
+
+        image2 = resize_image(image2, PART_W, PART_H)
+        self.guarding_img = ImageTk.PhotoImage(image2)
+
+    def do_grid2(self):
+        one_row = self.height / self.rows
+        one_col = self.width / self.cols
+
+        y = 300 - (self.height / 2)
         xs = []
         ys = []
         for row in range(self.rows + 1):
             ys.append(y + (one_row/2))
             y += one_row
 
-        x = 10
+        x = 460 - (self.width / 2)
         for row in range(self.cols + 1):
             xs.append(x + (one_col/2))
             x += one_col
@@ -106,20 +159,21 @@ class Map:
         self.xs = ys
         self.ys = xs
 
-    def draw_grid(self):
-        one_row = 480 / self.rows
-        one_col = 900 / self.cols
+    def draw_grid2(self):
+        one_row = self.height / self.rows
+        one_col = self.width / self.cols
         self.grid_lines = []
 
-        x1 = 10
-        x2 = 910
-        y = 60
+        x1 = 460 - (self.width / 2)
+        x2 = 460 + (self.width / 2)
+        y = 300 - (self.height / 2)
         for row in range(self.rows + 1):
             self.grid_lines.append(self.canvas.create_line(x1, y, x2, y, width=5, fill=self.grid_col))
             y += one_row
 
-        x = 10
-        y1, y2 = 60, 540
+        x = 460 - (self.width / 2)
+        y1 = 300 - (self.height / 2)
+        y2 = 300 + (self.height / 2)
         for row in range(self.cols + 1):
             self.grid_lines.append(self.canvas.create_line(x, y1, x, y2, width=5, fill=self.grid_col))
             x += one_col
@@ -132,5 +186,5 @@ class Map:
         self.player.draw()
 
     def draw_map(self):
-        self.draw_grid()
+        self.draw_grid2()
         self.draw_objects()

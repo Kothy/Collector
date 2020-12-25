@@ -2,6 +2,7 @@ from TextWithPicures import TextWithImages
 from PIL import Image, ImageTk
 from Map import Map
 import copy
+from CommonFunctions import resize_image
 
 
 class Task:
@@ -157,10 +158,13 @@ class Task:
 
     def draw_map_bg(self):
         img = Image.open("mapy/{}/map.png".format(self.map_name))
-        img = img.resize((900, 480))
+
+        # img = img.resize((900, 480))
+        img = resize_image(img, 900, 480)
+        self.map_bg_w, self.map_bg_h = img.size
         self.map_bg_img = ImageTk.PhotoImage(img)
 
-        self.map_bg_img_id = self.parent.canvas.create_image(10, 60, image=self.map_bg_img, anchor='nw')
+        self.map_bg_img_id = self.parent.canvas.create_image(460, 300, image=self.map_bg_img, anchor='c')
 
     def __repr__(self):
         return " ".join([str(self.index), self.name, self.type,
