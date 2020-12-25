@@ -39,7 +39,7 @@ class Task:
         text = ""
         for count in arr:
             if not "?" in count:
-                print(count)
+                # print(count)
                 images.append(count[0])
                 if "<=" in count:
                     self.col_counts.append((count[0], "<=", int(count.replace("<=", "")[1:])))
@@ -65,7 +65,7 @@ class Task:
                     count = count.replace("=", " presne ").replace(str(count2), "")
                 count = count[1:] + str(count2) + " _"
                 text += count + " ,"
-        print(self.col_counts)
+        # print(self.col_counts)
         images = self.attach_postfix(images, self.map_name, "collectibles")
         return text[:-1], images
 
