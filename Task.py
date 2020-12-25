@@ -19,6 +19,7 @@ class Task:
         self.col = col
         self.steps_count = steps
         self.assign = assign
+        self.col_counts = []
         # print("zadanie je: ", self.assign)
         self.solvable = solvable
         self.obstacles = []
@@ -38,26 +39,33 @@ class Task:
         text = ""
         for count in arr:
             if not "?" in count:
+                print(count)
                 images.append(count[0])
                 if "<=" in count:
+                    self.col_counts.append((count[0], "<=", int(count.replace("<=", "")[1:])))
                     count2 = int(count.replace("<=", "")[1:])
                     count = count.replace("<=", " najviac ").replace(str(count2), "")
                 elif ">=" in count:
+                    self.col_counts.append((count[0], ">=", int(count.replace(">=", "")[1:])))
                     count2 = int(count.replace(">=", "")[1:])
                     count = count.replace(">=", " najmenej ").replace(str(count2), "")
                 elif ">" in count:
+                    self.col_counts.append((count[0], ">=", int(count.replace(">", "")[1:]) + 1))
                     count2 = int(count.replace(">", "")[1:])
                     count = count.replace(">", " najmenej ").replace(str(count2), "")
                     count2 += 1
                 elif "<" in count:
+                    self.col_counts.append((count[0], "<=", int(count.replace("<", "")[1:]) - 1))
                     count2 = int(count.replace("<", "")[1:])
                     count = count.replace("<", " najviac ").replace(str(count2), "")
                     count2 -= 1
                 else:  #"="  in count
+                    self.col_counts.append((count[0], "=", int(count.replace("=", "")[1:])))
                     count2 = int(count.replace("=", "")[1:])
                     count = count.replace("=", " presne ").replace(str(count2), "")
                 count = count[1:] + str(count2) + " _"
                 text += count + " ,"
+        print(self.col_counts)
         images = self.attach_postfix(images, self.map_name, "collectibles")
         return text[:-1], images
 
