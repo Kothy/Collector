@@ -175,6 +175,9 @@ class SolveScreen(Screen):
         lines = self.remove_lines(lines, 1)
 
         self.tasks_set = TaskSet(tasks_set_name, self.canvas, next_without_solve, obstacles, self)
+
+        self.choose_taskset_btn.show()
+
         if next_without_solve == "ano":
             self.next_task_btn.show()
 
@@ -222,7 +225,10 @@ class SolveScreen(Screen):
 
         self.prev_task_btn = ColorButton(self, 1015, 25, 160, 36, 'orange', 'Predošlá úloha')
         self.menu_btn = ColorButton(self, 75, 25, 100, 36, 'green3', 'Menu')
+        self.choose_taskset_btn = ColorButton(self, 225, 25, 180, 36, 'green3', 'Výber sady úloh')
+        self.choose_taskset_btn.hide()
         self.menu_btn.bind(self.go_to_menu)
+        self.choose_taskset_btn.bind(self.choose_taskset_menu)
 
         self.screen_panel = CanvasObject(self, [self.task_name_text, self.menu_btn])
 
@@ -230,6 +236,11 @@ class SolveScreen(Screen):
         self.next_task_btn.hide()
         self.next_task_btn.bind(self.next_task)
         self.prev_task_btn.bind(self.prev_task)
+
+    def choose_taskset_menu(self):
+        self.canvas.delete("all")
+        self.parent.background_set()
+        self.parent.solve_screen_init()
 
     def remove_task(self):
         self.tasks_set.remove_task_and_map()
