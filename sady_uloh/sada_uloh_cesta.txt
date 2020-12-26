@@ -2,11 +2,11 @@ Nazov: Sada_Uloh_1
 Mapa: Mapa_Zberatela
 
 # Nastavenie prekazok #
-x: stvorec
-y: kriz
+x: kriz
+y: bod
 
 # Ulohy #
-Volny_prechod: ano
+Volny_prechod: nie
 
 1.
 Nazov: Uloha 1
@@ -15,7 +15,7 @@ Rezim: oba
 Riadkov: 3
 Stlpcov: 5
 Krokov:
-Zadanie: abcdbc
+Zadanie: cba
 Riesitelna: ano
 .y.a.
 b.c..
@@ -27,10 +27,10 @@ Typ: cesta
 Rezim: oba
 Riadkov: 3
 Stlpcov: 5
-Krokov: 6
-Zadanie: abcdb
+Krokov: 10
+Zadanie: baac
 Riesitelna: ano
-.y.ac
+ay.ac
 b....
 .p.x.
 
@@ -40,8 +40,8 @@ Typ: cesta
 Rezim: oba
 Riadkov: 3
 Stlpcov: 6
-Krokov: 6
-Zadanie: abc
+Krokov:
+Zadanie: bac
 Riesitelna: ano
 p.y.a.
 .b....

@@ -17,7 +17,7 @@ class Task:
         self.row = row
         self.map_str = map_str
         self.col = col
-        self.steps_count = steps
+        self.steps_count = int(steps)
         self.assign = assign
         self.col_counts = []
         # print("zadanie je: ", self.assign)
@@ -124,6 +124,51 @@ class Task:
         for i in range(num):
             arr.pop(0)
         return arr
+
+    def check_answer(self):
+        if self.type == "pocty":
+            return self.check_count_answer()
+        elif self.type == "cesta":
+            return self.check_path_answer()
+        return True
+
+    def check_path_answer(self):
+
+        if "".join(self.map.player.coll_path) == self.assign and self.steps_count >= self.map.player.steps_count:
+            print("spravna odpoved", self.map.player.steps_count, self.steps_count)
+            self.parent.parent.show_next_task_button()
+            return True
+        print("nespravna odpoved", self.map.player.steps_count, self.steps_count)
+        return False
+
+    def check_count_answer(self):
+        print(self.map.player.coll_collected, self.assign)
+        colle = self.map.player.coll_collected
+        answers = []
+        for count in self.col_counts:
+            col = count[0]
+            sign = count[1]
+            num = count[2]
+            if sign == "=" and col in colle and colle[col] == num:
+                answers.append(True)
+            elif sign == "<=" and col in colle and self.map.player.coll_collected[col] <= num:
+                answers.append(True)
+            elif sign == "<=" and col not in colle:
+                answers.append(True)
+            elif sign == ">=" and col in colle and self.map.player.coll_collected[col] >= num:
+                answers.append(True)
+            elif sign == ">=" and col not in colle and num == 0:
+                answers.append(True)
+            else:
+                answers.append(False)
+        print(answers)
+        if False not in answers and self.steps_count >= self.map.player.steps_count:
+            print("spravna odpoved", self.map.player.steps_count, self.steps_count)
+
+            self.parent.parent.show_next_task_button()
+        else:
+            print("nespravna odpoved", self.map.player.steps_count, self.steps_count)
+        return False not in answers and self.steps_count <= self.map.player.steps_count
 
     def translate_color(self, color):
         if color == "cierna":

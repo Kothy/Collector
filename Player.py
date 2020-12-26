@@ -143,6 +143,8 @@ class Player:
             colectible = self.remove_draw_add_road_part("ok", "down")
             # print(self.coll_path)
             self.steps_count += 1
+            if self.map.task.parent.parent.actual_regime == "priamy":
+                self.map.task.check_answer()
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -164,6 +166,8 @@ class Player:
             colectible = self.remove_draw_add_road_part('ok', 'up')
             # print(self.coll_path)
             self.steps_count += 1
+            if self.map.task.parent.parent.actual_regime == "priamy":
+                self.map.task.check_answer()
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -185,6 +189,8 @@ class Player:
             colectible = self.remove_draw_add_road_part('ok', 'right')
             # print(self.coll_path)
             self.steps_count += 1
+            if self.map.task.parent.parent.actual_regime == "priamy":
+                self.map.task.check_answer()
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -206,6 +212,8 @@ class Player:
             colectible = self.remove_draw_add_road_part('ok', 'left')
             # print(self.coll_path)
             self.steps_count += 1
+            if self.map.task.parent.parent.actual_regime == "priamy":
+                self.map.task.check_answer()
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -220,6 +228,11 @@ class Player:
             self.map.array[obj.row][obj.col] = obj
             if isinstance(obj, Collectible):
                 self.coll_path.remove(obj.name)
+                self.coll_collected[obj.name] -= 1
+
+                if self.coll_collected[obj.name] == 0:
+                    del self.coll_collected[obj.name]
+
             obj.draw()
             self.steps_count -= 1
             self.row = row

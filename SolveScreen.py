@@ -175,6 +175,9 @@ class SolveScreen(Screen):
         lines = self.remove_lines(lines, 1)
 
         self.tasks_set = TaskSet(tasks_set_name, self.canvas, next_without_solve, obstacles, self)
+        if next_without_solve == "ano":
+            self.next_task_btn.show()
+
         while len(lines) > 0 and lines[0] != "##!EOF##":
              lines = self.read_task(lines, map_name)
 
@@ -221,10 +224,10 @@ class SolveScreen(Screen):
         self.menu_btn = ColorButton(self, 75, 25, 100, 36, 'green3', 'Menu')
         self.menu_btn.bind(self.go_to_menu)
 
-        self.screen_panel = CanvasObject(self, [self.task_name_text,
-                                                self.next_task_btn, self.menu_btn])
+        self.screen_panel = CanvasObject(self, [self.task_name_text, self.menu_btn])
 
         self.prev_task_btn.hide()
+        self.next_task_btn.hide()
         self.next_task_btn.bind(self.next_task)
         self.prev_task_btn.bind(self.prev_task)
 
@@ -243,7 +246,7 @@ class SolveScreen(Screen):
             self.road.clear_road()
             self.tasks_set.next_task()
             self.draw_task_and_map()
-            if self.tasks_set.actual == len(self.tasks_set.tasks) - 1:
+            if self.tasks_set.actual == len(self.tasks_set.tasks) - 1 or self.tasks_set.next == "nie":
                 self.next_task_btn.hide()
 
     def prev_task(self):
@@ -259,6 +262,10 @@ class SolveScreen(Screen):
             self.draw_task_and_map()
             if self.tasks_set.actual == 0:
                 self.prev_task_btn.hide()
+
+    def show_next_task_button(self):
+        if self.tasks_set.actual < len(self.tasks_set.tasks) - 1:
+            self.next_task_btn.show()
 
     def map_window_init(self):
         image = Image.new('RGBA', (900, 480), (141, 202, 73, 100))
@@ -401,10 +408,13 @@ class SolveScreen(Screen):
             else:
                 self.road.road_parts[i].change_color("ok")
             self.canvas.update()
-            time.sleep(0.7)
+            time.sleep(0.6)
+
+        self.tasks_set.get_actual_task().check_answer()
         player.reset_game(plan=True)
 
         player.planned_move = False
+
 
     def task_window_init(self):
         # texty tam su na skusku, daj ich potom odtialto prec :) self.task_text_obstacle potom vyuzi aj na info "Ziadne zadanie" v pripade volnej ulohy

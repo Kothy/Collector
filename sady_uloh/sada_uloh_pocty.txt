@@ -6,22 +6,22 @@ x: bod
 y: kriz
 
 # Ulohy #
-Volny_prechod: ano
+Volny_prechod: nie
 
 1.
 Nazov: Uloha1
 Typ: pocty
 Rezim: oba
-Riadkov: 3
-Stlpcov: 6
-Krokov: 6
-Zadanie: a?,b>3,c<=2,d=1
+Riadkov: 5
+Stlpcov: 5
+Krokov: 10
+Zadanie: a?,b=1,c<=2,d=1
 Riesitelna: ano
-.y.a......
-b.c.......
-.p..x.....
-..........
-..........
+.y.a.
+b.c..
+.p..x
+dc...
+.b...
 
 2.
 Nazov: Uloha1
