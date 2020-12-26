@@ -351,10 +351,12 @@ class CreateMapScreen(Screen):
         path_color__text = self.canvas.create_text(300, 520, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
                                                    anchor='ne', width=230, text='Farba trajektórie\na mriežky:')
         self.path_color_choices = ColorButton(self, 360, 533, 100, 30, 'light_blue', 'čierna')
+        self.trajectory_color_choices = ColorButton(self, 480, 533, 100, 30, 'light_blue', 'čierna')
 
-        self.path_color_choices.bind(self.trajectory_and_grid_color_changed)
+        self.path_color_choices.bind(self.grid_color_changed)
+        self.trajectory_color_choices.bind(self.trajectory_color_changed)
 
-    def trajectory_and_grid_color_changed(self):
+    def grid_color_changed(self):
         actual_text = self.path_color_choices.text
         color_choices = ["čierna", "biela", "červená", "zelená", "žltá"]
         index = color_choices.index(actual_text)
@@ -362,6 +364,15 @@ class CreateMapScreen(Screen):
         if index == len(color_choices):
             index = 0
         self.path_color_choices.change_text(color_choices[index])
+
+    def trajectory_color_changed(self):
+        actual_text = self.trajectory_color_choices.text
+        color_choices = ["čierna", "biela", "červená", "zelená", "žltá"]
+        index = color_choices.index(actual_text)
+        index += 1
+        if index == len(color_choices):
+            index = 0
+        self.trajectory_color_choices.change_text(color_choices[index])
 
     def rotation_changed(self):
         actual_text = self.rotated_choices.text
