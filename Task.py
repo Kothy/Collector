@@ -247,8 +247,15 @@ class Task:
             print(message.format('13'))
             nums.append("13")
 
+        if len(lines) > 14:
+            new_lines = lines[14:]
+            new_lines = list(set(new_lines))
+            if not (len(new_lines) == 1 and new_lines[0]=="") :
+                return "Na konci súboru sa nachádzajú nepovolené riadky."
+
         if len(nums) == 0:
             return ""
+
         return message.format(nums[0])
 
 

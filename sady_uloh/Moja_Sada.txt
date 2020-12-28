@@ -1,5 +1,5 @@
 Nazov: Moja Sada
-Mapa: Mapa
+Mapa: Mapa_Zberatela
 
 # Nastavenie prekazok #
 x: stvorec
