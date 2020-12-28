@@ -1,6 +1,7 @@
 from PIL import Image, ImageTk
 import copy
 
+
 class TextWithImages:
     def __init__(self, canvas, x, y, width, text, images):
         self.canvas = canvas

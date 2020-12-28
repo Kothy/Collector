@@ -5,6 +5,8 @@ import copy
 from CommonFunctions import resize_image
 import playsound
 from MapParts import Collectible
+import re
+from tkinter import messagebox
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
 CORRECT_ANS_SOUND = 'sounds/Correct_Answer2.mp3'
@@ -199,8 +201,23 @@ class Task:
         return "black"
 
     def read_map_file(self):
+        # colors = "(cierna|biela|cervena|zelena|zlta)"
+        # pattern = "Nazov: [a-zA-Z0-9_]{1,15}\n\n" + \
+        #           "# Nastavenia postavicky #\n" + \
+        #           "Meno: [a-zA-Z0-9_]{1,10}\n" + \
+        #           "Otacanie: (vsetky smery|ziadne|vlavo/vpravo|dole/hore)\n" + \
+        #           "Smerovanie: (-|vpravo|hore|dole|vlavo)\n" + \
+        #           "Mriezka: {}\n" + \
+        #           "Trajektoria: {}\n\n" \
+        #           "# Predmety #\n" + \
+        #           "(a,b,c,d|a,b,c|a,b|a)\n\n" + \
+        #           "# Prekazky #\n(x,y,z|x,y|x)".format(colors, colors)
+
         with open("mapy/" + self.map_name + "/map_settings.txt") as file:
             full = file.read()
+
+        # if re.match(pattern, full.strip()) == None:
+        #     messagebox.showerror(title="Chyba", message="Chybný súbor mapy.")
 
         lines = full.split("\n")
 

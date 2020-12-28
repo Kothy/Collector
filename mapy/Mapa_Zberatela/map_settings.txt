@@ -13,4 +13,3 @@ a,b,c,d
 # Prekazky #
 x,y,z
 
-

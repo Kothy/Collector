@@ -25,8 +25,8 @@ class Player:
         self.start_rotation = None
         self.actual_rotation = None
 
-        self.routing = self.map.task.routing  # vpravo, vľavo, hore, dole, -
-        self.rotation = self.map.task.char_rotation  # žiadne, vľavo/vpravo, dole/hore, všetky smery
+        self.routing = self.map.task.routing  # vpravo, vlavo, hore, dole, -
+        self.rotation = self.map.task.char_rotation  # ziadne, vlavo/vpravo, dole/hore, vsetky smery
 
         if self.routing == "hore":
             rotating = ["vlavo", "dole", "vpravo"]
@@ -144,7 +144,6 @@ class Player:
             self.turn_down()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part("ok", "down")
-            # print(self.coll_path)
             self.steps_count += 1
             if self.map.task.parent.parent.actual_regime == "priamy":
                 self.map.task.check_answer()
@@ -167,7 +166,6 @@ class Player:
             self.turn_up()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'up')
-            # print(self.coll_path)
             self.steps_count += 1
             if self.map.task.parent.parent.actual_regime == "priamy":
                 self.map.task.check_answer()
@@ -190,7 +188,7 @@ class Player:
             self.turn_right()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'right')
-            # print(self.coll_path)
+
             self.steps_count += 1
             if self.map.task.parent.parent.actual_regime == "priamy":
                 self.map.task.check_answer()
@@ -213,7 +211,7 @@ class Player:
             self.turn_left()
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'left')
-            # print(self.coll_path)
+
             self.steps_count += 1
             if self.map.task.parent.parent.actual_regime == "priamy":
                 self.map.task.check_answer()
