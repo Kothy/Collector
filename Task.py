@@ -5,8 +5,8 @@ import copy
 from CommonFunctions import resize_image
 import playsound
 from MapParts import Collectible
-import re
 from tkinter import messagebox
+import re
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
 CORRECT_ANS_SOUND = 'sounds/Correct_Answer2.mp3'
@@ -27,7 +27,6 @@ class Task:
         self.steps_count = int(steps)
         self.assign = assign
         self.col_counts = []
-        # print("zadanie je: ", self.assign)
         self.solvable = solvable
         self.obstacles = []
         self.map_name = map_name
@@ -46,7 +45,7 @@ class Task:
         text = ""
         for count in arr:
             if not "?" in count:
-                # print(count)
+
                 images.append(count[0])
                 if "<=" in count:
                     self.col_counts.append((count[0], "<=", int(count.replace("<=", "")[1:])))
@@ -72,7 +71,7 @@ class Task:
                     count = count.replace("=", " presne ").replace(str(count2), "")
                 count = count[1:] + str(count2) + " _"
                 text += count + " ,"
-        # print(self.col_counts)
+
         images = self.attach_postfix(images, self.map_name, "collectibles")
         return text[:-1], images
 
@@ -87,13 +86,12 @@ class Task:
                 self.char_name, tex, "s použitím najviac {} krokov".format(self.steps_count))
 
         elif self.type == "cesta":
-            # images_col = self.assign.split(",")
+
             images_col = self.assign.strip()
             path = []
             for part in images_col:
                 path.append(part)
 
-            # images_col = self.attach_postfix(images_col, self.map_name, "collectibles")
             images_col = self.attach_postfix(path, self.map_name, "collectibles")
             images = images + images_col
 
@@ -200,6 +198,60 @@ class Task:
             return "yellow"
         return "black"
 
+    def check_map_file(self, lines):
+        if len(lines) < 14:
+            return "Chýbajúce riadky súboru"
+
+        message = "Chyba súboru na riadku {}."
+        nums = []
+        if re.match("Nazov: [a-zA-Z0-9_]{1,15}", lines[0]) is None:
+            print(message.format('0'))
+            nums.append("0")
+        elif lines[1] != "":
+            print(message.format('1'))
+            nums.append("1")
+        elif lines[2] != "# Nastavenia postavicky #":
+            print(message.format('2'))
+            nums.append("2")
+        elif re.match("Meno: [a-zA-Z0-9_]{1,10}", lines[3]) is None:
+            print(message.format('3'))
+            nums.append("3")
+        elif re.match("Otacanie: (vsetky smery|ziadne|vlavo/vpravo|dole/hore)", lines[4]) is None:
+            print(message.format('4'))
+            nums.append("4")
+        elif re.match("Smerovanie: (-|vpravo|hore|dole|vlavo)", lines[5]) is None:
+            print(message.format('5'))
+            nums.append("5")
+        elif re.match("Mriezka: (cierna|biela|cervena|zelena|zlta)", lines[6]) is None:
+            print(message.format('6'))
+            nums.append("6")
+        elif re.match("Trajektoria: (cierna|biela|cervena|zelena|zlta)", lines[7]) is None:
+            print(message.format('7'))
+            nums.append("7")
+        elif lines[8] != "":
+            print(message.format('8'))
+            nums.append("8")
+        elif lines[9] != "# Predmety #":
+            print(message.format('9'))
+            nums.append("9")
+        elif re.match("(a,b,c,d|a,b,c|a,b|a)", lines[10]) is None:
+            print(message.format('10'))
+            nums.append("10")
+        elif lines[11] != "":
+            print(message.format('11'))
+            nums.append("11")
+        elif lines[12] != "# Prekazky #":
+            nums.append("12")
+            print(message.format('12'))
+        elif re.match("(x,y,z|x,y|x)", lines[13]) is None:
+            print(message.format('13'))
+            nums.append("13")
+
+        if len(nums) == 0:
+            return ""
+        return message.format(nums[0])
+
+
     def read_map_file(self):
         # colors = "(cierna|biela|cervena|zelena|zlta)"
         # pattern = "Nazov: [a-zA-Z0-9_]{1,15}\n\n" + \
@@ -220,6 +272,9 @@ class Task:
         #     messagebox.showerror(title="Chyba", message="Chybný súbor mapy.")
 
         lines = full.split("\n")
+
+        # print(lines)
+        self.map_error_message = self.check_map_file(lines)
 
         lines = self.remove_lines(lines, 3)
 
@@ -252,6 +307,9 @@ class Task:
         self.map_bg_img = ImageTk.PhotoImage(img)
 
         self.map_bg_img_id = self.parent.canvas.create_image(460, 300, image=self.map_bg_img, anchor='c')
+
+    def remove_map_bg(self):
+        self.parent.canvas.delete(self.map_bg_img_id)
 
     def __repr__(self):
         return " ".join([str(self.index), self.name, self.type,

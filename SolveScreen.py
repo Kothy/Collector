@@ -7,6 +7,7 @@ from Road import Road
 from ClickableList import ClickableList
 from Task import TaskSet
 import time
+from tkinter import messagebox
 
 
 class SolveScreen(Screen):
@@ -180,6 +181,14 @@ class SolveScreen(Screen):
 
         while len(lines) > 0 and lines[0] != "##!EOF##":
              lines = self.read_task(lines, map_name)
+
+        if len(self.tasks_set.tasks) > 0 and self.tasks_set.tasks[0].map_error_message != "":
+
+            # self.tasks_set.get_actual_task().remove_map_bg()
+            self.choose_taskset_menu()
+            error_message = "Chyba súboru mapy/{}/map_settings.txt\n".format(self.tasks_set.get_actual_task().map.name) + self.tasks_set.tasks[0].map_error_message
+            messagebox.showerror(title="Chyba", message=error_message)
+            return
 
         if next_without_solve == "ano" and len(self.tasks_set.tasks) > 1:
             self.next_task_btn.show()
