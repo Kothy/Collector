@@ -17,7 +17,7 @@ class Player:
         self.trajectory = []
         self.steps_count = 0
         img = Image.open("mapy/{}/character.png".format(self.map.name))
-        img = resize_image(img, self.map.part_w, self.map.part_h)
+        img = resize_image(img, self.map.part_w - 4, self.map.part_h - 4)
         self.image = ImageTk.PhotoImage(img)
         self.images = {"vlavo": None, "vpravo": None,
                        "dole": None, "hore": None}
@@ -243,6 +243,9 @@ class Player:
             self.actual_rotation = rotation
             self.remove()
             self.draw()
+            if len(self.trajectory) == 0:
+                self.row = self.start_row
+                self.col = self.start_col
             if plan == False:
                 self.map.canvas.delete(t)
                 self.map.task.parent.parent.road.remove_last_part()
@@ -257,6 +260,20 @@ class Player:
         t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.trajectory_col, width=10)
         self.trajectory[-1][4] = t
         self.trajectory_lines.append(t)
+
+    def draw_full_trajectory(self):
+        x, y = self.start_x, self.start_y
+        for i in range(len(self.trajectory)):
+            row, col, xx, yy, _, obj, rotation = self.trajectory[i]
+            t = self.map.canvas.create_line(x, y, xx, yy, fill=self.map.trajectory_col, width=10)
+            self.trajectory_lines.append(t)
+
+            x = xx
+            y = yy
+
+        t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.trajectory_col, width=10)
+        self.trajectory_lines.append(t)
+
 
     def reset_game(self, plan=False):
         while len(self.trajectory) > 0:

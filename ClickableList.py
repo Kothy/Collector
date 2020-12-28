@@ -186,12 +186,14 @@ class ListButton:
         self.list.deselect_all()
         self.canvas.itemconfigure(self.imageObj, state="hidden")
         self.canvas.itemconfigure(self.hoveredObj, state='normal')
+        self.canvas.itemconfigure(self.textObj, fill='#0a333f')
         self.selected = True
 
     def leave(self, _):
         self.selected = False
         self.canvas.itemconfigure(self.hoveredObj, state='hidden')
         self.canvas.itemconfigure(self.imageObj, state="normal")
+        self.canvas.itemconfigure(self.textObj, fill=self.text_color)
 
     def draw(self):
         fih = self.folder_img_h

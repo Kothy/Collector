@@ -3,6 +3,7 @@ from CommonFunctions import *
 from Player import Player
 from MapParts import Blank, Collectible, Obstacle
 
+
 PART_W = 0
 PART_H = 0
 ALPHA = 100
@@ -17,24 +18,10 @@ class Map:
         self.array = []
         self.grid_col = grid_col
         self.rows, self.cols = 0, 0
-        self.width = self.task.map_bg_w
-        self.height = self.task.map_bg_h
+        self.width = self.task.map_bg_w - 5
+        self.height = self.task.map_bg_h - 5
         self.trajectory_col = self.task.trajectory_color
         self.read_map()
-
-    # def calculate_dims(self):
-    #     global PART_W, PART_H
-    #
-    #     PART_H = int(480 / self.rows)
-    #     PART_W = int(900 / self.cols)
-    #
-    #     self.part_h = PART_H
-    #     self.part_w = PART_W
-    #
-    #     image2 = Image.open("obrazky/guarding.png")
-    #
-    #     image2 = resize_image(image2, PART_W, PART_H)
-    #     self.guarding_img = ImageTk.PhotoImage(image2)
 
     def find_guarding(self, name):
         for guard in self.task.parent.obstacles_arr:
@@ -138,12 +125,15 @@ class Map:
 
         image2 = Image.open("obrazky/guarding.png")
 
-        image2 = resize_image(image2, PART_W, PART_H)
+        image2 = image2.resize((PART_W - 4, PART_H - 4))
         self.guarding_img = ImageTk.PhotoImage(image2)
+        image3 = Image.open("obrazky/guarding_x.png")
+        image3 = resize_image(image3, int((PART_W - 4)/5), int((PART_H - 4)/5))
+        self.guarding_img_x = ImageTk.PhotoImage(image3)
 
     def do_grid2(self):
-        one_row = self.height / self.rows
-        one_col = self.width / self.cols
+        one_row = (self.height) / self.rows
+        one_col = (self.width) / self.cols
 
         y = 300 - (self.height / 2)
         xs = []
@@ -161,7 +151,7 @@ class Map:
         self.ys = xs
 
     def draw_grid2(self):
-        one_row = self.height / self.rows
+        one_row = (self.height) / self.rows
         one_col = self.width / self.cols
         self.grid_lines = []
 
@@ -172,9 +162,9 @@ class Map:
             self.grid_lines.append(self.canvas.create_line(x1, y, x2, y, width=5, fill=self.grid_col))
             y += one_row
 
-        x = 460 - (self.width / 2)
-        y1 = 300 - (self.height / 2)
-        y2 = 300 + (self.height / 2)
+        x = 460 - ((self.width) / 2)
+        y1 = 300 - ((self.height) / 2)
+        y2 = 300 + ((self.height) / 2)
         for row in range(self.cols + 1):
             self.grid_lines.append(self.canvas.create_line(x, y1, x, y2, width=5, fill=self.grid_col))
             x += one_col
@@ -187,5 +177,8 @@ class Map:
         self.player.draw()
 
     def draw_map(self):
+        # print("blaaa kresli sa mapa")
         self.draw_grid2()
+        self.player.draw_full_trajectory()
         self.draw_objects()
+        # print(self.player.trajectory)

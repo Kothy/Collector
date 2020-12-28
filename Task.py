@@ -5,8 +5,8 @@ import copy
 from CommonFunctions import resize_image
 import playsound
 from MapParts import Collectible
-from tkinter import messagebox
 import re
+
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
 CORRECT_ANS_SOUND = 'sounds/Correct_Answer2.mp3'
@@ -37,7 +37,7 @@ class Task:
 
     def attach_postfix(self, images, map_name, dir):
         for i in range(len(images)):
-            images[i] = "mapy/{}/{}/{}.png".format(map_name, dir,images[i])
+            images[i] = "mapy/{}/{}/{}.png".format(map_name, dir, images[i])
         return images
 
     def parse_counts(self, arr):
@@ -65,7 +65,7 @@ class Task:
                     count2 = int(count.replace("<", "")[1:])
                     count = count.replace("<", " najviac ").replace(str(count2), "")
                     count2 -= 1
-                else:  #"="  in count
+                else:  # "="  in count
                     self.col_counts.append((count[0], "=", int(count.replace("=", "")[1:])))
                     count2 = int(count.replace("=", "")[1:])
                     count = count.replace("=", " presne ").replace(str(count2), "")
@@ -98,7 +98,7 @@ class Task:
             text = "{} chce pozbierať \n {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
                 self.char_name,
                 "{} (v tomto počte a poradí) s použitím najviac {} krokov".format(("_ " * len(images_col)),
-                                                                                    self.steps_count))
+                                                                                  self.steps_count))
 
         else:
             text = ""
@@ -250,7 +250,7 @@ class Task:
         if len(lines) > 14:
             new_lines = lines[14:]
             new_lines = list(set(new_lines))
-            if not (len(new_lines) == 1 and new_lines[0]=="") :
+            if not (len(new_lines) == 1 and new_lines[0] == ""):
                 return "Na konci súboru sa nachádzajú nepovolené riadky."
 
         if len(nums) == 0:
@@ -258,29 +258,13 @@ class Task:
 
         return message.format(nums[0])
 
-
     def read_map_file(self):
-        # colors = "(cierna|biela|cervena|zelena|zlta)"
-        # pattern = "Nazov: [a-zA-Z0-9_]{1,15}\n\n" + \
-        #           "# Nastavenia postavicky #\n" + \
-        #           "Meno: [a-zA-Z0-9_]{1,10}\n" + \
-        #           "Otacanie: (vsetky smery|ziadne|vlavo/vpravo|dole/hore)\n" + \
-        #           "Smerovanie: (-|vpravo|hore|dole|vlavo)\n" + \
-        #           "Mriezka: {}\n" + \
-        #           "Trajektoria: {}\n\n" \
-        #           "# Predmety #\n" + \
-        #           "(a,b,c,d|a,b,c|a,b|a)\n\n" + \
-        #           "# Prekazky #\n(x,y,z|x,y|x)".format(colors, colors)
 
         with open("mapy/" + self.map_name + "/map_settings.txt") as file:
             full = file.read()
 
-        # if re.match(pattern, full.strip()) == None:
-        #     messagebox.showerror(title="Chyba", message="Chybný súbor mapy.")
-
         lines = full.split("\n")
 
-        # print(lines)
         self.map_error_message = self.check_map_file(lines)
 
         lines = self.remove_lines(lines, 3)
@@ -289,10 +273,11 @@ class Task:
 
         text = self.parent.parent.canvas.itemcget(self.parent.parent.task_text_mode, 'text')
         if "{}" in text:
-            self.parent.parent.canvas.itemconfig(self.parent.parent.task_text_mode, text=text.format(self.char_name + ": "))
+            self.parent.parent.canvas.itemconfig(self.parent.parent.task_text_mode,
+                                                 text=text.format(self.char_name + ": "))
 
-        self.char_rotation = lines.pop(0).split(":")[1].strip() # žiadne, vľavo/vpravo, dole/hore, všetky smery
-        self.routing = lines.pop(0).split(":")[1].strip() # vpravo, vľavo, hore, dole, -
+        self.char_rotation = lines.pop(0).split(":")[1].strip()  # ziadne, vlavo/vpravo, dole/hore, vsetky smery
+        self.routing = lines.pop(0).split(":")[1].strip()  # vpravo, vlavo, hore, dole, -
 
         self.traject_and_grid_color = self.translate_color(lines.pop(0).split(":")[1].strip())
         self.trajectory_color = self.translate_color(lines.pop(0).split(":")[1].strip())
@@ -309,7 +294,7 @@ class Task:
         img = Image.open("mapy/{}/map.png".format(self.map_name))
 
         # img = img.resize((900, 480))
-        img = resize_image(img, 900, 480)
+        img = resize_image(img, 899, 479)
         self.map_bg_w, self.map_bg_h = img.size
         self.map_bg_img = ImageTk.PhotoImage(img)
 
@@ -347,7 +332,7 @@ class Task:
         if self.type != "volna":
             self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
 
-        self.parent.canvas.itemconfig(self.parent.parent.task_name_text, text=str(self.index + 1)+". " + self.name)
+        self.parent.canvas.itemconfig(self.parent.parent.task_name_text, text=str(self.index + 1) + ". " + self.name)
         self.parent.canvas.itemconfig(self.parent.parent.task_name_text, state="normal")
         self.map.draw_map()
 
@@ -368,7 +353,7 @@ class TaskSet:
 
     def add_task(self, name, typ, regime, row, col, steps, assign, maps_str, map_name, char_name, solvable):
         t = Task(self, len(self.tasks), name, typ, regime, row, col, steps, assign, maps_str, map_name, char_name,
-             solvable)
+                 solvable)
         self.tasks.append(t)
 
     def draw_task_and_map(self):

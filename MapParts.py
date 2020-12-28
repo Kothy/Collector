@@ -27,7 +27,7 @@ class Collectible:
         self.row = i
         self.col = j
         img = Image.open("mapy/{}/collectibles/{}.png".format(self.map.name, self.name))
-        img = resize_image(img, self.map.part_w, self.map.part_h)
+        img = resize_image(img, self.map.part_w - 4, self.map.part_h - 4)
         self.img = img
         self.image = ImageTk.PhotoImage(img)
 
@@ -52,7 +52,7 @@ class Obstacle:
         self.row = i
         self.col = j
         img = Image.open("mapy/{}/obstacles/{}.png".format(self.map.name, self.name))
-        img = resize_image(img, self.map.part_w, self.map.part_h)
+        img = resize_image(img, self.map.part_w - 4, self.map.part_h - 4)
         img_sizes = img.size
         img2 = Image.open("obrazky/obstacle_bg.png").resize((img_sizes[0], img_sizes[1]))
         self.bg_img = ImageTk.PhotoImage(img2)
@@ -91,6 +91,9 @@ class Obstacle:
         if i >= 0 and i < self.map.rows and j >= 0 and j < self.map.cols:
             y, x = self.map.xs[i], self.map.ys[j]
             id = self.map.canvas.create_image(x, y, image=img, anchor="c")
+            part_w = self.map.part_w
+            part_h = self.map.part_h
+            id2 = self.map.canvas.create_image(x + (part_w/2) - 6, y - (part_h/2) + 6, image=self.map.guarding_img_x, anchor="ne")
             return id
         return None
 
