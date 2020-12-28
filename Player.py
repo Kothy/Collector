@@ -1,5 +1,5 @@
 from MapParts import *
-import playsound
+
 
 class Player:
     def __init__(self, map, i, j):
@@ -22,6 +22,7 @@ class Player:
         self.images = {"vlavo": None, "vpravo": None,
                        "dole": None, "hore": None}
         self.coll_path = []
+        self.start_rotation = None
         self.actual_rotation = None
 
         self.routing = self.map.task.routing  # vpravo, vľavo, hore, dole, -
@@ -51,6 +52,8 @@ class Player:
             rotating = ["vlavo", "dole", "vpravo"]
             self.images["hore"] = ImageTk.PhotoImage(img)
             self.actual_rotation = "hore"
+
+        self.start_rotation = self.actual_rotation
 
         angle = 90
         for move in rotating:
@@ -113,7 +116,6 @@ class Player:
             blank = Blank(self.map, row, col)
             self.map.array[row][col] = blank
             self.coll_path.append(collectible_name)
-            # playsound.playsound('sounds/Collection.mp3', False)
             if collectible_name not in self.coll_collected:
                 self.coll_collected[collectible_name] = 1
             else:
@@ -136,7 +138,7 @@ class Player:
             return "wrong", obsta
         if self.row + 1 < self.map.rows:
             row, col = self.row + 1, self.col
-            self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col]])
+            self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col], self.actual_rotation])
             self.row += 1
             self.y = self.map.xs[self.row]
             self.turn_down()
@@ -159,7 +161,7 @@ class Player:
             return "wrong", obsta
         if self.row - 1 >= 0:
             row, col = self.row - 1, self.col
-            self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col]])
+            self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col], self.actual_rotation])
             self.row -= 1
             self.y = self.map.xs[self.row]
             self.turn_up()
@@ -182,7 +184,7 @@ class Player:
             return "wrong", obsta
         if self.col + 1 < self.map.cols:
             row, col = self.row, self.col + 1
-            self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col]])
+            self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col], self.actual_rotation])
             self.col += 1
             self.x = self.map.ys[self.col]
             self.turn_right()
@@ -205,7 +207,7 @@ class Player:
             return "wrong", obsta
         if self.col - 1 >= 0:
             row, col = self.row, self.col - 1
-            self.trajectory.append([self.row, self.col + 1, self.x, self.y, None, self.map.array[row][col]])
+            self.trajectory.append([self.row, self.col + 1, self.x, self.y, None, self.map.array[row][col], self.actual_rotation])
             self.col -= 1
             self.x = self.map.ys[self.col]
             self.turn_left()
@@ -225,7 +227,7 @@ class Player:
 
     def step_back(self, plan=False):
         if len(self.trajectory) > 0:
-            row, col, x, y, t, obj = self.trajectory.pop(-1)
+            row, col, x, y, t, obj, rotation = self.trajectory.pop(-1)
             self.map.array[obj.row][obj.col] = obj
             if isinstance(obj, Collectible):
                 self.coll_path.remove(obj.name)
@@ -240,6 +242,7 @@ class Player:
             self.col = col
             self.x = x
             self.y = y
+            self.actual_rotation = rotation
             self.remove()
             self.draw()
             if plan == False:
@@ -252,7 +255,7 @@ class Player:
             self.map.canvas.tag_raise(self.img_id)
 
     def draw_trajectory(self):
-        row, col, x, y, _, obj = self.trajectory[-1]
+        row, col, x, y, _, obj, rotation = self.trajectory[-1]
         t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.trajectory_col, width=10)
         self.trajectory[-1][4] = t
         self.trajectory_lines.append(t)
@@ -261,6 +264,7 @@ class Player:
         while len(self.trajectory) > 0:
             self.step_back(plan)
 
+        self.actual_rotation = self.start_rotation
         self.coll_collected = {}
         self.coll_path = []
         self.row = self.start_row
@@ -269,3 +273,5 @@ class Player:
         self.y = self.start_y
         self.steps_count = 0
         self.trajectory = []
+        self.remove()
+        self.draw()

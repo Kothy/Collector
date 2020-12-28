@@ -2,7 +2,7 @@ Nazov: Mapa_Zberatela
 
 # Nastavenia postavicky #
 Meno: Emilos
-Otacanie: dole/hore
+Otacanie: vsetky smery
 Smerovanie: -
 Mriezka: zlta
 Trajektoria: biela
