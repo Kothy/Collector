@@ -43,6 +43,9 @@ class RoadPart(CanvasObject):
     def select(self):
         if self.border is not None:
             return
+        for index in self.parent.selected_parts:
+            self.parent.road_parts[index].deselect()
+
         self.parent.selected_parts.append(self.index)
         self.border = self.canvas.create_rectangle(20 + self.index * 50, 553, 62 + self.index * 50, 595,
                                                    outline='darkviolet', width=3)

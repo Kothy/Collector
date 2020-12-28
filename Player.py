@@ -1,5 +1,5 @@
 from MapParts import *
-
+import playsound
 
 class Player:
     def __init__(self, map, i, j):
@@ -113,6 +113,7 @@ class Player:
             blank = Blank(self.map, row, col)
             self.map.array[row][col] = blank
             self.coll_path.append(collectible_name)
+            # playsound.playsound('sounds/Collection.mp3', False)
             if collectible_name not in self.coll_collected:
                 self.coll_collected[collectible_name] = 1
             else:

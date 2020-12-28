@@ -3,6 +3,11 @@ from PIL import Image, ImageTk
 from Map import Map
 import copy
 from CommonFunctions import resize_image
+import playsound
+from MapParts import Collectible
+
+COLLECTION_SOUND = 'sounds/Collection.mp3'
+CORRECT_ANS_SOUND = 'sounds/Correct_Answer2.mp3'
 
 
 class Task:
@@ -92,7 +97,7 @@ class Task:
 
             text = "{} chce pozbierať \n {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
                 self.char_name,
-                "{} (v tomto počte a poradí) s použitím najviac {} krokov".format(("_ " * len(images_col)),# [:-2]
+                "{} (v tomto počte a poradí) s použitím najviac {} krokov".format(("_ " * len(images_col)),
                                                                                     self.steps_count))
 
         else:
@@ -130,18 +135,22 @@ class Task:
             return self.check_count_answer()
         elif self.type == "cesta":
             return self.check_path_answer()
-        else:
+        elif self.type == "volna" and isinstance(self.map.player.trajectory[-1][5], Collectible):
+            playsound.playsound(COLLECTION_SOUND, False)
             self.parent.parent.show_next_task_button()
         return True
 
     def check_path_answer(self):
-
-        if "".join(self.map.player.coll_path) == self.assign and self.steps_count >= self.map.player.steps_count:
+        answer = "".join(self.map.player.coll_path) == self.assign and self.steps_count >= self.map.player.steps_count
+        if answer:
             # print("spravna odpoved", self.map.player.steps_count, self.steps_count)
             self.parent.parent.show_next_task_button()
-            return True
+            playsound.playsound(CORRECT_ANS_SOUND, False)
+
+        if isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
+            playsound.playsound(COLLECTION_SOUND, False)
         # print("nespravna odpoved", self.map.player.steps_count, self.steps_count)
-        return False
+        return answer
 
     def check_count_answer(self):
         # print(self.map.player.coll_collected, self.assign)
@@ -163,13 +172,17 @@ class Task:
                 answers.append(True)
             else:
                 answers.append(False)
-        # print(answers)
-        if False not in answers and self.steps_count >= self.map.player.steps_count:
-            # print("spravna odpoved", self.map.player.steps_count, self.steps_count)
 
+        answer = False not in answers and self.steps_count >= self.map.player.steps_count
+        if answer:
+            # print("spravna odpoved")
+            playsound.playsound(CORRECT_ANS_SOUND, False)
             self.parent.parent.show_next_task_button()
-        else:
-            print("nespravna odpoved", self.map.player.steps_count, self.steps_count)
+        # print(self.map.player.trajectory)
+        if isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
+            playsound.playsound(COLLECTION_SOUND, False)
+        # else:
+        #     print("nespravna odpoved")
         return False not in answers and self.steps_count <= self.map.player.steps_count
 
     def translate_color(self, color):
