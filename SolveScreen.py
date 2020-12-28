@@ -178,14 +178,12 @@ class SolveScreen(Screen):
 
         self.choose_taskset_btn.show()
 
-        if next_without_solve == "ano":
-            self.next_task_btn.show()
-
         while len(lines) > 0 and lines[0] != "##!EOF##":
              lines = self.read_task(lines, map_name)
 
-        # print(len(self.tasks_set.tasks))
-        # self.tasks_set.tasks[self.actual_task].parse_assign()
+        if next_without_solve == "ano" and len(self.tasks_set.tasks) > 1:
+            self.next_task_btn.show()
+
         self.canvas.itemconfig(self.task_text_mode, state="normal")
         self.draw_task_and_map()
 

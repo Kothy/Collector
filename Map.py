@@ -19,6 +19,7 @@ class Map:
         self.rows, self.cols = 0, 0
         self.width = self.task.map_bg_w
         self.height = self.task.map_bg_h
+        self.trajectory_col = self.task.trajectory_color
         self.read_map()
 
     # def calculate_dims(self):

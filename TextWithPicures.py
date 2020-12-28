@@ -33,16 +33,18 @@ class TextWithImages:
         texts = text.split(" ")
         x_start = x
         id = None
-        for word in texts:
-            if word == "_":
+        for i in range(len(texts)):
+            if texts[i] == "":
+                continue
+            if texts[i] == "_":
                 word_w = 45
-            elif word == "\n":
+            elif texts[i] == "\n":
                 x = x_start
                 y += 40
                 continue
             else:
                 id = self.canvas.create_text(x, y, fill="#0a333f",
-                            font=('Comic Sans MS', 16, 'italic bold'), text=word + " ", anchor="w")
+                            font=('Comic Sans MS', 16, 'italic bold'), text=texts[i] + " ", anchor="w")
                 self.objects.append(id)
                 w, h, text_center_height = self.text_dims(id)
                 word_w = w
@@ -51,7 +53,7 @@ class TextWithImages:
                 y += 40
                 x = x_start
 
-            if word == "_":
+            if texts[i] == "_":
                 picture = pictures.pop(0)
                 img = ImageTk.PhotoImage(self.resize(picture, image_height, image_height))
                 img_id = self.canvas.create_image(x, y, image=img, anchor="w")

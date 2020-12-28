@@ -130,19 +130,21 @@ class Task:
             return self.check_count_answer()
         elif self.type == "cesta":
             return self.check_path_answer()
+        else:
+            self.parent.parent.show_next_task_button()
         return True
 
     def check_path_answer(self):
 
         if "".join(self.map.player.coll_path) == self.assign and self.steps_count >= self.map.player.steps_count:
-            print("spravna odpoved", self.map.player.steps_count, self.steps_count)
+            # print("spravna odpoved", self.map.player.steps_count, self.steps_count)
             self.parent.parent.show_next_task_button()
             return True
-        print("nespravna odpoved", self.map.player.steps_count, self.steps_count)
+        # print("nespravna odpoved", self.map.player.steps_count, self.steps_count)
         return False
 
     def check_count_answer(self):
-        print(self.map.player.coll_collected, self.assign)
+        # print(self.map.player.coll_collected, self.assign)
         colle = self.map.player.coll_collected
         answers = []
         for count in self.col_counts:
@@ -161,9 +163,9 @@ class Task:
                 answers.append(True)
             else:
                 answers.append(False)
-        print(answers)
+        # print(answers)
         if False not in answers and self.steps_count >= self.map.player.steps_count:
-            print("spravna odpoved", self.map.player.steps_count, self.steps_count)
+            # print("spravna odpoved", self.map.player.steps_count, self.steps_count)
 
             self.parent.parent.show_next_task_button()
         else:
@@ -201,6 +203,7 @@ class Task:
         self.routing = lines.pop(0).split(":")[1].strip() # vpravo, vľavo, hore, dole, -
 
         self.traject_and_grid_color = self.translate_color(lines.pop(0).split(":")[1].strip())
+        self.trajectory_color = self.translate_color(lines.pop(0).split(":")[1].strip())
 
         lines = self.remove_lines(lines, 2)
         self.collectibles = len(lines.pop(0).split(","))

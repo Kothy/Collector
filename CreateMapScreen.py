@@ -118,7 +118,7 @@ class CreateMapScreen(Screen):
             threading.Thread(target=self.save_map, args=(self.map_name.get(),)).start()
 
     def save_map(self, name):
-        name =  strip_accents(name)
+        name = strip_accents(name)
         dir = "mapy/" + name + "/"
         for path in [dir, dir + "obstacles", dir + "collectibles"]:
             os.mkdir(path)
@@ -142,11 +142,12 @@ class CreateMapScreen(Screen):
             all_col += ",b,c,d"
 
         text = "Nazov: {}\n\n# Nastavenia postavicky #\nMeno: {}\nOtacanie: {}\nSmerovanie: {}" \
-               "\nTrajektoria: {}\n\n# Predmety #\n{}\n\n# Prekazky #\n{}"
+               "\nMriezka: {} \nTrajektoria: {}\n\n# Predmety #\n{}\n\n# Prekazky #\n{}"
 
         file_txt = text.format(name, strip_accents(self.character_name.get()),
                            strip_accents(self.rotate_options.checkboxes[self.rotate_options.checked_index].text),
-                           strip_accents(self.rotated_choices.text), strip_accents(self.path_color_choices.text), all_col, all_obs)
+                           strip_accents(self.rotated_choices.text), strip_accents(self.trajectory_color_choices.text),
+                               strip_accents(self.path_color_choices.text),all_col, all_obs)
 
         with open(dir + "map_settings.txt", "w") as file:
             file.write(file_txt)

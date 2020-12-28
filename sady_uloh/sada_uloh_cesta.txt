@@ -27,10 +27,10 @@ Typ: cesta
 Rezim: oba
 Riadkov: 3
 Stlpcov: 5
-Krokov: 10
-Zadanie: baac
+Krokov: 6
+Zadanie: abcdb
 Riesitelna: ano
-ay.ac
+.y.ac
 b....
 .p.x.
 
@@ -40,8 +40,8 @@ Typ: cesta
 Rezim: oba
 Riadkov: 3
 Stlpcov: 6
-Krokov:
-Zadanie: bac
+Krokov: 6
+Zadanie: abc
 Riesitelna: ano
 p.y.a.
 .b....

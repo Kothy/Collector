@@ -4,7 +4,8 @@ Nazov: ocean
 Meno: Nemo
 Otacanie: vlavo/vpravo
 Smerovanie: vlavo
-Trajektoria: cervena
+Mriezka: cervena
+Trajektoria: biela
 
 # Predmety #
 a,b,c

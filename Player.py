@@ -252,7 +252,7 @@ class Player:
 
     def draw_trajectory(self):
         row, col, x, y, _, obj = self.trajectory[-1]
-        t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.grid_col, width=10)
+        t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.trajectory_col, width=10)
         self.trajectory[-1][4] = t
         self.trajectory_lines.append(t)
 

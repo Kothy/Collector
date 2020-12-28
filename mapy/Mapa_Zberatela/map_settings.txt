@@ -4,7 +4,8 @@ Nazov: Mapa_Zberatela
 Meno: Emilos
 Otacanie: dole/hore
 Smerovanie: -
-Trajektoria: zlta
+Mriezka: zlta
+Trajektoria: biela
 
 # Predmety #
 a,b,c,d
