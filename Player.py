@@ -1,4 +1,5 @@
 from MapParts import *
+from PIL import ImageOps
 
 
 class Player:
@@ -60,22 +61,65 @@ class Player:
             self.images[move] = ImageTk.PhotoImage(img.rotate(angle, expand=True))
             angle += 90
 
+        if self.rotation == "dole/hore":
+            if self.routing == "hore":
+                self.images["hore"] = ImageTk.PhotoImage(img)
+                im_flip = ImageOps.flip(img)
+                self.images["dole"] =  ImageTk.PhotoImage(im_flip)
+            elif self.routing == "dole":
+                self.images["dole"] = ImageTk.PhotoImage(img)
+                im_flip = ImageOps.flip(img)
+                self.images["hore"] = ImageTk.PhotoImage(im_flip)
+
+            elif self.routing == "vpravo":
+                self.images["hore"] = ImageTk.PhotoImage(img.rotate(angle, expand=True))
+                im_flip = ImageOps.flip(img.rotate(angle, expand=True))
+                self.images["dole"] = ImageTk.PhotoImage(im_flip)
+            else:
+                self.images["dole"] = ImageTk.PhotoImage(img.rotate(angle, expand=True))
+                im_flip = ImageOps.flip(img.rotate(angle, expand=True))
+                self.images["hore"] = ImageTk.PhotoImage(im_flip)
+
+        elif self.rotation == "vlavo/vpravo":
+            if self.routing == "vpravo":
+                self.images["vpravo"] = ImageTk.PhotoImage(img)
+                im_flip = ImageOps.mirror(img)
+                self.images["vlavo"] =  ImageTk.PhotoImage(im_flip)
+            elif self.routing == "vlavo":
+                self.images["vlavo"] = ImageTk.PhotoImage(img)
+                im_flip = ImageOps.mirror(img)
+                self.images["vpravo"] = ImageTk.PhotoImage(im_flip)
+            elif self.routing == "hore":
+                self.images["vlavo"] = ImageTk.PhotoImage(img.rotate(angle, expand=True))
+                im_flip = ImageOps.mirror(img.rotate(angle, expand=True))
+                self.images["vpravo"] = ImageTk.PhotoImage(im_flip)
+
+            else:
+                self.images["vpravo"] = ImageTk.PhotoImage(img.rotate(angle, expand=True))
+                im_flip = ImageOps.mirror(img.rotate(angle, expand=True))
+                self.images["vlavo"] = ImageTk.PhotoImage(im_flip)
+
+
         self.planned_move = False
 
     def turn_right(self):
         if self.rotation == "vlavo/vpravo" or self.rotation == "vsetky smery":
+            print("otocenie vpravo")
             self.actual_rotation = "vpravo"
 
     def turn_left(self):
         if self.rotation == "vlavo/vpravo" or self.rotation == "vsetky smery":
+            print("otocenie vlavo")
             self.actual_rotation = "vlavo"
 
     def turn_up(self):
         if self.rotation == "dole/hore" or self.rotation == "vsetky smery":
+            print("otocenie hore")
             self.actual_rotation = "hore"
 
     def turn_down(self):
         if self.rotation == "dole/hore" or self.rotation == "vsetky smery":
+            print("otocenie dole")
             self.actual_rotation = "dole"
 
     def draw(self):

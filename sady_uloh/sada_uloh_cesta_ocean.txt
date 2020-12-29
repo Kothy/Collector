@@ -12,12 +12,13 @@ Volny_prechod: ano
 Nazov: Prva
 Typ: cesta
 Rezim: oba
-Riadkov: 3
+Riadkov: 4
 Stlpcov: 5
-Krokov: 6
-Zadanie: abc
+Krokov: 10
+Zadanie: bca
 Riesitelna: ano
 .y.a.
+.....
 b....
 pc..x
 
@@ -25,27 +26,31 @@ pc..x
 Nazov: Druha
 Typ: cesta
 Rezim: oba
-Riadkov: 3
+Riadkov: 5
 Stlpcov: 5
-Krokov: 6
+Krokov: 8
 Zadanie: abcbbb
 Riesitelna: ano
-.y.ac
-b....
+.y...
+c....
+bbbb.
+a....
 .p.x.
 
 3.
 Nazov: Tretia
 Typ: cesta
 Rezim: planovaci
-Riadkov: 3
-Stlpcov: 6
-Krokov: 6
-Zadanie: abcaa
+Riadkov: 5
+Stlpcov: 7
+Krokov: 10
+Zadanie: acbaa
 Riesitelna: ano
-..y.ap
-.b....
-.c..x.
+..y.ap.
+.b.....
+.c.....
+aa...x.
+.......
 
 4.
 Nazov: Stvrta
@@ -53,11 +58,11 @@ Typ: cesta
 Rezim: oba
 Riadkov: 5
 Stlpcov: 8
-Krokov: 6
+Krokov: 15
 Zadanie: abcaa
 Riesitelna: ano
 ..y.ap..
 .b......
-.c..x...
-........
-........
+.c......
+b.....x.
+.a.a....

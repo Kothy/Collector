@@ -136,30 +136,32 @@ class Task:
             arr.pop(0)
         return arr
 
-    def check_answer(self):
+    def check_answer(self, play=True):
         if self.type == "pocty":
-            return self.check_count_answer()
+            return self.check_count_answer(play)
         elif self.type == "cesta":
-            return self.check_path_answer()
+            return self.check_path_answer(play)
         elif self.type == "volna" and isinstance(self.map.player.trajectory[-1][5], Collectible):
             playsound.playsound(COLLECTION_SOUND, False)
             self.parent.parent.show_next_task_button()
         return True
 
-    def check_path_answer(self):
+    def check_path_answer(self, play=True):
         answer = "".join(self.map.player.coll_path) == self.assign and self.steps_count >= self.map.player.steps_count
         if answer:
-            # print("spravna odpoved", self.map.player.steps_count, self.steps_count)
+            print("spravne")
             self.parent.parent.show_next_task_button()
-            playsound.playsound(CORRECT_ANS_SOUND, False)
+            if play:
+                playsound.playsound(CORRECT_ANS_SOUND, False)
 
         if isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
-            playsound.playsound(COLLECTION_SOUND, False)
-        # print("nespravna odpoved", self.map.player.steps_count, self.steps_count)
+            print("collectible")
+            if play:
+                playsound.playsound(COLLECTION_SOUND, False)
+
         return answer
 
-    def check_count_answer(self):
-        # print(self.map.player.coll_collected, self.assign)
+    def check_count_answer(self, play=True):
         colle = self.map.player.coll_collected
         answers = []
         for count in self.col_counts:
@@ -181,14 +183,14 @@ class Task:
 
         answer = False not in answers and self.steps_count >= self.map.player.steps_count
         if answer:
-            # print("spravna odpoved")
-            playsound.playsound(CORRECT_ANS_SOUND, False)
+            if play:
+                playsound.playsound(CORRECT_ANS_SOUND, False)
             self.parent.parent.show_next_task_button()
-        # print(self.map.player.trajectory)
+
         if isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
-            playsound.playsound(COLLECTION_SOUND, False)
-        # else:
-        #     print("nespravna odpoved")
+            if play:
+                playsound.playsound(COLLECTION_SOUND, False)
+
         return False not in answers and self.steps_count <= self.map.player.steps_count
 
     def translate_color(self, color):

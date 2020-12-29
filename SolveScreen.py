@@ -8,6 +8,11 @@ from ClickableList import ClickableList
 from Task import TaskSet
 import time
 from tkinter import messagebox
+import playsound
+
+
+COLLECTION_SOUND = 'sounds/Collection.mp3'
+CORRECT_ANS_SOUND = 'sounds/Correct_Answer2.mp3'
 
 
 class SolveScreen(Screen):
@@ -392,8 +397,9 @@ class SolveScreen(Screen):
         self.canvas.update()
         time.sleep(0.5)
         ignored = False
-        # print("Startujem z: ", player.row, player.col)
+
         for i in range(self.road.number_of_active_road_parts):
+            was_coll = False
             if ignored == True:
                 self.road.road_parts[i].change_color("ignored")
                 continue
@@ -422,13 +428,21 @@ class SolveScreen(Screen):
                     ignored = True
 
                 elif move == "ok" and obsta is not None:
+                    was_coll = True
                     self.road.road_parts[i].add_obstacle("mapy/{}/collectibles/{}.png".format(map_name, obsta))
             else:
                 self.road.road_parts[i].change_color("ok")
+
+            if was_coll:
+                playsound.playsound(COLLECTION_SOUND, False)
+
             self.canvas.update()
             time.sleep(0.6)
 
-        self.tasks_set.get_actual_task().check_answer()
+        answer = self.tasks_set.get_actual_task().check_answer(play=False)
+        print(answer)
+        if answer:
+            playsound.playsound(CORRECT_ANS_SOUND, False)
         player.reset_game(plan=True)
 
         player.planned_move = False

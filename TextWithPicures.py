@@ -1,6 +1,8 @@
 from PIL import Image, ImageTk
 import copy
+from CommonFunctions import resize_image
 
+LINE_HEIGHT = 40
 
 class TextWithImages:
     def __init__(self, canvas, x, y, width, text, images):
@@ -16,7 +18,7 @@ class TextWithImages:
 
     def resize(self, imgName, w, h):
         img = Image.open(imgName)
-        return img.resize((w, h), Image.ANTIALIAS)
+        return resize_image(img, w, h)
 
     def text_dims(self, txt):
         bounds = self.canvas.bbox(txt)
@@ -29,7 +31,7 @@ class TextWithImages:
         return self.canvas.bbox(txt)
 
     def textWithPictures(self, x, y, text, pictures, row_width):
-        image_height = 38
+        image_height = LINE_HEIGHT
         # self.canvas.create_rectangle(x, y - 25, x + row_width, y + 200)
         texts = text.split(" ")
         x_start = x
@@ -41,7 +43,7 @@ class TextWithImages:
                 word_w = 45
             elif texts[i] == "\n":
                 x = x_start
-                y += 40
+                y += LINE_HEIGHT
                 continue
             else:
                 id = self.canvas.create_text(x, y, fill="#0a333f",
@@ -51,7 +53,7 @@ class TextWithImages:
                 word_w = w
 
             if x + word_w > x_start + row_width:
-                y += 40
+                y += LINE_HEIGHT
                 x = x_start
 
             if texts[i] == "_":
