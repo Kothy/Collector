@@ -239,7 +239,7 @@ class SolveScreen(Screen):
 
                 # print(tasks[i], check, no)
 
-        print("tieto riadky su zle: ", nums)
+        # print("tieto riadky su zle: ", nums)
         if len(nums) == 0:
             return ""
         else:
@@ -330,7 +330,7 @@ class SolveScreen(Screen):
 
         answer = self.check_task_file(lines, "sady_uloh/" + name + ".txt")
 
-        print("Subor je v poriadku: ", answer)
+        # print("Subor je v poriadku: ", answer)
         if answer != "":
             self.choose_taskset_menu()
             messagebox.showerror(title="Chyba", message="Chyba v súbore sady_uloh/" + name + ".txt\nChyba: " + str(answer))

@@ -14,7 +14,7 @@ Typ: pocty
 Rezim: planovaci
 Riadkov: 3
 Stlpcov: 6
-Krokov: 10
+Krokov: 15
 Zadanie: a?,b>2,c<=2,d=1
 Riesitelna: ano
 .y.a......

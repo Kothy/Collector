@@ -377,21 +377,24 @@ class Task:
         if self.type != "volna":
 
             # self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
+            x = 30
+            if self.type == "cesta":
+                x = 0
 
             self.text_w_images = TextWithImages(self.parent.canvas, 930, 125, w, self.assign_text2, images[:self.assign_text2.count("_") + 1])
-            self.text_w_images2 = TextWithImages(self.parent.canvas, 930, 345, w, self.obstacles_assign,
+            self.text_w_images2 = TextWithImages(self.parent.canvas, 930, 345 - x, w, self.obstacles_assign,
                                                 images[self.assign_text2.count("_"):])
 
             id1 = self.parent.canvas.create_text(930, 70, fill="#0a333f",
                                                              font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
                                                              width=330, text='{} chce pozbierať'.format(self.char_name))
-            id2 = self.parent.canvas.create_text(930, 220, fill="#0a333f",
+            id2 = self.parent.canvas.create_text(930, 220 - x, fill="#0a333f",
                                                            font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
                                                            width=330, text='s použítim najviac {} krokov.'.format(self.steps_count))
             id3 = self.parent.canvas.create_text(930, 185, fill="#0a333f",
                                                                font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
                                                                width=330, text='(v tomto počte aj poradí)')
-            id4 = self.parent.canvas.create_text(930, 255, fill="#0a333f",
+            id4 = self.parent.canvas.create_text(930, 255 - x, fill="#0a333f",
                                                               font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
                                                               width=330,
                                                               text='Musí sa ale vyhnúť políčkam, ktoré ohrozuje')

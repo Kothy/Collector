@@ -15,7 +15,8 @@ class TextWithImages:
         self.images_on_canvas = []
         self.images = images
         self.objects = []
-        self.textWithPictures(x, y, text, copy.deepcopy(self.images), width)
+        self.text_size = 16
+        self.textWithPictures(self.x, self.y, self.text, copy.deepcopy(self.images), self.width)
 
     def resize(self, imgName, w, h):
         img = Image.open(imgName)
@@ -37,7 +38,9 @@ class TextWithImages:
         texts = text.split(" ")
         x_start = x
         id = None
+        lines = 1
         for i in range(len(texts)):
+            # print(repr(text[i]))
             if texts[i] == "":
                 continue
             if texts[i] == "_":
@@ -45,16 +48,20 @@ class TextWithImages:
             elif texts[i] == "\n":
                 x = x_start
                 y += LINE_HEIGHT
+                lines += 1
                 continue
             else:
+                t = texts[i] if texts[i] == "," else texts[i] + " "
+
                 id = self.canvas.create_text(x, y, fill="#0a333f",
-                            font=('Comic Sans MS', 16, 'italic bold'), text=texts[i] + " ", anchor="w")
+                            font=('Comic Sans MS', self.text_size, 'italic bold'), text=t, anchor="w")
                 self.objects.append(id)
                 w, h, text_center_height = self.text_dims(id)
                 word_w = w
 
             if x + word_w > x_start + row_width:
                 y += LINE_HEIGHT
+                lines += 1
                 x = x_start
 
             if texts[i] == "_":
@@ -66,6 +73,13 @@ class TextWithImages:
             else:
                 self.canvas.coords(id, x, y)
             x += word_w
+        if lines > 2:
+            self.remove()
+            self.text_size -= 1
+            self.images_on_canvas = []
+            self.objects = []
+            self.textWithPictures(self.x, self.y, self.text, copy.deepcopy(self.images), self.width)
+        print("pocet riadkov yadania", lines)
 
     def remove(self):
         for obj in self.objects:
