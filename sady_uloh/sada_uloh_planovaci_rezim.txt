@@ -3,10 +3,10 @@ Mapa: Mapa_Zberatela
 
 # Nastavenie prekazok #
 x: stvorec
-y: kriz
+y: krizy
 
 # Ulohy #
-Volny_prechod: ano
+Volny prechod: ano
 
 1.
 Nazov: Uloha1

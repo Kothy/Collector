@@ -6,7 +6,7 @@ x: stvorec
 y: kriz
 
 # Ulohy #
-Volny_prechod: ano
+Volny prechod: ano
 
 1.
 Nazov: Uloha1

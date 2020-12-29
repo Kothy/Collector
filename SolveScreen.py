@@ -9,6 +9,9 @@ from Task import TaskSet
 import time
 from tkinter import messagebox
 import playsound
+import re
+import copy
+from os import path
 
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
@@ -156,6 +159,160 @@ class SolveScreen(Screen):
         self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name.replace(" ", "_"), "", solvable)
         return lines
 
+    def check_task_file(self, lines, filename):
+
+        lines2 = copy.copy(lines)
+        for i in range(len(lines2)):
+            if lines2[i] == "":
+                lines2[i] = "**BLANK_LINE**"
+            lines2[i] += "\n"
+
+
+        text = "".join(lines2)
+        lines2 = text.split("**BLANK_LINE**\n")
+
+        message = "Chyba súboru na riadku {}.".format(filename)
+        nums = []
+
+        sett = lines2[0].split("\n")
+        obs = lines2[1].split("\n")
+        tasks_sett = lines2[2].split("\n")
+        tasks = []
+
+        for i in range(3, len(lines2)):
+            tasks.append(lines2[i].split("\n"))
+
+        # print(sett)
+        # print(obs)
+        # print(tasks_sett)
+        # print(tasks)
+
+        if len(sett) != 3:
+            return message
+
+        if len(sett) < 2 and len(sett) > 5:
+            return message
+
+        if len(tasks_sett) != 3:
+            return message
+
+        if re.fullmatch("Nazov: [a-zA-Z0-9_\ ]{1,15}", sett[0]) is None:
+            nums.append(sett[0])
+        elif re.fullmatch("Mapa: [a-zA-Z0-9_]{1,15}", sett[1]) is None:
+            nums.append(sett[1])
+        elif re.fullmatch("", sett[2]) is None:
+            nums.append(sett[2])
+        elif obs[0] != "# Nastavenie prekazok #":
+            nums.append(obs[0])
+
+        map_name = sett[1].split(": ")[1]
+
+        if not path.exists("mapy/{}".format(map_name)):
+            nums.append("Neexistujúca mapa")
+
+        for i in range(1, len(obs) - 1):
+            if re.fullmatch("([xyz]): (stvorec|kriz|bod)", obs[i]) is None:
+                nums.append(obs[i])
+
+        if re.fullmatch("", obs[-1]) is None:
+            nums.append(obs[-1])
+
+        if tasks_sett[0] != "# Ulohy #":
+            nums.append(tasks_sett[0])
+
+        if re.fullmatch("Volny prechod: (nie|ano)", tasks_sett[1]) is None:
+            nums.append(tasks_sett[1])
+
+        if tasks_sett[2] != "":
+            nums.append(tasks_sett[2])
+
+
+        for i in range(len(tasks)):
+            check, line = self.check_task_full_assignment(tasks[i], map_name)
+            if check == False:
+                nums.append(line)
+
+                # print(tasks[i], check, no)
+
+        print("tieto riadky su zle: ", nums)
+        if len(nums) == 0:
+            return ""
+        else:
+            return nums[0]
+
+    def check_task_full_assignment(self, lines, map_name):
+        if len(lines) < 10 and not len(lines) == lines.count(""):
+
+            return False, "Chyba v počte riadkov"
+
+        if re.fullmatch("[0-9]{1,2}\.", lines[0]) is None:
+            return False, lines[0]
+        if re.fullmatch("Nazov: [a-zA-Z0-9_\ ]{1,15}", lines[1]) is None:
+            return False, lines[1]
+        if re.fullmatch("Typ: (pocty|volna|cesta)", lines[2]) is None:
+            return False, lines[2]
+        if re.fullmatch("Rezim: (planovaci|priamy|oba)", lines[3]) is None:
+            return False, lines[3]
+        if re.fullmatch("Riadkov: [0-9]{1,2}", lines[4]) is None:
+            return False, lines[4]
+        if re.fullmatch("Stlpcov: [0-9]{1,2}", lines[5]) is None:
+            return False, lines[5]
+        if re.fullmatch("Krokov: {0,1}[0-9]{0,2}", lines[6]) is None:
+            print("tu")
+            return False, lines[6]
+        if lines[7].startswith("Zadanie: "):  #(a|b|c|d)(|>|<|=|<=|>=)[0-9]{1,2}
+            if "pocty" in lines[2]:
+                assign = lines[7].split(": ")[1]
+                assign = assign.split(",")
+                for i in range(len(assign)):
+                    if re.fullmatch("(([abcd])\?)|(([abcd])(|>|<|=|<=|>=)[0-9]{1,2})", assign[i]) is None:
+                        return False, lines[7]
+                    for char in "abcd":
+                        if char in assign and not path.exists("mapy/{}/collectibles/{}.png".format(map_name, char)):
+                            return False, lines[7]
+
+            elif "cesta" in lines[2]:
+                assign = lines[7].split(": ")[1]
+                if re.fullmatch("([abcd]){1,16}", assign) is None:
+                    return False, lines[7]
+
+                for char in assign:
+                    if not path.exists("mapy/{}/collectibles/{}.png".format(map_name, char)):
+                        return False, lines[7]
+
+            if "volna" in lines[2] and re.fullmatch("Zadanie: ", lines[7]) is None:
+                return False, lines[7]
+
+        if not lines[7].startswith("Zadanie: "):
+            return False, lines[7]
+        if re.fullmatch("Riesitelna: (ano|nie)", lines[8]) is None:
+            return False, lines[8]
+
+        for i in range(9, len(lines) - 1):
+            if re.fullmatch("([\.pabcdxyz])+", lines[i]) is None:
+                return False, lines[i]
+
+        if re.fullmatch("", lines[-1]) is None:
+            return False, lines[-1]
+
+        # print("".join(lines[9:]))
+        player_count = 0
+        for i in range(9, len(lines)):
+            for char in lines[i]:
+                if char == 'p':
+                    player_count += 1
+                if char != "." and char.isalnum():
+
+                    if char != 'p' and not (path.exists("mapy/{}/collectibles/{}.png".format(map_name, char)) or
+                         path.exists("mapy/{}/obstacles/{}.png".format(map_name, char))):
+                        return False, lines[i]
+                    elif char == 'p' and not path.exists("mapy/{}/character.png".format(map_name)):
+                        return False, lines[i]
+                if player_count > 1:
+                    return False, lines[i] + "- Viac hráčov v hracom poli"
+
+        return True, None
+
     def draw_task_assignment(self, name):
         self.canvas.itemconfig(self.task_text_set_choice, state="hidden")
 
@@ -165,6 +322,15 @@ class SolveScreen(Screen):
         lines = full.split("\n")
         if lines[-1] == "":
             lines.pop(-1)
+
+        answer = self.check_task_file(lines, "sady_uloh/" + name + ".txt")
+
+        print("Subor je v poriadku: ", answer)
+        if answer != "":
+            self.choose_taskset_menu()
+            messagebox.showerror(title="Chyba", message="Chyba v súbore sady_uloh/" + name + ".txt\nChyba: " + str(answer))
+            return
+
         lines.append("##!EOF##")
         tasks_set_name = lines.pop(0).split(":")[-1].strip()
         map_name = lines.pop(0).split(":")[-1].strip()

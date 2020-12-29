@@ -181,12 +181,7 @@ class Task:
             else:
                 answers.append(False)
 
-            # print(answers)
-
         answer = False not in answers and self.steps_count >= self.map.player.steps_count
-        # print("Odpoved je",answer, self.steps_count >= self.map.player.steps_count)
-        # print("Urobenzch krokov: ", self.map.player.steps_count)
-        # print("Dovolenych krokok: ", self.steps_count)
         if answer:
             if play:
                 playsound.playsound(CORRECT_ANS_SOUND, False)
@@ -215,56 +210,61 @@ class Task:
         if len(lines) < 14:
             return "Chýbajúce riadky súboru"
 
-        message = "Chyba súboru na riadku {}."
+        message = "Chyba: {}"
         nums = []
-        if re.match("Nazov: [a-zA-Z0-9_]{1,15}", lines[0]) is None:
-            print(message.format('0'))
-            nums.append("0")
+        # print("Nayov mapz: ", self.map_name)
+        if re.fullmatch("Nazov: [a-zA-Z0-9_]{1,15}", lines[0]) is None:
+            # print(message.format('0'))
+            nums.append(lines[0])
         elif lines[1] != "":
-            print(message.format('1'))
-            nums.append("1")
+            # print(message.format('1'))
+            nums.append(lines[1])
         elif lines[2] != "# Nastavenia postavicky #":
-            print(message.format('2'))
-            nums.append("2")
-        elif re.match("Meno: [a-zA-Z0-9_]{1,10}", lines[3]) is None:
-            print(message.format('3'))
-            nums.append("3")
-        elif re.match("Otacanie: (vsetky smery|ziadne|vlavo/vpravo|dole/hore)", lines[4]) is None:
-            print(message.format('4'))
-            nums.append("4")
-        elif re.match("Smerovanie: (-|vpravo|hore|dole|vlavo)", lines[5]) is None:
+            # print(message.format('2'))
+            nums.append(lines[2])
+        elif re.fullmatch("Meno: [a-zA-Z0-9_]{1,10}", lines[3]) is None:
+            # print(message.format('3'))
+            nums.append(lines[3])
+        elif re.fullmatch("Otacanie: (vsetky smery|ziadne|vlavo/vpravo|dole/hore)", lines[4]) is None:
+            # print(message.format('4'))
+            nums.append(lines[4])
+        elif re.fullmatch("Smerovanie: (-|vpravo|hore|dole|vlavo)", lines[5]) is None:
             print(message.format('5'))
-            nums.append("5")
-        elif re.match("Mriezka: (cierna|biela|cervena|zelena|zlta)", lines[6]) is None:
-            print(message.format('6'))
-            nums.append("6")
-        elif re.match("Trajektoria: (cierna|biela|cervena|zelena|zlta)", lines[7]) is None:
-            print(message.format('7'))
-            nums.append("7")
+            nums.append(lines[5])
+        elif re.fullmatch("Mriezka: (cierna|biela|cervena|zelena|zlta)", lines[6]) is None:
+            # print(message.format('6'))
+            nums.append(lines[6])
+        elif re.fullmatch("Trajektoria: (cierna|biela|cervena|zelena|zlta)", lines[7]) is None:
+            # print(message.format('7'))
+            nums.append(lines[7])
         elif lines[8] != "":
-            print(message.format('8'))
-            nums.append("8")
+            # print(message.format('8'))
+            nums.append(lines[8])
         elif lines[9] != "# Predmety #":
-            print(message.format('9'))
-            nums.append("9")
-        elif re.match("(a,b,c,d|a,b,c|a,b|a)", lines[10]) is None:
-            print(message.format('10'))
-            nums.append("10")
+            # print(message.format('9'))
+            nums.append(lines[9])
+        elif re.fullmatch("(a,b,c,d|a,b,c|a,b|a)", lines[10]) is None:
+            # print(message.format('10'))
+            nums.append(lines[10])
         elif lines[11] != "":
-            print(message.format('11'))
-            nums.append("11")
+            # print(message.format('11'))
+            nums.append(lines[11])
         elif lines[12] != "# Prekazky #":
-            nums.append("12")
-            print(message.format('12'))
-        elif re.match("(x,y,z|x,y|x)", lines[13]) is None:
-            print(message.format('13'))
-            nums.append("13")
+            nums.append(lines[12])
+            # print(message.format('12'))
+        elif re.fullmatch("(x,y,z|x,y|x)", lines[13]) is None:
+            # print(message.format('13'))
+            nums.append(lines[13])
+
+        map_name = lines[0].split(": ")[1]
+        if self.map_name != map_name:
+            return message.format("Neexistujúci názov mapy: {}.".format(map_name))
 
         if len(lines) > 14:
             new_lines = lines[14:]
             new_lines = list(set(new_lines))
             if not (len(new_lines) == 1 and new_lines[0] == ""):
-                return "Na konci súboru sa nachádzajú nepovolené riadky."
+                return message.format("Na konci súboru sa nachádzajú nepovolené riadky.")
 
         if len(nums) == 0:
             return ""

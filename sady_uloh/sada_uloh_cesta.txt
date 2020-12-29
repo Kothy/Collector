@@ -6,7 +6,7 @@ x: kriz
 y: bod
 
 # Ulohy #
-Volny_prechod: ano
+Volny prechod: ano
 
 1.
 Nazov: Uloha 1

@@ -3,10 +3,10 @@ Mapa: ocean
 
 # Nastavenie prekazok #
 x: stvorec
-y: kriz
+y: bod
 
 # Ulohy #
-Volny_prechod: ano
+Volny prechod: ano
 
 1.
 Nazov: Prva
@@ -59,7 +59,7 @@ Rezim: oba
 Riadkov: 5
 Stlpcov: 8
 Krokov: 15
-Zadanie: abcaa
+Zadanie: abca
 Riesitelna: ano
 ..y.ap..
 .b......
