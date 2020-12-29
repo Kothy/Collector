@@ -4,6 +4,7 @@ from CommonFunctions import resize_image
 
 LINE_HEIGHT = 40
 
+
 class TextWithImages:
     def __init__(self, canvas, x, y, width, text, images):
         self.canvas = canvas

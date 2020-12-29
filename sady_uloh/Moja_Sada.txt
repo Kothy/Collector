@@ -7,20 +7,50 @@ y: kriz
 z: bod
 
 # Ulohy #
-Volny prechod: ano
+Volny prechod: nie
 
 1.
-Nazov: Prva
+Nazov: Jednotka
 Typ: volna
 Rezim: oba
 Riadkov: 5
 Stlpcov: 10
 Krokov: 
 Zadanie: 
-Riesitelna: ano
+Riesitelna: nie
 p........z
 ..........
-.....x....
+....xx....
+..........
+y........a
+
+2.
+Nazov: Neriesitelna
+Typ: volna
+Rezim: oba
+Riadkov: 5
+Stlpcov: 10
+Krokov: 
+Zadanie: 
+Riesitelna: nie
+p........z
+..........
+....xx....
+..........
+y........a
+
+3.
+Nazov: Neriesitelna
+Typ: volna
+Rezim: oba
+Riadkov: 5
+Stlpcov: 10
+Krokov: 
+Zadanie: 
+Riesitelna: nie
+p........z
+..........
+.....xx...
 ..........
 y........a
 

@@ -9,7 +9,7 @@ import re
 
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
-CORRECT_ANS_SOUND = 'sounds/Correct_Answer2.mp3'
+CORRECT_ANS_SOUND = 'sounds/Correct_Answer.mp3'
 
 
 class Task:
@@ -27,7 +27,7 @@ class Task:
         self.steps_count = int(steps)
         self.assign = assign
         self.col_counts = []
-        self.solvable = solvable
+        self.solvable = True if solvable == "ano" else False
         self.obstacles = []
         self.map_name = map_name
         self.char_name = char_name
@@ -324,6 +324,9 @@ class Task:
 
     def draw(self):
         w = 340
+        self.text_w_images = None
+        self.text_w_images2 = None
+        self.assign_ids = []
         text = self.assign_text
         images = self.assign_images
         if self.mode == "oba" or self.mode == "priamy":
@@ -374,8 +377,10 @@ class Task:
 
     def remove(self):
         self.map.remove()
-        self.text_w_images.remove()
-        self.text_w_images2.remove()
+        if self.text_w_images is not None:
+            self.text_w_images.remove()
+        if self.text_w_images is not None:
+            self.text_w_images2.remove()
         for id in self.assign_ids:
             self.parent.canvas.delete(id)
 
