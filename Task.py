@@ -149,13 +149,13 @@ class Task:
     def check_path_answer(self, play=True):
         answer = "".join(self.map.player.coll_path) == self.assign and self.steps_count >= self.map.player.steps_count
         if answer:
-            print("spravne")
+            # print("spravne")
             self.parent.parent.show_next_task_button()
             if play:
                 playsound.playsound(CORRECT_ANS_SOUND, False)
 
         if isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
-            print("collectible")
+            # print("collectible")
             if play:
                 playsound.playsound(COLLECTION_SOUND, False)
 
@@ -181,7 +181,12 @@ class Task:
             else:
                 answers.append(False)
 
+            # print(answers)
+
         answer = False not in answers and self.steps_count >= self.map.player.steps_count
+        # print("Odpoved je",answer, self.steps_count >= self.map.player.steps_count)
+        # print("Urobenzch krokov: ", self.map.player.steps_count)
+        # print("Dovolenych krokok: ", self.steps_count)
         if answer:
             if play:
                 playsound.playsound(CORRECT_ANS_SOUND, False)
@@ -191,7 +196,7 @@ class Task:
             if play:
                 playsound.playsound(COLLECTION_SOUND, False)
 
-        return False not in answers and self.steps_count <= self.map.player.steps_count
+        return False not in answers and self.steps_count >= self.map.player.steps_count
 
     def translate_color(self, color):
         if color == "cierna":

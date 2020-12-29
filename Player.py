@@ -104,22 +104,18 @@ class Player:
 
     def turn_right(self):
         if self.rotation == "vlavo/vpravo" or self.rotation == "vsetky smery":
-            print("otocenie vpravo")
             self.actual_rotation = "vpravo"
 
     def turn_left(self):
         if self.rotation == "vlavo/vpravo" or self.rotation == "vsetky smery":
-            print("otocenie vlavo")
             self.actual_rotation = "vlavo"
 
     def turn_up(self):
         if self.rotation == "dole/hore" or self.rotation == "vsetky smery":
-            print("otocenie hore")
             self.actual_rotation = "hore"
 
     def turn_down(self):
         if self.rotation == "dole/hore" or self.rotation == "vsetky smery":
-            print("otocenie dole")
             self.actual_rotation = "dole"
 
     def draw(self):

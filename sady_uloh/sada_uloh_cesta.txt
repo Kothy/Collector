@@ -6,7 +6,7 @@ x: kriz
 y: bod
 
 # Ulohy #
-Volny_prechod: nie
+Volny_prechod: ano
 
 1.
 Nazov: Uloha 1
@@ -26,13 +26,13 @@ Nazov: Uloha 2
 Typ: cesta
 Rezim: oba
 Riadkov: 3
-Stlpcov: 5
+Stlpcov: 6
 Krokov: 6
-Zadanie: abcdb
+Zadanie: abcb
 Riesitelna: ano
-.y.ac
-b....
-.p.x.
+.y.cb.
+ba....
+.p.x..
 
 3.
 Nazov: Uloha 3
@@ -40,9 +40,9 @@ Typ: cesta
 Rezim: oba
 Riadkov: 3
 Stlpcov: 6
-Krokov: 6
-Zadanie: abc
+Krokov: 12
+Zadanie: babccaaadd
 Riesitelna: ano
-p.y.a.
-.b....
-.c..x.
+payaad
+bba..d
+.cc.x.

@@ -21,7 +21,7 @@ class Collector:
         self.canvas = tk.Canvas(self.root, width=1280, height=650)
         self.canvas.pack()
 
-        self.canvas.bind("<Button-1>", self.click)
+        # self.canvas.bind("<Button-1>", self.click)
 
     def background_set(self):
         image = Image.open("obrazky/bg.jpg")
