@@ -24,7 +24,7 @@ b.c..
 .b...
 
 2.
-Nazov: Uloha1
+Nazov: Uloha2
 Typ: pocty
 Rezim: oba
 Riadkov: 3
@@ -39,7 +39,7 @@ b.c.......
 ..........
 
 3.
-Nazov: Uloha1
+Nazov: Uloha3
 Typ: pocty
 Rezim: oba
 Riadkov: 3

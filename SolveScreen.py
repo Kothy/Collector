@@ -12,11 +12,13 @@ import playsound
 import re
 import copy
 from os import path
+import math
 
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
 CORRECT_ANS_SOUND = 'sounds/Correct_Answer.mp3'
 WRONG_SOUND = "sounds/wrong_sound.mp3"
+SPEED = 40
 
 
 class SolveScreen(Screen):
@@ -33,6 +35,7 @@ class SolveScreen(Screen):
         self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
         self.actual_regime = None
         self.task_not_draw = True
+        self.moving = False
 
     def check_move(self, move, dir, obsta):
         map_name = self.tasks_set.get_actual_task().map.name
@@ -69,6 +72,8 @@ class SolveScreen(Screen):
 
     def move_down(self, _):
         player = self.tasks_set.get_player()
+        if self.moving == True:
+            return
         if player.planned_move == True:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
@@ -82,6 +87,8 @@ class SolveScreen(Screen):
 
     def move_up(self, _):
         player = self.tasks_set.get_player()
+        if self.moving == True:
+            return
         if player.planned_move == True:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
@@ -95,6 +102,8 @@ class SolveScreen(Screen):
 
     def move_right(self, _):
         player = self.tasks_set.get_player()
+        if self.moving == True:
+            return
         if player.planned_move == True:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
@@ -108,6 +117,8 @@ class SolveScreen(Screen):
 
     def move_left(self, _):
         player = self.tasks_set.get_player()
+        if self.moving == True:
+            return
         if player.planned_move == True:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
@@ -646,9 +657,46 @@ class SolveScreen(Screen):
 
         player.planned_move = False
 
+    def move_img_smoothly(self, img, x1, y1, x2, y2):
+        player =  self.tasks_set.get_player()
+        edge_len = math.hypot(x1 - x2,y1 - y2)
+        start_x = x1
+        start_y = y1
+        end_x = x2
+        end_y = y2
+        id = self.canvas.create_image(x1, y1, image=img, anchor='c')
+        id2 = 0
+        traj_col = self.tasks_set.get_actual_task().trajectory_color
+        self.moving = True
+
+        def step(pos, id, id2, xs, ys):
+            player.hide()
+            pos += SPEED / edge_len
+            x = start_x * (1 - pos) + end_x * pos
+            y = start_y * (1 - pos) + end_y * pos
+            self.canvas.delete(id)
+            self.canvas.delete(id2)
+            id2 = self.canvas.create_line(x, y, xs, ys, fill=traj_col, width=5)
+            id = self.canvas.create_image(x, y, image=img, anchor='c')
+
+            # self.canvas.update()
+            if pos < 1:
+                time.sleep(0.1)
+                self.canvas.update()
+                step(pos, id, id2, x, y)
+            else:
+                self.canvas.delete(id)
+                self.canvas.delete(id2)
+                # self.canvas.update()
+                # self.canvas.after(100, lambda: step(pos, id))
+            #
+
+        step(0, id, id2, start_x, start_y)
+        self.moving = False
+
+        player.show()
 
     def task_window_init(self):
-        # texty tam su na skusku, daj ich potom odtialto prec :) self.task_text_obstacle potom vyuzi aj na info "Ziadne zadanie" v pripade volnej ulohy
         image = Image.new('RGBA', (350, 480), (255, 170, 79, 100))
         self.screen_task_bg_img = ImageTk.PhotoImage(image)
         screen_task_bg = self.canvas.create_image(920, 60, image=self.screen_task_bg_img, anchor='nw')
@@ -736,7 +784,7 @@ class SolveScreen(Screen):
         self.road.clear_road()
 
     def show_common(self):
-        # zobrazi len to, co sa netyka konkretnych uloh, ak chces vidiet vsetko, daj si do CanvasObject initu hidden=False
+
         starting_canvas_items = [self.menu_btn,
                                  self.solve_screen_map_bg,
                                  self.solve_screen_keyboard,

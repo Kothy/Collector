@@ -187,8 +187,11 @@ class Player:
             row, col = self.row + 1, self.col
             self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col], self.actual_rotation])
             self.row += 1
-            self.y = self.map.xs[self.row]
             self.turn_down()
+            rot = self.actual_rotation
+            self.map.task.parent.parent.move_img_smoothly(self.images[rot], self.x, self.y, self.x, self.map.xs[self.row])
+            self.y = self.map.xs[self.row]
+
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part("ok", "down")
             self.steps_count += 1
@@ -209,8 +212,10 @@ class Player:
             row, col = self.row - 1, self.col
             self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col], self.actual_rotation])
             self.row -= 1
-            self.y = self.map.xs[self.row]
             self.turn_up()
+            rot = self.actual_rotation
+            self.map.task.parent.parent.move_img_smoothly(self.images[rot], self.x, self.y, self.x, self.map.xs[self.row])
+            self.y = self.map.xs[self.row]
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'up')
             self.steps_count += 1
@@ -231,8 +236,10 @@ class Player:
             row, col = self.row, self.col + 1
             self.trajectory.append([self.row, self.col, self.x, self.y, None, self.map.array[row][col], self.actual_rotation])
             self.col += 1
-            self.x = self.map.ys[self.col]
             self.turn_right()
+            rot = self.actual_rotation
+            self.map.task.parent.parent.move_img_smoothly(self.images[rot], self.x, self.y, self.map.ys[self.col], self.y)
+            self.x = self.map.ys[self.col]
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'right')
 
@@ -254,8 +261,11 @@ class Player:
             row, col = self.row, self.col - 1
             self.trajectory.append([self.row, self.col + 1, self.x, self.y, None, self.map.array[row][col], self.actual_rotation])
             self.col -= 1
-            self.x = self.map.ys[self.col]
             self.turn_left()
+            rot = self.actual_rotation
+            self.map.task.parent.parent.move_img_smoothly(self.images[rot], self.x, self.y, self.map.ys[self.col], self.y)
+            self.x = self.map.ys[self.col]
+
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'left')
 
@@ -270,7 +280,7 @@ class Player:
         while self.trajectory_lines:
             self.map.canvas.delete(self.trajectory_lines.pop(0))
 
-    def step_back(self, plan=False):
+    def step_back(self, plan=False, move=True):
         if len(self.trajectory) > 0:
             row, col, x, y, t, obj, rotation = self.trajectory.pop(-1)
             self.map.array[obj.row][obj.col] = obj
@@ -285,9 +295,12 @@ class Player:
             self.steps_count -= 1
             self.row = row
             self.col = col
+            self.actual_rotation = rotation
+            if move:
+                self.map.task.parent.parent.move_img_smoothly(self.images[rotation], self.x, self.y, x, y)
             self.x = x
             self.y = y
-            self.actual_rotation = rotation
+
             self.remove()
             self.draw()
             if len(self.trajectory) == 0:
@@ -324,7 +337,7 @@ class Player:
 
     def reset_game(self, plan=False):
         while len(self.trajectory) > 0:
-            self.step_back(plan)
+            self.step_back(plan=plan, move=False)
 
         self.actual_rotation = self.start_rotation
         self.coll_collected = {}
