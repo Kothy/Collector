@@ -150,7 +150,7 @@ class Task:
     def check_path_answer(self, play=True):
         answer = "".join(self.map.player.coll_path) == self.assign and self.steps_count >= self.map.player.steps_count
         if answer:
-            answer = self.parent.parent.road.wrong_in_road()
+            answer = not self.parent.parent.road.wrong_in_road()
         if answer:
             # print("spravne")
             self.parent.parent.show_next_task_button()
@@ -191,8 +191,9 @@ class Task:
                 answers.append(False)
 
         answer = False not in answers and self.steps_count >= self.map.player.steps_count
+
         if answer:
-            answer = self.parent.parent.road.wrong_in_road()
+            answer = not self.parent.parent.road.wrong_in_road()
         if answer:
             if play:
                 playsound.playsound(CORRECT_ANS_SOUND, False)

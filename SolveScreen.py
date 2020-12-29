@@ -263,18 +263,22 @@ class SolveScreen(Screen):
         if re.fullmatch("Stlpcov: [0-9]{1,2}", lines[5]) is None:
             return False, lines[5]
         if re.fullmatch("Krokov: {0,1}[0-9]{0,2}", lines[6]) is None:
-            print("tu")
+            # print("tu")
             return False, lines[6]
         if lines[7].startswith("Zadanie: "):  #(a|b|c|d)(|>|<|=|<=|>=)[0-9]{1,2}
             if "pocty" in lines[2]:
                 assign = lines[7].split(": ")[1]
-                assign = assign.split(",")
-                for i in range(len(assign)):
-                    if re.fullmatch("(([abcd])\?)|(([abcd])(|>|<|=|<=|>=)[0-9]{1,2})", assign[i]) is None:
+                ass = assign.split(",")
+
+                for i in range(len(ass)):
+                    if re.fullmatch("((a|b|c|d)\?)|((a|b|c|d)(>|<|=|<=|>=)[0-9]{1,2})", ass[i]) is None:
+                        print(ass[i])
                         return False, lines[7]
-                    for char in "abcd":
-                        if char in assign and not path.exists("mapy/{}/collectibles/{}.png".format(map_name, char)):
-                            return False, lines[7]
+
+                assign = lines[7].split(": ")[1]
+                for char in "abcd":
+                    if char in assign and not path.exists("mapy/{}/collectibles/{}.png".format(map_name, char)):
+                        return False, lines[7] + " Neexistujúci predmet."
 
             elif "cesta" in lines[2]:
                 assign = lines[7].split(": ")[1]

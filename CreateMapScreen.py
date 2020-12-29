@@ -9,6 +9,7 @@ from ObjectList import ObjectList
 import os
 import threading
 import unicodedata
+from CommonFunctions import *
 
 MAP_NAME_LENGTH = 15
 CHARACTER_NAME_LENGTH = 10
@@ -18,7 +19,7 @@ ERROR2 = 'Chyba pri ukladaní mapy: nepovolený názov mapy'
 ERROR30 = 'Chyba pri ukladaní mapy: názov mapy už existuje'
 ERROR3 = 'Chyba pri ukladaní mapy: nezadaný názov postavičky'
 ERROR4 = 'Chyba pri ukladaní mapy: nepovolený názov postavičky'
-ERROR5 = 'Chyba pri ukladaní mapy: nezadaný obrázok postaviky'
+ERROR5 = 'Chyba pri ukladaní mapy: nezadaný obrázok postavičky'
 ERROR6 = 'Chyba pri ukladaní mapy: nezadané pozadie mapy'
 ERROR7 = 'Chyba pri ukladaní mapy: nezadané predmety'
 ERROR8 = 'Chyba pri ukladaní mapy: nezadané prekážky'
@@ -77,16 +78,19 @@ class CreateMapScreen(Screen):
     def display_error(self, text):
         self.canvas.itemconfig(self.saving_error_text, text=text)
         self.canvas.itemconfig(self.saving_error_text, state=tk.NORMAL)
+        print(len(text))
         if 30 < len(text) < 40:
             self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 16, 'italic bold'))
-        elif len(text) >= 40:
+        elif 40 <= len(text) < 50:
             self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 15, 'italic bold'))
         else:
-            self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 17, 'italic bold'))
+            self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 14, 'italic bold'))
 
     def check_inputs(self):
         map_name = strip_accents(self.map_name.get())
-        char_name = self.map_name.get()
+        char_name = self.character_name.get()
+        char_img = self.canvas.itemcget(self.player_file_text, 'text')
+        map_img = self.canvas.itemcget(self.map_file_text, 'text')
         if map_name == "":
             self.display_error(ERROR1)
 
@@ -102,10 +106,10 @@ class CreateMapScreen(Screen):
         elif not char_name.isalnum():
             self.display_error(ERROR4)
 
-        elif self.canvas.itemcget(self.player_file_text, 'text') == "":
+        elif ".png" not in char_img and ".jpg" not in char_img:
             self.display_error(ERROR5)
 
-        elif self.canvas.itemcget(self.map_file_text, 'text') == "":
+        elif ".png" not in map_img and ".jpg" not in map_img:
             self.display_error(ERROR6)
 
         elif len(self.collectibles_list.items) < 1:
@@ -146,7 +150,7 @@ class CreateMapScreen(Screen):
 
         file_txt = text.format(name, strip_accents(self.character_name.get()),
                            strip_accents(self.rotate_options.checkboxes[self.rotate_options.checked_index].text),
-                           strip_accents(self.rotated_choices.text), strip_accents(self.trajectory_color_choices.text),
+                           strip_accents(self.rotated_choices.text), strip_accents(self.trajectory_color_choices.text).strip(),
                                strip_accents(self.path_color_choices.text),all_col, all_obs)
 
         with open(dir + "map_settings.txt", "w") as file:
@@ -233,7 +237,8 @@ class CreateMapScreen(Screen):
                 self.canvas.delete(self.character_preview)
 
             image = Image.open(path)
-            resized_img = resize_image_by_height(image, 110)
+            resized_img = resize_image(image, 170, 140)
+            # resized_img = resize_image_by_height(image, 110)
             self.character_preview_img = ImageTk.PhotoImage(resized_img)
             self.character_preview_img2 = image
             self.character_preview = self.canvas.create_image(440, 170, image=self.character_preview_img, anchor='nw')
@@ -248,7 +253,7 @@ class CreateMapScreen(Screen):
                 self.canvas.delete(self.map_preview)
 
             image = Image.open(path)
-            resized_img = resize_image_by_height(image, 120)
+            resized_img = resize_image(image, 400,130)
             self.map_preview_img = ImageTk.PhotoImage(resized_img)
             self.map_preview_img2 = image
             self.map_preview = self.canvas.create_image(954, 180, image=self.map_preview_img, anchor='c')
@@ -256,12 +261,14 @@ class CreateMapScreen(Screen):
     def open_browser_collectibles(self, _):
         path = self.open_file_browser("Vyber obrázky pre predmety", multiple_files=True)
         if path and len(path) <= 4 - len(self.collectibles_list.items):
+            self.canvas.itemconfig(self.collectibles_help, state=tk.HIDDEN)
             for item in path:
                 self.collectibles_list.add_item(item)
 
     def open_browser_obstacles(self, _):
         path = self.open_file_browser("Vyber obrázky pre prekážky", multiple_files=True)
         if path and len(path) <= 3 - len(self.obstacles_list.items):
+            self.canvas.itemconfig(self.obstacles_help, state=tk.HIDDEN)
             for item in path:
                 self.obstacles_list.add_item(item)
 
@@ -270,7 +277,7 @@ class CreateMapScreen(Screen):
                                                 anchor='nw', width=530,
                                                 text='Názov mapy:\n(môže obsahovať iba písmená a čísla)')
 
-        # toto treba dokoncit - zarovnat asi doprava, obmedzit dlzku, ziskavat nejako text
+
         self.character_name = tk.StringVar()
         self.map_name = tk.StringVar()
         self.map_name_entry = tk.Entry(self.parent.root, font=('Comic Sans MS', 15, 'italic bold'), width=20,
@@ -292,7 +299,15 @@ class CreateMapScreen(Screen):
         self.plus_btn = self.canvas.create_image(860, 82, image=self.plus_btn_img, anchor='nw')
 
         self.map_file_text = self.canvas.create_text(900, 85, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
-                                                     anchor='nw', width=330, text='', state="hidden")
+                                                     anchor='nw', width=330, text='<-- vyber pozadie mapy', state="normal")
+
+        self.collectibles_help = self.canvas.create_text(850, 255, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
+                                                     anchor='nw', width=330, text='<-- vyber obrázky pre predmety na zbieranie',
+                                                     state="normal")
+
+        self.obstacles_help = self.canvas.create_text(850, 465, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
+                                                        anchor='nw', width=330, text='<-- vyber obrázky pre prekážky',
+                                                        state="normal")
 
         self.canvas.tag_bind(self.plus_btn, '<ButtonPress-1>', self.open_browser_map)
 
@@ -328,7 +343,7 @@ class CreateMapScreen(Screen):
         self.canvas.tag_bind(self.plus_btn, '<ButtonPress-1>', self.open_browser_character)
 
         self.player_file_text = self.canvas.create_text(245, 176, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
-                                                        anchor='nw', width=330, text='', state="hidden")
+                                                        anchor='nw', width=330, text='<-- vyber obrázok postavičky', state="normal")
 
         name_text = self.canvas.create_text(300, 250, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
                                             anchor='ne', width=330, text='Meno:')

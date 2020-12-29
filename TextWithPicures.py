@@ -79,7 +79,7 @@ class TextWithImages:
             self.images_on_canvas = []
             self.objects = []
             self.textWithPictures(self.x, self.y, self.text, copy.deepcopy(self.images), self.width)
-        print("pocet riadkov yadania", lines)
+        # print("pocet riadkov yadania", lines)
 
     def remove(self):
         for obj in self.objects:

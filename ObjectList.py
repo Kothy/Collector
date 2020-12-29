@@ -1,4 +1,5 @@
 from PIL import Image, ImageTk
+from CommonFunctions import resize_image
 
 
 def resize_image_by_height(img, hsize):
@@ -43,10 +44,12 @@ class ObjectListItem:
 
         image = Image.open('obrazky/delete.png')
         image = image.resize((35, 35), Image.ANTIALIAS)
+
         self.delete_img = ImageTk.PhotoImage(image)
 
         image2 = Image.open(img)
-        image2 = image2.resize((35, 35), Image.ANTIALIAS)
+        # image2 = image2.resize((35, 35), Image.ANTIALIAS)
+        image2 = resize_image(image2,35, 35)
         self.preview_img = ImageTk.PhotoImage(image2)
         self.draw()
 

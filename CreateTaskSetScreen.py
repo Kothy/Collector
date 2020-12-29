@@ -243,7 +243,7 @@ class CreateTaskSetScreen(Screen):
             set_string += 'Rezim: ' + ('planovaci' if task.mode == 'plánovací' else task.mode) + '\n'
             set_string += 'Riadkov: ' + task.row + '\n'
             set_string += 'Stlpcov: ' + task.col + '\n'
-            set_string += 'Krokov: ' + task.steps_count + '\n'
+            set_string += 'Krokov: ' + str(task.steps_count) + '\n'
             set_string += 'Zadanie: ' + task.assign + '\n'
             set_string += 'Riesitelna: ' + ('ano' if task.solvable else 'nie') + '\n'
             set_string += task.map_str + '\n\n'

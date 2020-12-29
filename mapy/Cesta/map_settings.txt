@@ -1,0 +1,14 @@
+Nazov: Cesta
+
+# Nastavenia postavicky #
+Meno: Autobus
+Otacanie: vlavo/vpravo
+Smerovanie: vpravo
+Mriezka: cervena
+Trajektoria: biela
+
+# Predmety #
+a,b,c
+
+# Prekazky #
+x,y,z
