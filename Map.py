@@ -77,43 +77,6 @@ class Map:
 
         self.player.remove()
 
-    # def do_grid(self):
-    #     one_row = 480 / self.rows
-    #     one_col = 900 / self.cols
-    #
-    #     y = 60
-    #     xs = []
-    #     ys = []
-    #     for row in range(self.rows + 1):
-    #         ys.append(y + (one_row/2))
-    #         y += one_row
-    #
-    #     x = 10
-    #     for row in range(self.cols + 1):
-    #         xs.append(x + (one_col/2))
-    #         x += one_col
-    #
-    #     self.xs = ys
-    #     self.ys = xs
-    #
-    # def draw_grid(self):
-    #     one_row = 480 / self.rows
-    #     one_col = 900 / self.cols
-    #     self.grid_lines = []
-    #
-    #     x1 = 10
-    #     x2 = 910
-    #     y = 60
-    #     for row in range(self.rows + 1):
-    #         self.grid_lines.append(self.canvas.create_line(x1, y, x2, y, width=5, fill=self.grid_col))
-    #         y += one_row
-    #
-    #     x = 10
-    #     y1, y2 = 60, 540
-    #     for row in range(self.cols + 1):
-    #         self.grid_lines.append(self.canvas.create_line(x, y1, x, y2, width=5, fill=self.grid_col))
-    #         x += one_col
-
     def calculate_dims2(self):
         global PART_W, PART_H
 
@@ -177,8 +140,6 @@ class Map:
         self.player.draw()
 
     def draw_map(self):
-        # print("blaaa kresli sa mapa")
         self.draw_grid2()
         self.player.draw_full_trajectory()
         self.draw_objects()
-        # print(self.player.trajectory)

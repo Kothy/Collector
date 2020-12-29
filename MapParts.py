@@ -71,21 +71,23 @@ class Obstacle:
         j = self.col
         if self.guarding != "bod":
             for a, b in [(i-1, j), (i+1,j), (i,j+1), (i,j-1)]:
-                id = self.draw_at(a, b, self.map.guarding_img)
+                id,id2 = self.draw_at(a, b, self.map.guarding_img)
                 if id is not None:
                     self.map.array[a][b].guarded = True
                     self.map.array[a][b].guarded_by = self.name
                     self.guarded_pos.append((a, b))
                     self.guardians_ids.append(id)
+                    self.guardians_ids.append(id2)
 
             if self.guarding == "stvorec":
                 for a, b in [(i - 1, j - 1), (i + 1, j + 1), (i + 1, j - 1), (i - 1, j + 1)]:
-                    id = self.draw_at(a, b, self.map.guarding_img)
+                    id,id2 = self.draw_at(a, b, self.map.guarding_img)
                     if id is not None:
                         self.map.array[a][b].guarded = True
                         self.map.array[a][b].guarded_by = self.name
                         self.guarded_pos.append((a, b))
                         self.guardians_ids.append(id)
+                        self.guardians_ids.append(id2)
 
     def draw_at(self, i, j, img):
         if i >= 0 and i < self.map.rows and j >= 0 and j < self.map.cols:
@@ -94,8 +96,8 @@ class Obstacle:
             part_w = self.map.part_w
             part_h = self.map.part_h
             id2 = self.map.canvas.create_image(x + (part_w/2) - 6, y - (part_h/2) + 6, image=self.map.guarding_img_x, anchor="ne")
-            return id
-        return None
+            return id, id2
+        return None,None
 
     def get_guarded(self):
         return self.guarded_pos

@@ -445,25 +445,26 @@ class SolveScreen(Screen):
 
         self.task_text_collect = self.canvas.create_text(930, 70, fill="#0a333f",
                                                          font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
-                                                         width=330, text='Emil chce pozbierat')
-        self.task_text_collectibles = [
-            self.canvas.create_text(1095, 110, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'), anchor='n',
-                                    width=330, text='práve 5 aaa, najviac 6 ccc'),
-            self.canvas.create_text(1095, 150, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'), anchor='n',
-                                    width=330, text='najviac 6 bbb a 0 ddd')]
-        self.task_text_steps = self.canvas.create_text(930, 185, fill="#0a333f",
-                                                       font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
-                                                       width=330, text='s pouzitim najviac 15 krokov.')
-        self.task_text_path_info = self.canvas.create_text(930, 215, fill="#0a333f",
-                                                           font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
-                                                           width=330, text='(v tomto pocte aj poradi)')
-        self.task_text_obstacle = self.canvas.create_text(930, 255, fill="#0a333f",
-                                                          font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
-                                                          width=330, text='Musi sa ale vyhnut polickam, ktore ohrozuje')
-        self.task_text_obstacles = self.canvas.create_text(1095, 330, fill="#0a333f",
-                                                           font=('Comic Sans MS', 15, 'italic bold'), anchor='n',
-                                                           width=330, text='Liska alebo Voda')
+                                                         width=330, text='{} chce pozbierat')
+        # self.task_text_collectibles = [
+        #     self.canvas.create_text(1095, 110, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'), anchor='n',
+        #                             width=330, text='práve 5 aaa, najviac 6 ccc'),
+        #     self.canvas.create_text(1095, 150, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'), anchor='n',
+        #                             width=330, text='najviac 6 bbb a 0 ddd')]
 
+        # self.task_text_steps = self.canvas.create_text(930, 220, fill="#0a333f",
+        #                                                font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
+        #                                                width=330, text='s použítim najviac {} krokov.')
+        # self.task_text_path_info = self.canvas.create_text(930, 185, fill="#0a333f",
+        #                                                    font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
+        #                                                    width=330, text='(v tomto počte aj poradí)')
+        # self.task_text_obstacle = self.canvas.create_text(930, 255, fill="#0a333f",
+        #                                                   font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
+        #                                                   width=330, text='Musí sa ale vyhnúť políčkam, ktoré ohrozuje')
+        # self.task_text_obstacles = self.canvas.create_text(1095, 330, fill="#0a333f",
+        #                                                    font=('Comic Sans MS', 15, 'italic bold'), anchor='n',
+        #                                                    width=330, text='Liska alebo Voda')
+        #
         self.task_text_mode = self.canvas.create_text(930, 370, fill="#114c32",
                                                       font=('Comic Sans MS', 17, 'italic bold'), anchor='nw', width=330,
                                                       text='{}\n"Pomôžeš mi, prosím, naplánovať cestu?"\n\n\tRežim: priamy')
@@ -472,9 +473,9 @@ class SolveScreen(Screen):
                                                             font=('Comic Sans MS', 20, 'italic bold'), anchor='center',
                                                             width=330, text='Vyber sadu úloh')
 
-        task_text_collectibles_obj = CanvasObject(self, self.task_text_collectibles)
-        solve_screen_task_collectibles = CanvasObject(self, [self.task_text_collect, task_text_collectibles_obj])
-        self.solve_screen_task_obstacles = CanvasObject(self, [self.task_text_obstacle, self.task_text_obstacles])
+        # task_text_collectibles_obj = CanvasObject(self, self.task_text_collectibles)
+        self.solve_screen_task_collectibles = CanvasObject(self, [self.task_text_collect])
+        # self.solve_screen_task_obstacles = CanvasObject(self, [self.task_text_obstacle, self.task_text_obstacles])
 
         image = Image.open('obrazky/swap_mode.png')
         image = image.resize((32, 32), Image.ANTIALIAS)
@@ -484,17 +485,20 @@ class SolveScreen(Screen):
         self.canvas.tag_bind(self.swap_mode_btn, '<ButtonPress-1>', self.swap_mode)
 
 
-        # self.solve_screen_task_mode = CanvasObject(self, [self.task_text_mode, self.swap_mode_btn])
+        self.solve_screen_task_mode = CanvasObject(self, [self.task_text_mode, self.swap_mode_btn])
 
-        self.solve_screen_task_mode = CanvasObject(self, [self.task_text_mode])
+        # self.solve_screen_task_mode = CanvasObject(self, [self.task_text_mode])
 
-        self.solve_screen_task_mode.show()
+        # self.solve_screen_task_mode.show()
 
-        self.solve_screen_task_window = CanvasObject(self, [self.solve_screen_task_bg, solve_screen_task_collectibles,
-                                                            self.task_text_steps, self.task_text_path_info,
-                                                            self.task_text_set_choice,
-                                                            self.solve_screen_task_obstacles,
-                                                            self.solve_screen_task_mode])
+        # self.solve_screen_task_window = CanvasObject(self, [self.solve_screen_task_bg,
+        #                                                     self.task_text_steps, self.task_text_path_info,
+        #                                                     self.task_text_set_choice,
+        #                                                     self.solve_screen_task_obstacles,
+        #                                                     self.solve_screen_task_mode])
+
+        self.solve_screen_task_window = CanvasObject(self, [self.solve_screen_task_bg])
+
 
     def swap_mode(self, _):
         player = self.tasks_set.get_player()
@@ -524,7 +528,8 @@ class SolveScreen(Screen):
                                  self.solve_screen_map_bg,
                                  self.solve_screen_keyboard,
                                  self.solve_screen_road_bg, self.road,
-                                 self.solve_screen_task_bg, self.task_text_set_choice]
+                                 self.solve_screen_task_bg#, self.task_text_set_choice
+                                 ]
 
         for item in starting_canvas_items:
             self.show_canvas_item(item)

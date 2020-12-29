@@ -84,6 +84,7 @@ class Task:
             images += imgs
             text = "{} chce pozbierať \n {} {}. Musí sa ale vyhnúť všetkým políčkam, ktoré ohrozuje _".format(
                 self.char_name, tex, "s použitím najviac {} krokov".format(self.steps_count))
+            self.assign_text2 = tex
 
         elif self.type == "cesta":
 
@@ -99,6 +100,7 @@ class Task:
                 self.char_name,
                 "{} (v tomto počte a poradí) s použitím najviac {} krokov".format(("_ " * len(images_col)),
                                                                                   self.steps_count))
+            self.assign_text2 = ("_ " * len(images_col))[:-1]
 
         else:
             text = ""
@@ -112,10 +114,14 @@ class Task:
 
         if len(self.obstacles) == 3:
             text += " a _ a _ ."
+            t =  "_ a _ a _ ."
         elif len(self.obstacles) == 2:
             text += " a _ ."
+            t = "_ a _ ."
         else:
             text += " ."
+            t = "_ ."
+        self.obstacles_assign = t
 
         arr = copy.deepcopy(self.obstacles)
 
@@ -330,7 +336,30 @@ class Task:
             self.parent.canvas.itemconfig(self.parent.parent.swap_mode_btn, state="hidden")
 
         if self.type != "volna":
-            self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
+
+            # self.text_w_images = TextWithImages(self.parent.canvas, 930, 90, w, text, images)
+
+            self.text_w_images = TextWithImages(self.parent.canvas, 930, 125, w, self.assign_text2, images[:self.assign_text2.count("_") + 1])
+            self.text_w_images2 = TextWithImages(self.parent.canvas, 930, 345, w, self.obstacles_assign,
+                                                images[self.assign_text2.count("_"):])
+
+            id1 = self.parent.canvas.create_text(930, 70, fill="#0a333f",
+                                                             font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
+                                                             width=330, text='{} chce pozbierať'.format(self.char_name))
+            id2 = self.parent.canvas.create_text(930, 220, fill="#0a333f",
+                                                           font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
+                                                           width=330, text='s použítim najviac {} krokov.'.format(self.steps_count))
+            id3 = self.parent.canvas.create_text(930, 185, fill="#0a333f",
+                                                               font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
+                                                               width=330, text='(v tomto počte aj poradí)')
+            id4 = self.parent.canvas.create_text(930, 255, fill="#0a333f",
+                                                              font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
+                                                              width=330,
+                                                              text='Musí sa ale vyhnúť políčkam, ktoré ohrozuje')
+
+            self.assign_ids = [id1, id2, id3, id4]
+            if self.type == "pocty":
+                self.parent.canvas.itemconfig(id3, state="hidden")
 
         self.parent.canvas.itemconfig(self.parent.parent.task_name_text, text=str(self.index + 1) + ". " + self.name)
         self.parent.canvas.itemconfig(self.parent.parent.task_name_text, state="normal")
@@ -339,6 +368,9 @@ class Task:
     def remove(self):
         self.map.remove()
         self.text_w_images.remove()
+        self.text_w_images2.remove()
+        for id in self.assign_ids:
+            self.parent.canvas.delete(id)
 
 
 class TaskSet:
