@@ -29,6 +29,13 @@ class Road(CanvasObject):
         self.road_parts[self.number_of_active_road_parts].direction = direction
         self.number_of_active_road_parts += 1
 
+    def wrong_in_road(self):
+        for part in self.road_parts:
+            if part.color == "wrong":
+                return True
+        return False
+
+
     def count_active_parts(self):
         count = 0
         for part in self.road_parts:

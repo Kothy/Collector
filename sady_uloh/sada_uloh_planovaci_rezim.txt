@@ -3,7 +3,7 @@ Mapa: Mapa_Zberatela
 
 # Nastavenie prekazok #
 x: stvorec
-y: krizy
+y: kriz
 
 # Ulohy #
 Volny prechod: ano
@@ -18,9 +18,9 @@ Krokov: 10
 Zadanie: a?,b>2,c<=2,d=1
 Riesitelna: ano
 .y.a......
-b.c...d...
-.p........
-b.b.....x.
+b.c...dc..
+.p..c.....
+b.bb....x.
 ....d.....
 
 2.

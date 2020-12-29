@@ -599,7 +599,34 @@ class SolveScreen(Screen):
                     ignored = True
 
                 elif move == "ok" and obsta is not None:
-                    playsound.playsound(COLLECTION_SOUND, False)
+                    if self.tasks_set.get_actual_task().type == "cesta":
+                        act_task = self.tasks_set.get_actual_task()
+                        len_col = len(act_task.map.player.coll_path)
+                        if act_task.assign[:len_col] == "".join(act_task.map.player.coll_path):
+                            playsound.playsound(COLLECTION_SOUND, False)
+                        else:
+                            playsound.playsound(WRONG_SOUND, False)
+                        # print(act_task.assign, act_task.map.player.coll_path, act_task.assign[:len_col])
+                    if self.tasks_set.get_actual_task().type == "pocty":
+                        act_task = self.tasks_set.get_actual_task()
+                        colle = player.coll_collected
+                        was = False
+                        for count in act_task.col_counts:
+                            col = count[0]
+                            sign = count[1]
+                            num = count[2]
+                            if sign == "=" and col in colle and colle[col] > num and col == obsta:
+                                was = True
+                                break
+                            elif sign == "<=" and col in colle and colle[col] > num and col == obsta:
+                                was = True
+                                break
+                        if was == False:
+                            playsound.playsound(COLLECTION_SOUND, False)
+                        else:
+                            playsound.playsound(WRONG_SOUND, False)
+
+
                     self.road.road_parts[i].add_obstacle("mapy/{}/collectibles/{}.png".format(map_name, obsta))
             else:
                 self.road.road_parts[i].change_color("ok")

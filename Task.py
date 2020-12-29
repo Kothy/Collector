@@ -10,6 +10,7 @@ import re
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
 CORRECT_ANS_SOUND = 'sounds/Correct_Answer.mp3'
+WRONG_SOUND = "sounds/wrong_sound.mp3"
 
 
 class Task:
@@ -149,15 +150,23 @@ class Task:
     def check_path_answer(self, play=True):
         answer = "".join(self.map.player.coll_path) == self.assign and self.steps_count >= self.map.player.steps_count
         if answer:
+            answer = self.parent.parent.road.wrong_in_road()
+        if answer:
             # print("spravne")
             self.parent.parent.show_next_task_button()
             if play:
                 playsound.playsound(CORRECT_ANS_SOUND, False)
 
-        if isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
+        if len(self.map.player.trajectory) and isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
             # print("collectible")
             if play:
-                playsound.playsound(COLLECTION_SOUND, False)
+                len_col = len(self.map.player.coll_path)
+                if self.map.task.assign[:len_col] == "".join(self.map.player.coll_path):
+                    # print(self.map.task.assign, self.map.player.coll_path, self.map.task.assign[:len_col])
+                    playsound.playsound(COLLECTION_SOUND, False)
+                else:
+                    playsound.playsound(WRONG_SOUND, False)
+
 
         return answer
 
@@ -183,13 +192,33 @@ class Task:
 
         answer = False not in answers and self.steps_count >= self.map.player.steps_count
         if answer:
+            answer = self.parent.parent.road.wrong_in_road()
+        if answer:
             if play:
                 playsound.playsound(CORRECT_ANS_SOUND, False)
             self.parent.parent.show_next_task_button()
 
-        if isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
+        if len(self.map.player.trajectory) and isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
+            col_name = self.map.player.trajectory[-1][5].name
             if play:
-                playsound.playsound(COLLECTION_SOUND, False)
+                # playsound.playsound(COLLECTION_SOUND, False)
+                colle = self.map.player.coll_collected
+                was = False
+                for count in self.col_counts:
+                    col = count[0]
+                    sign = count[1]
+                    num = count[2]
+                    if sign == "=" and col in colle and colle[col] > num and col == col_name:
+                        was = True
+                        break
+                    elif sign == "<=" and col in colle and colle[col] > num and col == col_name:
+                        was = True
+                        break
+
+                if was == False:
+                    playsound.playsound(COLLECTION_SOUND, False)
+                else:
+                    playsound.playsound(WRONG_SOUND, False)
 
         return False not in answers and self.steps_count >= self.map.player.steps_count
 

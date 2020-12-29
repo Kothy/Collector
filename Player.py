@@ -3,6 +3,7 @@ from PIL import ImageOps
 import playsound
 
 WRONG_SOUND = "sounds/wrong_sound.mp3"
+COLLECTION_SOUND = 'sounds/Collection.mp3'
 
 
 class Player:
