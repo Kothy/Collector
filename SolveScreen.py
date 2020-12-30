@@ -18,7 +18,7 @@ import math
 COLLECTION_SOUND = 'sounds/Collection.mp3'
 CORRECT_ANS_SOUND = 'sounds/Correct_Answer.mp3'
 WRONG_SOUND = "sounds/wrong_sound.mp3"
-SPEED = 40
+SPEED = 30
 
 
 class SolveScreen(Screen):
@@ -72,9 +72,7 @@ class SolveScreen(Screen):
 
     def move_down(self, _):
         player = self.tasks_set.get_player()
-        if self.moving == True:
-            return
-        if player.planned_move == True:
+        if player.planned_move == True or self.moving:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("down")
@@ -87,9 +85,7 @@ class SolveScreen(Screen):
 
     def move_up(self, _):
         player = self.tasks_set.get_player()
-        if self.moving == True:
-            return
-        if player.planned_move == True:
+        if player.planned_move == True or self.moving:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("up")
@@ -102,9 +98,7 @@ class SolveScreen(Screen):
 
     def move_right(self, _):
         player = self.tasks_set.get_player()
-        if self.moving == True:
-            return
-        if player.planned_move == True:
+        if player.planned_move == True or self.moving:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("right")
@@ -117,9 +111,7 @@ class SolveScreen(Screen):
 
     def move_left(self, _):
         player = self.tasks_set.get_player()
-        if self.moving == True:
-            return
-        if player.planned_move == True:
+        if player.planned_move == True or self.moving:
             return
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("left")
@@ -132,7 +124,7 @@ class SolveScreen(Screen):
 
     def step_back(self, _):
         player = self.tasks_set.get_player()
-        if player.planned_move == True:
+        if player.planned_move == True or self.moving:
             return
         if self.actual_regime == "planovaci":
             self.road.remove_last_part()
@@ -145,7 +137,7 @@ class SolveScreen(Screen):
             self.unbind_all()
             return
         player = self.tasks_set.get_player()
-        if player.planned_move == True:
+        if player.planned_move == True or self.moving:
             return
         self.unbind_all()
 
@@ -445,7 +437,7 @@ class SolveScreen(Screen):
 
     def next_task(self):
         player = self.tasks_set.get_player()
-        if player.planned_move == True:
+        if player.planned_move == True or self.moving:
             return
 
         if self.tasks_set.actual < len(self.tasks_set.tasks) - 1:
@@ -461,7 +453,7 @@ class SolveScreen(Screen):
 
     def prev_task(self):
         player = self.tasks_set.get_player()
-        if player.planned_move == True:
+        if player.planned_move == True or self.moving:
             return
 
         if self.tasks_set.actual > 0:
@@ -521,7 +513,7 @@ class SolveScreen(Screen):
     def clear_road(self, _):
         # print("stlacena metlicka")
         player = self.tasks_set.get_player()
-        if player.planned_move == True:
+        if player.planned_move == True or self.moving:
             return
 
         if self.actual_regime == "priamy":
@@ -582,7 +574,7 @@ class SolveScreen(Screen):
             self.road.road_parts[i].change_color("basic")
 
         self.canvas.update()
-        time.sleep(0.5)
+        time.sleep(0.01)
         ignored = False
 
         for i in range(self.road.number_of_active_road_parts):
@@ -665,33 +657,24 @@ class SolveScreen(Screen):
         end_x = x2
         end_y = y2
         id = self.canvas.create_image(x1, y1, image=img, anchor='c')
-        id2 = 0
-        traj_col = self.tasks_set.get_actual_task().trajectory_color
         self.moving = True
 
-        def step(pos, id, id2, xs, ys):
+        def step(pos, id):
             player.hide()
             pos += SPEED / edge_len
             x = start_x * (1 - pos) + end_x * pos
             y = start_y * (1 - pos) + end_y * pos
             self.canvas.delete(id)
-            self.canvas.delete(id2)
-            id2 = self.canvas.create_line(x, y, xs, ys, fill=traj_col, width=5)
             id = self.canvas.create_image(x, y, image=img, anchor='c')
 
-            # self.canvas.update()
             if pos < 1:
                 time.sleep(0.1)
                 self.canvas.update()
-                step(pos, id, id2, x, y)
+                step(pos, id)
             else:
                 self.canvas.delete(id)
-                self.canvas.delete(id2)
-                # self.canvas.update()
-                # self.canvas.after(100, lambda: step(pos, id))
-            #
 
-        step(0, id, id2, start_x, start_y)
+        step(0, id)
         self.moving = False
 
         player.show()
@@ -763,7 +746,8 @@ class SolveScreen(Screen):
 
     def swap_mode(self, _):
         player = self.tasks_set.get_player()
-        if player.planned_move == True:
+
+        if player.planned_move == True or self.moving:
             return
         text = self.canvas.itemcget(self.task_text_mode, 'text')
         if "plánovací" in text:
