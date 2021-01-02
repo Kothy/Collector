@@ -11,6 +11,7 @@ WRONG_VOLUME = 0.15
 CORRECT_VOLUME = 0.15
 COLLECT_VOLUME = 1.0
 
+
 def resize_image(img, max_width, max_height):
     w_percent = (max_width / float(img.size[0]))
     height = int((float(img.size[1]) * float(w_percent)))
@@ -53,8 +54,9 @@ def resize_image_by_height(img, hsize):
     return img.resize((basewidth, hsize), Image.ANTIALIAS)
 
 
-def check_map_file(self, lines, map_name):
+def check_map_file(lines, map_name):
     lines = lines.split("\n")
+
     if len(lines) < 14:
         return "Chýbajúce riadky súboru"
 
