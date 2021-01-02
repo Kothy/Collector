@@ -277,7 +277,7 @@ class SolveScreen(Screen):
                 ass = assign.split(",")
 
                 for i in range(len(ass)):
-                    if re.fullmatch("((a|b|c|d)\?)|((a|b|c|d)(>|<|=|<=|>=)[0-9]{1,2})", ass[i]) is None:
+                    if re.fullmatch("((a|b|c|d)=\?)|((a|b|c|d)(>|<|=|<=|>=)[0-9]{1,2})", ass[i]) is None:
                         print(ass[i])
                         return False, lines[7]
 

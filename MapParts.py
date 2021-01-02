@@ -24,9 +24,6 @@ class Blank:
                 self.map.canvas.create_image(self.x, self.y, image=self.map.guarding_img, anchor='c'))
         self.guards.append(
         self.map.canvas.create_image(self.x, self.y, image=self.map.guarding_img_x, anchor='c'))
-        # self.guards.append(
-        #     self.map.canvas.create_image(self.x, self.y, image=self.map.guarding_img, anchor='c'))
-
 
     def __repr__(self):
         return "."
@@ -85,7 +82,7 @@ class Obstacle:
         j = self.col
         if self.guarding != "bod":
             for a, b in [(i-1, j), (i+1,j), (i,j+1), (i,j-1)]:
-                id,id2 = self.draw_at(a, b, self.map.guarding_img)
+                id, id2 = self.draw_at(a, b, self.map.guarding_img)
                 if id is not None:
                     self.map.array[a][b].guarded = True
                     self.map.array[a][b].guarded_by = self.name
