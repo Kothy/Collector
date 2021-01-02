@@ -1,0 +1,26 @@
+Nazov: Skuskova
+Mapa: Mapa_Zberatela
+
+# Nastavenie prekazok #
+x: kriz
+y: bod
+z: stvorec
+
+# Ulohy #
+Volny prechod: ano
+
+1.
+Nazov: U
+Typ: cesta
+Rezim: oba
+Riadkov: 5
+Stlpcov: 10
+Krokov: 15
+Zadanie: abcd
+Riesitelna: nie
+.....z....
+.x.c......
+..b.d.....
+.a.y.x....
+p.........
+

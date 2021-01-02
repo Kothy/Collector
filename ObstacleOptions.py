@@ -32,3 +32,6 @@ class ObstacleOptions(CanvasObject):
     def create_items(self):
         self.parts = [ObstacleOptionsItem(self, i, self.obstacle_imgs[i], self.mode_imgs)
                       for i in range(len(self.obstacle_imgs))]
+
+    def get_options(self):
+        return [part.get_selected_mode() for part in self.parts]

@@ -85,6 +85,7 @@ class CreateTaskSetScreen(Screen):
                                                   anchor='nw', width=330, text='Režimy stráženia:\n(pre prekážky)')
         self.obstacle_options = ObstacleOptions(self)
 
+
         self.obstacles_obj = CanvasObject(self, [obstacles_mode_text, self.obstacle_options], False)
 
     def error_text_init(self):

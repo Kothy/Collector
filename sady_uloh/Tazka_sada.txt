@@ -1,0 +1,41 @@
+Nazov: Tazka sada
+Mapa: Mapa_Zberatela
+
+# Nastavenie prekazok #
+x: kriz
+y: bod
+z: stvorec
+
+# Ulohy #
+Volny prechod: nie
+
+1.
+Nazov: Tazka uloha
+Typ: cesta
+Rezim: planovaci
+Riadkov: 5
+Stlpcov: 10
+Krokov: 15
+Zadanie: bcda
+Riesitelna: nie
+z....b....
+.yc...x..a
+.......x..
+.by..cy...
+.p.......d
+
+2.
+Nazov: Lahsia uloha
+Typ: pocty
+Rezim: priamy
+Riadkov: 5
+Stlpcov: 8
+Krokov: 12
+Zadanie: a?,b=1,c?,d?
+Riesitelna: nie
+........
+...b....
+..x..z..
+...p....
+........
+
