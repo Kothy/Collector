@@ -23,6 +23,7 @@ ERROR5 = 'Chyba pri ukladaní mapy: nezadaný obrázok postavičky'
 ERROR6 = 'Chyba pri ukladaní mapy: nezadané pozadie mapy'
 ERROR7 = 'Chyba pri ukladaní mapy: nezadané predmety'
 ERROR8 = 'Chyba pri ukladaní mapy: nezadané prekážky'
+MOVE = - 15
 
 
 def resize_image_by_width(img, basewidth):
@@ -288,7 +289,7 @@ class CreateMapScreen(Screen):
 
         self.map_name.trace("w", self.map_name_text_changed)
         self.character_name.trace("w", self.char_name_text_changed)
-        self.canvas.create_window(360, 265, window=self.char_name_entry)
+        self.canvas.create_window(360, 265 + MOVE, window=self.char_name_entry)
 
         map_choice_text = self.canvas.create_text(690, 80, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
                                                   anchor='nw', width=330, text='Pozadie mapy:')
@@ -336,6 +337,7 @@ class CreateMapScreen(Screen):
         self.obstacles_list = ObjectList(850, 462, self.canvas, [])
 
     def player_settings_init(self):
+        x = -20
         player_settings_text = self.canvas.create_text(70, 170, fill="#0a333f",
                                                        font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
                                                        width=330, text='Postavička:')
@@ -345,17 +347,17 @@ class CreateMapScreen(Screen):
         self.player_file_text = self.canvas.create_text(245, 176, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
                                                         anchor='nw', width=330, text='<-- vyber obrázok postavičky', state="normal")
 
-        name_text = self.canvas.create_text(300, 250, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
+        name_text = self.canvas.create_text(300, 250 + MOVE, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
                                             anchor='ne', width=330, text='Meno:')
 
-        rotate_text = self.canvas.create_text(300, 290, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
+        rotate_text = self.canvas.create_text(300, 290 + MOVE, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
                                               anchor='ne', width=330, text='Otáčanie obrázku:\n(pri pohybe)')
-        self.rotate_options = Options(self, 330, 308, ['žiadne', 'vľavo/vpravo', 'dole/hore', 'všetky smery'], 0)
+        self.rotate_options = Options(self, 330, 308 + MOVE, ['žiadne', 'vľavo/vpravo', 'dole/hore', 'všetky smery'], 0)
 
-        rotated_text = self.canvas.create_text(300, 450, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
+        rotated_text = self.canvas.create_text(300, 450 + MOVE, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
                                                anchor='ne', width=230, text='Otočenie nahratého obrázku postavičky:')
 
-        self.rotated_choices = ColorButton(self, 360, 490, 100, 30, 'light_blue', '-')
+        self.rotated_choices = ColorButton(self, 360, 490 + MOVE, 100, 30, 'light_blue', '-')
 
         for i in range(len(self.rotate_options.checkboxes)):
             self.rotate_options.checkboxes[i].disable = self.rotated_choices
@@ -364,10 +366,12 @@ class CreateMapScreen(Screen):
 
         self.rotated_choices.change_color("grey")
 
-        path_color__text = self.canvas.create_text(300, 520, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
-                                                   anchor='ne', width=230, text='Farba trajektórie\na mriežky:')
-        self.path_color_choices = ColorButton(self, 360, 533, 100, 30, 'light_blue', 'čierna')
-        self.trajectory_color_choices = ColorButton(self, 480, 533, 100, 30, 'light_blue', 'čierna')
+        path_color__text = self.canvas.create_text(300, 520 + MOVE, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
+                                                   anchor='ne', width=230, text='Farba trajektórie:')
+        grid_color__text = self.canvas.create_text(300, 545, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'),
+                                                   anchor='ne', width=230, text='Farba mriežky:')
+        self.path_color_choices = ColorButton(self, 360, 533 + MOVE, 100, 30, 'light_blue', 'čierna')
+        self.trajectory_color_choices = ColorButton(self, 360, 560, 100, 30, 'light_blue', 'čierna')
 
         self.path_color_choices.bind(self.grid_color_changed)
         self.trajectory_color_choices.bind(self.trajectory_color_changed)
