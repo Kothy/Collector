@@ -392,6 +392,7 @@ class SolveScreen(Screen):
         self.canvas.tag_bind(self.keyboard[1], '<ButtonPress-1>', self.move_right)
         self.canvas.tag_bind(self.keyboard[2], '<ButtonPress-1>', self.move_up)
         self.canvas.tag_bind(self.keyboard[3], '<ButtonPress-1>', self.move_left)
+        self.tasks_set.get_actual_task().map.draw_guards()
 
     def unbind_all(self):
         self.parent.root.unbind('<Up>')
@@ -465,6 +466,7 @@ class SolveScreen(Screen):
             self.road.clear_road()
             self.tasks_set.prev_task()
             self.draw_task_and_map()
+            self.tasks_set.get_actual_task().map.draw_guards()
             if self.tasks_set.actual == 0:
                 self.prev_task_btn.hide()
 

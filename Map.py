@@ -139,6 +139,12 @@ class Map:
 
         self.player.draw()
 
+    def draw_guards(self):
+        for i in range(len(self.array)):
+            for j in range(len(self.array[i])):
+                if isinstance(self.array[i][j], Blank) and self.array[i][j].guarded:
+                    self.array[i][j].draw_guard()
+
     def draw_map(self):
         self.draw_grid2()
         self.player.draw_full_trajectory()

@@ -406,6 +406,7 @@ class Task:
         self.parent.canvas.itemconfig(self.parent.parent.task_name_text, text=str(self.index + 1) + ". " + self.name)
         self.parent.canvas.itemconfig(self.parent.parent.task_name_text, state="normal")
         self.map.draw_map()
+        # self.map.draw_guards()
 
     def remove(self):
         self.map.remove()
@@ -433,6 +434,7 @@ class TaskSet:
         self.tasks.append(t)
 
     def draw_task_and_map(self):
+        print("kreslim mapu")
         self.tasks[self.actual].draw()
 
     def remove_task_and_map(self):
