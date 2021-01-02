@@ -300,7 +300,8 @@ class Player:
                 self.map.task.parent.parent.move_img_smoothly(self.images[rotation], self.x, self.y, x, y)
             self.x = x
             self.y = y
-
+            if len(self.trajectory_lines) > 0:
+                self.map.canvas.delete(self.trajectory_lines.pop(-1))
             self.remove()
             self.draw()
             if len(self.trajectory) == 0:

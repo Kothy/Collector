@@ -362,8 +362,10 @@ class Task:
         if self.mode == "oba" or self.mode == "priamy":
             self.parent.canvas.itemconfig(self.parent.parent.play, state="hidden")
             self.parent.parent.actual_regime = "priamy"
+            self.actual_regime = "priamy"
         else:
             self.parent.parent.actual_regime = "planovaci"
+            self.actual_regime = "planovaci"
             self.parent.canvas.itemconfig(self.parent.parent.play, state="normal")
             text2 = self.parent.parent.canvas.itemcget(self.parent.parent.task_text_mode, 'text')
             text2 = text2.replace("nájsť", "naplánovať")

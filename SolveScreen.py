@@ -205,11 +205,10 @@ class SolveScreen(Screen):
         if len(tasks_sett) != 3:
             return message
 
-        # if re.fullmatch("Nazov: [a-zA-Z0-9_\ ]{1,15}", sett[0]) is None:
-        if not (sett[0].startswith("Nazov: ") and sett[0].split(": ")[1].replace("_", "").isalnum()):
+        if not (sett[0].startswith("Nazov: ") and sett[0].split(": ")[1].replace("_", "").replace(" ", "").isalnum()):
             nums.append(sett[0])
-            print(repr(sett[0].strip()))
-            print("blaaaaaaaaaaaaaaaaaaa")
+            # print(repr(sett[0].strip()))
+            # print("blaaaaaaaaaaaaaaaaaaa")
 
 
         elif re.fullmatch("Mapa: [a-zA-Z0-9_]{1,15}", sett[1]) is None:
@@ -263,7 +262,7 @@ class SolveScreen(Screen):
 
         if re.fullmatch("[0-9]{1,2}\.", lines[0]) is None:
             return False, lines[0]
-        if not (lines[1].startswith("Nazov: ") and lines[1].split(": ")[1].replace("_","").isalnum()):
+        if not (lines[1].startswith("Nazov: ") and lines[1].split(": ")[1].replace("_","").replace(" ", "").isalnum()):
             return False, lines[1]
         if re.fullmatch("Typ: (pocty|volna|cesta)", lines[2]) is None:
             return False, lines[2]
@@ -455,9 +454,12 @@ class SolveScreen(Screen):
             player.remove_trajectory()
             self.remove_task()
             self.road.clear_road()
+            self.tasks_set.get_actual_task().actual_regime = self.actual_regime
             self.tasks_set.next_task()
             self.draw_task_and_map()
             actual = self.tasks_set.get_actual_task()
+            self.set_actual_mode()
+            print("Aktualny rezim: ",self.tasks_set.get_actual_task().actual_regime)
             if self.tasks_set.actual == len(self.tasks_set.tasks) - 1 or self.tasks_set.next == "nie" and actual.solvable:
                 self.next_task_btn.hide()
 
@@ -470,9 +472,13 @@ class SolveScreen(Screen):
             self.next_task_btn.show()
             self.remove_task()
             self.road.clear_road()
+            player.remove_trajectory()
             self.tasks_set.prev_task()
             self.draw_task_and_map()
             self.tasks_set.get_actual_task().map.draw_guards()
+            act = self.tasks_set.get_actual_task()
+            self.actual_regime = act.actual_regime
+            self.set_actual_mode()
             if self.tasks_set.actual == 0:
                 self.prev_task_btn.hide()
 
@@ -756,6 +762,24 @@ class SolveScreen(Screen):
 
         self.solve_screen_task_window = CanvasObject(self, [self.solve_screen_task_bg])
 
+    def set_actual_mode(self):
+        mode = self.tasks_set.get_actual_task().actual_regime
+        # print("Aktualny rezim v task:", mode, self.tasks_set.get_actual_task().name)
+        # mode = self.actual_regime
+        # if mode == "planovaci":
+        #     self.canvas.itemconfig(self.task_text_mode, text="plánovací")
+        # if mode == "priamy":
+        #     self.canvas.itemconfig(self.task_text_mode, text="priamy")
+        if mode == 'priamy':
+            text = self.canvas.itemcget(self.task_text_mode, 'text')
+            text = text.replace("naplánovať", "nájsť")
+            text = text.replace("plánovací", "priamy")
+            self.canvas.itemconfig(self.task_text_mode, text=text)
+        elif mode == "planovaci":
+            text = self.canvas.itemcget(self.task_text_mode, 'text')
+            text = text.replace("nájsť", "naplánovať")
+            text = text.replace("priamy", "plánovací")
+            self.canvas.itemconfig(self.task_text_mode, text=text)
 
     def swap_mode(self, _):
         player = self.tasks_set.get_player()
@@ -769,12 +793,14 @@ class SolveScreen(Screen):
             self.canvas.itemconfig(self.task_text_mode, text=text)
             self.canvas.itemconfig(self.play, state="hidden")
             self.actual_regime = "priamy"
+            self.tasks_set.get_actual_task().actual_regime = "priamy"
         else:
             text = text.replace("nájsť", "naplánovať")
             text = text.replace("priamy","plánovací")
             self.canvas.itemconfig(self.task_text_mode, text=text)
             self.canvas.itemconfig(self.play, state="normal")
             self.actual_regime = "planovaci"
+            self.tasks_set.get_actual_task().actual_regime = "planovaci"
         task = self.tasks_set.get_actual_task()
         task.map.player.reset_game()
         task.map.player.remove_trajectory()
