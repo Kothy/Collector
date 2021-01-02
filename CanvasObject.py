@@ -23,6 +23,8 @@ class CanvasObject:
 
     def destroy(self):
         for part in self.parts:
+            if part is None:
+                continue
             if isinstance(part, CanvasObject):
                 part.destroy()
             else:

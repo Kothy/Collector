@@ -21,8 +21,8 @@ class CreateTaskScreen(Screen):
 
     def load_screen(self):
         self.panel_init()
-        self.error_text_init()
         self.backgrounds_init()
+        self.error_text_init()
         self.task_name_init()
         self.task_type_init()
         self.task_objects_init()
@@ -115,7 +115,7 @@ class CreateTaskScreen(Screen):
 
         steps_help_text = self.canvas.create_text(990, 245, fill="#114c32", font=('Comic Sans MS', 13, 'italic'),
                                                   anchor='nw', width=330,
-                                                  text='<-- ponechaj prázdne\n     pre maximálny možný\n     počet krokov (15)',
+                                                  text='<-- ponechaj prázdne\n     pre maximálny možný\n     počet krokov (16)',
                                                   state="normal")
 
         self.steps_obj = CanvasObject(self, [steps_text, steps_entry_window, steps_help_text])
@@ -145,8 +145,12 @@ class CreateTaskScreen(Screen):
 
         self.add_to_map_buttons = AddToMapButtonsSet(self, self.folder, 950, 365)
 
+        img = Image.open('obrazky/mouse.png')
+        self.mouse_img = ImageTk.PhotoImage(resize_image(img, 75, 75))
+        mouse = self.canvas.create_image(1180, 450, image=self.mouse_img)
+
         self.add_to_map_obj = CanvasObject(self, [objects_text, collectibles_text, obstacles_text, character_text,
-                                                  self.add_to_map_buttons], False)
+                                                  self.add_to_map_buttons, mouse], False)
 
     def map_sizes_init(self):
         rows_text = self.canvas.create_text(70, 120, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
@@ -184,6 +188,7 @@ class CreateTaskScreen(Screen):
 
         if self.task is not None:
             self.map.redraw(int(self.task.row), int(self.task.col))
+            self.map.load_field(self.task.map_str)
 
         ## TO DO
 
@@ -241,7 +246,7 @@ class CreateTaskScreen(Screen):
     def set_steps_text_changed(self, *args):
         count = self.set_steps.get()
         if (len(count) > 2 or (len(count) == 1 and count[0] not in '123456789') or
-                (len(count) == 2 and (count[0] != '1' or count[1] not in '012345'))):
+                (len(count) == 2 and (count[0] != '1' or count[1] not in '0123456'))):
             self.set_steps.set(count[:-1])
 
     def clicked_btn(self, text):
@@ -271,6 +276,9 @@ class CreateTaskScreen(Screen):
         if int(rows)*int(cols) < 2:
             self.set_error_text('Chyba: Mapa musí mať aspoň 2 políčka')
             return
+        if 'p' not in self.map.get_map_repr():
+            self.set_error_text('Chyba: Mapa musí obsahovať postavičku')
+            return
         task_type = self.task_type_options.checked_index
         if task_type == 0:
             assignment = ''
@@ -287,11 +295,10 @@ class CreateTaskScreen(Screen):
             if assignment == '':
                 self.set_error_text('Chyba: Pridaj do zadania aspoň 1 predmet')
                 return
-        map = '\n'.join(['.'*int(cols) for i in range(int(rows))])
 
         task = Task(self.parent, None if self.task is None else self.task.index, name, task_type,
                     self.task_mode_btn.text, rows, cols,
-                    self.set_steps.get(), assignment, map, None, None, True, False)
+                    self.set_steps.get(), assignment, self.map.get_map_repr(), None, None, True, False)
         self.parent.close_task_screen(task)
 
     def options_changed(self, index):
