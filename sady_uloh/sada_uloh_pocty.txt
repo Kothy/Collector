@@ -9,13 +9,13 @@ y: kriz
 Volny prechod: nie
 
 1.
-Nazov: Uloha1
+Nazov: Úloha1
 Typ: pocty
 Rezim: oba
 Riadkov: 5
 Stlpcov: 5
 Krokov: 10
-Zadanie: a?,b=1,c<=2,d=1
+Zadanie: a=?,b=1,c<=2,d=1
 Riesitelna: ano
 .y.a.
 b.c..
@@ -30,7 +30,7 @@ Rezim: oba
 Riadkov: 3
 Stlpcov: 5
 Krokov: 6
-Zadanie: a?,b>3,c<=2,d=1
+Zadanie: a=?,b>3,c<=2,d=1
 Riesitelna: ano
 .y.a......
 b.c.......
@@ -45,7 +45,7 @@ Rezim: oba
 Riadkov: 3
 Stlpcov: 10
 Krokov: 6
-Zadanie: a?,b>3,c<=2,d=1
+Zadanie: a=?,b>3,c<=2,d=1
 Riesitelna: ano
 .y.a......
 b.c.......

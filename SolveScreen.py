@@ -205,8 +205,13 @@ class SolveScreen(Screen):
         if len(tasks_sett) != 3:
             return message
 
-        if re.fullmatch("Nazov: [a-zA-Z0-9_\ ]{1,15}", sett[0]) is None:
+        # if re.fullmatch("Nazov: [a-zA-Z0-9_\ ]{1,15}", sett[0]) is None:
+        if not (sett[0].startswith("Nazov: ") and sett[0].split(": ")[1].replace("_", "").isalnum()):
             nums.append(sett[0])
+            print(repr(sett[0].strip()))
+            print("blaaaaaaaaaaaaaaaaaaa")
+
+
         elif re.fullmatch("Mapa: [a-zA-Z0-9_]{1,15}", sett[1]) is None:
             nums.append(sett[1])
         elif re.fullmatch("", sett[2]) is None:
@@ -258,7 +263,7 @@ class SolveScreen(Screen):
 
         if re.fullmatch("[0-9]{1,2}\.", lines[0]) is None:
             return False, lines[0]
-        if re.fullmatch("Nazov: [a-zA-Z0-9_\ ]{1,15}", lines[1]) is None:
+        if not (lines[1].startswith("Nazov: ") and lines[1].split(": ")[1].replace("_","").isalnum()):
             return False, lines[1]
         if re.fullmatch("Typ: (pocty|volna|cesta)", lines[2]) is None:
             return False, lines[2]
@@ -331,7 +336,7 @@ class SolveScreen(Screen):
     def draw_task_assignment(self, name):
         self.canvas.itemconfig(self.task_text_set_choice, state="hidden")
 
-        with open("sady_uloh/" + name + ".txt", "r") as file:
+        with open("sady_uloh/" + name + ".txt", "r", encoding="utf-8") as file:
             full = file.read()
 
         lines = full.split("\n")
@@ -363,7 +368,7 @@ class SolveScreen(Screen):
 
         self.tasks_set = TaskSet(tasks_set_name, self.canvas, next_without_solve, obstacles, self)
 
-        self.choose_taskset_btn.show()
+        # self.choose_taskset_btn.show()
 
         while len(lines) > 0 and lines[0] != "##!EOF##":
              lines = self.read_task(lines, map_name)
@@ -419,10 +424,11 @@ class SolveScreen(Screen):
 
         self.prev_task_btn = ColorButton(self, 1015, 25, 160, 36, 'orange', 'Predošlá úloha')
         self.menu_btn = ColorButton(self, 75, 25, 100, 36, 'green3', 'Menu')
-        self.choose_taskset_btn = ColorButton(self, 225, 25, 180, 36, 'green3', 'Výber sady úloh')
-        self.choose_taskset_btn.hide()
+        # self.choose_taskset_btn = ColorButton(self, 225, 25, 180, 36, 'green3', 'Výber sady úloh')
+        # self.choose_taskset_btn.hide()
+        # self.choose_taskset_btn.bind(self.choose_taskset_menu)
         self.menu_btn.bind(self.go_to_menu)
-        self.choose_taskset_btn.bind(self.choose_taskset_menu)
+
 
         self.screen_panel = CanvasObject(self, [self.task_name_text, self.menu_btn])
 

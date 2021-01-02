@@ -15,7 +15,7 @@ Rezim: planovaci
 Riadkov: 3
 Stlpcov: 6
 Krokov: 15
-Zadanie: a?,b>2,c<=2,d=1
+Zadanie: a=?,b>2,c<=2,d=1
 Riesitelna: ano
 .y.a......
 b.c...dc..
@@ -30,7 +30,7 @@ Rezim: planovaci
 Riadkov: 3
 Stlpcov: 5
 Krokov: 6
-Zadanie: a?,b>3,c<=2,d=1
+Zadanie: a=?,b>3,c<=2,d=1
 Riesitelna: ano
 .y.a......
 b.c.......
@@ -45,7 +45,7 @@ Rezim: planovaci
 Riadkov: 3
 Stlpcov: 10
 Krokov: 6
-Zadanie: a?,b>3,c<=2,d=1
+Zadanie: a=?,b>3,c<=2,d=1
 Riesitelna: ano
 .y.a......
 b.c.......

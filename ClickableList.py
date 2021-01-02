@@ -205,7 +205,7 @@ class ListButton:
         self.imageObj = self.canvas.create_image(x, self.y, image=self.image, anchor="c")
         self.folderObj = self.canvas.create_image(x - self.width / 2.2- fih, self.y, image=self.folder_img,
                                                   anchor="c")
-        self.textObj = self.canvas.create_text(x, self.y, font=("Comic Sans MS", 15), fill=self.text_color, text=self.text,
+        self.textObj = self.canvas.create_text(x, self.y, font=("Comic Sans MS", 15), fill=self.text_color, text=self.text.replace("_"," "),
                                                anchor="c")
 
         self.canvas.tag_bind(self.folderObj, '<ButtonPress-1>', self.click)

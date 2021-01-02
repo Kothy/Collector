@@ -174,21 +174,22 @@ class Task:
         colle = self.map.player.coll_collected
         answers = []
         for count in self.col_counts:
-            col = count[0]
-            sign = count[1]
-            num = count[2]
-            if sign == "=" and col in colle and colle[col] == num:
-                answers.append(True)
-            elif sign == "<=" and col in colle and self.map.player.coll_collected[col] <= num:
-                answers.append(True)
-            elif sign == "<=" and col not in colle:
-                answers.append(True)
-            elif sign == ">=" and col in colle and self.map.player.coll_collected[col] >= num:
-                answers.append(True)
-            elif sign == ">=" and col not in colle and num == 0:
-                answers.append(True)
-            else:
-                answers.append(False)
+            if "?" not in count:
+                col = count[0]
+                sign = count[1]
+                num = count[2]
+                if sign == "=" and col in colle and colle[col] == num:
+                    answers.append(True)
+                elif sign == "<=" and col in colle and self.map.player.coll_collected[col] <= num:
+                    answers.append(True)
+                elif sign == "<=" and col not in colle:
+                    answers.append(True)
+                elif sign == ">=" and col in colle and self.map.player.coll_collected[col] >= num:
+                    answers.append(True)
+                elif sign == ">=" and col not in colle and num == 0:
+                    answers.append(True)
+                else:
+                    answers.append(False)
 
         answer = False not in answers and self.steps_count >= self.map.player.steps_count
 
@@ -434,7 +435,7 @@ class TaskSet:
         self.tasks.append(t)
 
     def draw_task_and_map(self):
-        print("kreslim mapu")
+        # print("kreslim mapu")
         self.tasks[self.actual].draw()
 
     def remove_task_and_map(self):
