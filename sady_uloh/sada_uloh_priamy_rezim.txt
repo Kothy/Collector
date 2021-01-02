@@ -4,6 +4,7 @@ Mapa: Mapa_Zberatela
 # Nastavenie prekazok #
 x: stvorec
 y: kriz
+z: bod
 
 # Ulohy #
 Volny prechod: ano
@@ -12,41 +13,38 @@ Volny prechod: ano
 Nazov: Uloha1
 Typ: pocty
 Rezim: priamy
-Riadkov: 3
-Stlpcov: 6
-Krokov: 6
-Zadanie: a?,b>3,c<=2,d=1
+Riadkov: 4
+Stlpcov: 9
+Krokov: 13
+Zadanie: a?,b>=2,c<=2,d=3
 Riesitelna: ano
-.y.a......
-b.c.......
-.p..x.....
-..........
-..........
+.y.a....z
+b.c.d.b..
+.p.......
+ddd.....x
 
 2.
-Nazov: Uloha1
+Nazov: Presne jedna
 Typ: pocty
 Rezim: priamy
 Riadkov: 3
 Stlpcov: 5
-Krokov: 6
-Zadanie: a?,b>3,c<=2,d=1
+Krokov: 
+Zadanie: a=1,b=1,c=1,d=1
 Riesitelna: ano
 .y.a......
 b.c.......
-.p..x.....
-..........
-..........
+.p..zzy.d.
 
 3.
-Nazov: Uloha1
+Nazov: Vsetky zlte
 Typ: pocty
 Rezim: priamy
 Riadkov: 3
 Stlpcov: 10
-Krokov: 6
-Zadanie: a?,b>3,c<=2,d=1
+Krokov: 7
+Zadanie: d=6
 Riesitelna: ano
-.y.a......
-b.c.......
-.p..x.....
+.ddaddd..b
+.d........
+.p..x....a

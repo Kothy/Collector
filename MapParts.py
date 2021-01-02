@@ -98,7 +98,9 @@ class Obstacle:
             id, id2 = None, None
             if not self.map.array[i][j].guarded :
                 id = self.map.canvas.create_image(x, y, image=img, anchor="c")
-                id2 = self.map.canvas.create_image(x + (part_w/2) - 6, y - (part_h/2) + 6, image=self.map.guarding_img_x, anchor="ne")
+                # id2 = self.map.canvas.create_image(x + (part_w/2) - 6, y - (part_h/2) + 6, image=self.map.guarding_img_x, anchor="ne")
+                id2 = self.map.canvas.create_image(x, y,
+                                                   image=self.map.guarding_img_x, anchor="c")
             return id, id2
         return None,None
 

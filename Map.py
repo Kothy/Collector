@@ -91,7 +91,7 @@ class Map:
         image2 = image2.resize((PART_W - 3, PART_H - 3))
         self.guarding_img = ImageTk.PhotoImage(image2)
         image3 = Image.open("obrazky/guarding_x.png")
-        image3 = resize_image(image3, int((PART_W - 3)/5), int((PART_H - 3)/5))
+        image3 = resize_image(image3, int((PART_W - 3)/4.5), int((PART_H - 3)/4.5))
         self.guarding_img_x = ImageTk.PhotoImage(image3)
 
     def do_grid2(self):

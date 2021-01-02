@@ -114,8 +114,8 @@ class Task:
             self.obstacles.append("z")
 
         if len(self.obstacles) == 3:
-            text += " a _ a _ ."
-            t =  "_ a _ a _ ."
+            text += " , _ a _ ."
+            t =  "_ , _ a _ ."
         elif len(self.obstacles) == 2:
             text += " a _ ."
             t = "_ a _ ."
@@ -390,7 +390,7 @@ class Task:
                                                              width=330, text='{} chce pozbierať'.format(self.char_name))
             id2 = self.parent.canvas.create_text(930, 220 - x, fill="#0a333f",
                                                            font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
-                                                           width=330, text='s použítim najviac {} krokov.'.format(self.steps_count))
+                                                           width=330, text='s použitím najviac {} krokov.'.format(self.steps_count))
             id3 = self.parent.canvas.create_text(930, 185, fill="#0a333f",
                                                                font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
                                                                width=330, text='(v tomto počte aj poradí)')
