@@ -175,11 +175,12 @@ class SolveScreen(Screen):
                 lines2[i] = "**BLANK_LINE**"
             lines2[i] += "\n"
 
-
+        if len(lines2) > 0 and lines2[0] == "":
+            return "Chyba súboru {}.".format(filename) + " Chyba: " + repr("")
         text = "".join(lines2)
         lines2 = text.split("**BLANK_LINE**\n")
 
-        message = "Chyba súboru na riadku {}.".format(filename)
+        message = "Chyba súboru {}.".format(filename)
         nums = []
 
         sett = lines2[0].split("\n")
@@ -252,6 +253,8 @@ class SolveScreen(Screen):
         if len(lines) < 10 and not len(lines) == lines.count(""):
 
             return False, "Chyba v počte riadkov"
+        if lines[0] == "":
+            return False, "Nový riadok navyše."
 
         if re.fullmatch("[0-9]{1,2}\.", lines[0]) is None:
             return False, lines[0]
