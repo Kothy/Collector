@@ -20,6 +20,7 @@ class ClickableList:
         self.width = w
         self.buttons = []
         self.canvas = canvas
+        self.parent.solve_screen_keyboard.hide()
         self.line_h = 60
         self.item_h = 45
         self.bottom_pad = 40
@@ -156,6 +157,7 @@ class ListButton:
     def click(self, _):
         # self.list.parent.next_task_btn.change_state("normal")
         # self.list.parent.prev_task_btn.change_state("normal")
+        self.list.parent.solve_screen_keyboard.show()
         self.list.remove()
         self.list.parent.draw_task_assignment(self.text)
 

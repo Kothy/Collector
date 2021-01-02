@@ -496,19 +496,21 @@ class SolveScreen(Screen):
         image = Image.open("obrazky/controls/back.png")
         image = image.resize((75, 75), Image.ANTIALIAS)
         self.backspace_img = ImageTk.PhotoImage(image)
-        back = self.canvas.create_image(1080, 558, image=self.backspace_img, anchor='nw')
-        self.canvas.tag_bind(back, '<ButtonPress-1>', self.step_back)
+        self.back = self.canvas.create_image(1080, 558, image=self.backspace_img, anchor='nw')
+        self.canvas.tag_bind(self.back, '<ButtonPress-1>', self.step_back)
 
         image = Image.open("obrazky/controls/clear.png")
         image = image.resize((75, 75), Image.ANTIALIAS)
         self.clear_image = ImageTk.PhotoImage(image)
-        clear = self.canvas.create_image(1185, 558, image=self.clear_image, anchor='nw')
+        self.clear = self.canvas.create_image(1185, 558, image=self.clear_image, anchor='nw')
 
-        self.canvas.tag_bind(clear, '<ButtonPress-1>', self.clear_road)
+        self.canvas.tag_bind(self.clear, '<ButtonPress-1>', self.clear_road)
 
         self.solve_screen_keyboard = CanvasObject(self,
-                                                  [screen_keys_bg, screen_keys_bg_border, Keyboard(self, keyboard),
-                                                   back, clear])
+                                                  [screen_keys_bg_border, Keyboard(self, keyboard),
+                                                   self.back, self.clear])
+
+
 
     def clear_road(self, _):
         # print("stlacena metlicka")
