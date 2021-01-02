@@ -25,7 +25,7 @@ class Task:
         self.row = row
         self.map_str = map_str
         self.col = col
-        self.steps_count = int(steps)
+        self.steps_count = int(steps) if steps != '' else 15
         self.assign = assign
         self.col_counts = []
         self.solvable = True if solvable == "ano" else False

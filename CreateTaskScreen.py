@@ -6,6 +6,7 @@ from AddToMapButtonsSet import AddToMapButtonsSet
 from Options import Options
 from TaskBar import TaskBar
 from Task import Task
+from MapCreator import  MapCreator
 from CommonFunctions import resize_image
 import tkinter as tk
 
@@ -142,10 +143,10 @@ class CreateTaskScreen(Screen):
                                                  anchor='ne', width=530,
                                                  text='Postavička:')
 
-        add_to_map_buttons = AddToMapButtonsSet(self, self.folder, 950, 365)
+        self.add_to_map_buttons = AddToMapButtonsSet(self, self.folder, 950, 365)
 
         self.add_to_map_obj = CanvasObject(self, [objects_text, collectibles_text, obstacles_text, character_text,
-                                                  add_to_map_buttons], False)
+                                                  self.add_to_map_buttons], False)
 
     def map_sizes_init(self):
         rows_text = self.canvas.create_text(70, 120, fill="#0a333f", font=('Comic Sans MS', 17, 'italic bold'),
@@ -179,9 +180,10 @@ class CreateTaskScreen(Screen):
         self.cols_input_obj = CanvasObject(self, [cols_text, cols_entry_window], hidden=False)
 
     def map_init(self):
-        img = Image.open('mapy/' + self.folder + '/map.png')
-        self.map_img = ImageTk.PhotoImage(resize_image(img, 650, 370))
-        self.map = self.canvas.create_image(380, 347, image=self.map_img, anchor='c')
+        self.map = MapCreator(self, self.folder)
+
+        if self.task is not None:
+            self.map.redraw(int(self.task.row), int(self.task.col))
 
         ## TO DO
 
@@ -220,6 +222,8 @@ class CreateTaskScreen(Screen):
         count = self.set_rows.get()
         if len(count) > 1 or (len(count) == 1 and count[0] not in '12345'):
             self.set_rows.set(count[:-1])
+        else:
+            self.map.redraw(rows=0 if count == '' else int(count))
         if len(count) > 0:
             self.set_error_text('')
 
@@ -229,6 +233,8 @@ class CreateTaskScreen(Screen):
                 (len(count) == 1 and count[-1] not in '123456789') or
                 (len(count) == 2 and (count[0] != '1' or count[1] != '0'))):
             self.set_cols.set(count[:-1])
+        else:
+            self.map.redraw(cols=0 if count=='' else int(count))
         if len(count) > 0:
             self.set_error_text('')
 
