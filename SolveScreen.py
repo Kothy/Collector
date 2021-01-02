@@ -8,11 +8,11 @@ from ClickableList import ClickableList
 from Task import TaskSet
 import time
 from tkinter import messagebox
-import playsound
 import re
 import copy
 from os import path
 import math
+from CommonFunctions import playsound
 
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
@@ -78,7 +78,7 @@ class SolveScreen(Screen):
             self.change_direction("down")
             return
         if self.road.number_of_active_road_parts >= 16:
-            playsound.playsound(WRONG_SOUND, False)
+            playsound(WRONG_SOUND, 3)
             return
         move, obsta = player.move_down()
         self.check_move(move, "down", obsta)
@@ -91,7 +91,7 @@ class SolveScreen(Screen):
             self.change_direction("up")
             return
         if self.road.number_of_active_road_parts >=16:
-            playsound.playsound(WRONG_SOUND, False)
+            playsound(WRONG_SOUND, 3)
             return
         move, obsta = player.move_up()
         self.check_move(move, "up", obsta)
@@ -104,7 +104,7 @@ class SolveScreen(Screen):
             self.change_direction("right")
             return
         if self.road.number_of_active_road_parts >=16:
-            playsound.playsound(WRONG_SOUND, False)
+            playsound(WRONG_SOUND, 3)
             return
         move, obsta = player.move_right()
         self.check_move(move, "right", obsta)
@@ -116,8 +116,8 @@ class SolveScreen(Screen):
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("left")
             return
-        if self.road.number_of_active_road_parts >=16:
-            playsound.playsound(WRONG_SOUND, False)
+        if self.road.number_of_active_road_parts >= 16:
+            playsound(WRONG_SOUND, 3)
             return
         move, obsta = player.move_left()
         self.check_move(move, "left", obsta)
@@ -610,9 +610,9 @@ class SolveScreen(Screen):
                         act_task = self.tasks_set.get_actual_task()
                         len_col = len(act_task.map.player.coll_path)
                         if act_task.assign[:len_col] == "".join(act_task.map.player.coll_path):
-                            playsound.playsound(COLLECTION_SOUND, False)
+                            playsound(COLLECTION_SOUND, 1)
                         else:
-                            playsound.playsound(WRONG_SOUND, False)
+                            playsound(WRONG_SOUND, 3)
                         # print(act_task.assign, act_task.map.player.coll_path, act_task.assign[:len_col])
                     if self.tasks_set.get_actual_task().type == "pocty":
                         act_task = self.tasks_set.get_actual_task()
@@ -629,9 +629,9 @@ class SolveScreen(Screen):
                                 was = True
                                 break
                         if was == False:
-                            playsound.playsound(COLLECTION_SOUND, False)
+                            playsound(COLLECTION_SOUND, 1)
                         else:
-                            playsound.playsound(WRONG_SOUND, False)
+                            playsound(WRONG_SOUND, 3)
 
 
                     self.road.road_parts[i].add_obstacle("mapy/{}/collectibles/{}.png".format(map_name, obsta))
@@ -644,7 +644,7 @@ class SolveScreen(Screen):
         answer = self.tasks_set.get_actual_task().check_answer(play=False)
         # print("Odpoved je:", answer)
         if answer:
-            playsound.playsound(CORRECT_ANS_SOUND, False)
+            playsound(CORRECT_ANS_SOUND, 2)
         player.reset_game(plan=True)
 
         player.planned_move = False

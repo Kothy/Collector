@@ -2,7 +2,7 @@ from PIL import Image, ImageTk
 from os import listdir
 from os.path import isfile, join
 import math
-from CommonFunctions import resize_image_by_height, resize_image_by_width
+from CommonFunctions import resize_image_by_height
 
 
 class ClickableList:

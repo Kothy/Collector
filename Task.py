@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 from Map import Map
 import copy
 from CommonFunctions import resize_image
-import playsound
+from CommonFunctions import playsound
 from MapParts import Collectible
 import re
 
@@ -143,7 +143,7 @@ class Task:
         elif self.type == "cesta":
             return self.check_path_answer(play)
         elif self.type == "volna" and isinstance(self.map.player.trajectory[-1][5], Collectible):
-            playsound.playsound(COLLECTION_SOUND, False)
+            playsound(COLLECTION_SOUND, 1)
             self.parent.parent.show_next_task_button()
         return True
 
@@ -155,7 +155,7 @@ class Task:
             # print("spravne")
             self.parent.parent.show_next_task_button()
             if play:
-                playsound.playsound(CORRECT_ANS_SOUND, False)
+                playsound(CORRECT_ANS_SOUND, 2)
 
         if len(self.map.player.trajectory) and isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
             # print("collectible")
@@ -163,9 +163,9 @@ class Task:
                 len_col = len(self.map.player.coll_path)
                 if self.map.task.assign[:len_col] == "".join(self.map.player.coll_path):
                     # print(self.map.task.assign, self.map.player.coll_path, self.map.task.assign[:len_col])
-                    playsound.playsound(COLLECTION_SOUND, False)
+                    playsound(COLLECTION_SOUND, 1)
                 else:
-                    playsound.playsound(WRONG_SOUND, False)
+                    playsound(WRONG_SOUND, 3)
 
 
         return answer
@@ -196,13 +196,12 @@ class Task:
             answer = not self.parent.parent.road.wrong_in_road()
         if answer:
             if play:
-                playsound.playsound(CORRECT_ANS_SOUND, False)
+                playsound(CORRECT_ANS_SOUND, 2)
             self.parent.parent.show_next_task_button()
 
         if len(self.map.player.trajectory) and isinstance(self.map.player.trajectory[-1][5], Collectible) and not answer:
             col_name = self.map.player.trajectory[-1][5].name
             if play:
-                # playsound.playsound(COLLECTION_SOUND, False)
                 colle = self.map.player.coll_collected
                 was = False
                 for count in self.col_counts:
@@ -217,9 +216,9 @@ class Task:
                         break
 
                 if was == False:
-                    playsound.playsound(COLLECTION_SOUND, False)
+                    playsound(COLLECTION_SOUND, 1)
                 else:
-                    playsound.playsound(WRONG_SOUND, False)
+                    playsound(WRONG_SOUND, 3)
 
         return False not in answers and self.steps_count >= self.map.player.steps_count
 

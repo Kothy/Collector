@@ -2,12 +2,11 @@ from Screen import Screen
 from ColorButton import ColorButton
 from CanvasObject import CanvasObject
 from Options import Options
-from PIL import Image, ImageTk
+from PIL import ImageTk
 import tkinter as tk
 from tkinter import filedialog
 from ObjectList import ObjectList
 import os
-import threading
 import unicodedata
 from CommonFunctions import *
 

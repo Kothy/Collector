@@ -1,6 +1,15 @@
 from PIL import Image
 import re
+import pygame
+import threading
 
+
+pygame.init()
+pygame.mixer.init()
+
+WRONG_VOLUME = 0.15
+CORRECT_VOLUME = 0.15
+COLLECT_VOLUME = 1.0
 
 def resize_image(img, max_width, max_height):
     w_percent = (max_width / float(img.size[0]))
@@ -95,3 +104,19 @@ def check_map_file(self, lines, map_name):
         return ""
 
     return message.format(nums[0])
+
+
+def playsound(path, volume):
+    if volume == 1:
+        volume = COLLECT_VOLUME
+    elif volume == 2:
+        volume = CORRECT_VOLUME
+    else:
+        volume = WRONG_VOLUME
+    threading.Thread(target=playsound_thread, args=(path, volume,)).start()
+
+
+def playsound_thread(path, volume):
+    pygame.mixer.music.load(path)
+    pygame.mixer.music.set_volume(volume)
+    pygame.mixer.music.play()

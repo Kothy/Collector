@@ -1,6 +1,6 @@
 from MapParts import *
 from PIL import ImageOps
-import playsound
+from CommonFunctions import playsound
 
 WRONG_SOUND = "sounds/wrong_sound.mp3"
 COLLECTION_SOUND = 'sounds/Collection.mp3'
@@ -145,13 +145,13 @@ class Player:
 
     def check_guarding_obstacle(self, row, col):
         if not (col >= 0 and row >= 0 and row < self.map.rows and col < self.map.cols):
-            playsound.playsound(WRONG_SOUND, False)
+            playsound(WRONG_SOUND, 3)
             return True, "out"
         if isinstance(self.map.array[row][col], Blank) and self.map.array[row][col].guarded:
-            playsound.playsound(WRONG_SOUND, False)
+            playsound(WRONG_SOUND, 3)
             return True, self.map.array[row][col].guarded_by
         if isinstance(self.map.array[row][col], Obstacle):
-            playsound.playsound(WRONG_SOUND, False)
+            playsound(WRONG_SOUND, 3)
             return True, self.map.array[row][col].name
         return False, None
 
