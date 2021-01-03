@@ -1,22 +1,22 @@
-Nazov: Sada_Uloh_1
+Názov: Sada_Uloh_1
 Mapa: Mapa_Zberatela
 
-# Nastavenie prekazok #
-x: stvorec
-y: kriz
+# Nastavenie prekážok #
+x: štvorec
+y: kríž
 
-# Ulohy #
-Volny prechod: ano
+# Úlohy #
+Voľný prechod: áno
 
 1.
-Nazov: Uloha1
-Typ: pocty
-Rezim: planovaci
+Názov: Uloha1
+Typ: počty
+Režim: plánovací
 Riadkov: 3
-Stlpcov: 6
+Stĺpcov: 6
 Krokov: 15
 Zadanie: a=?,b>2,c<=2,d=1
-Riesitelna: ano
+Riešiteľná: áno
 .y.a......
 b.c...dc..
 .p..c.....
@@ -24,14 +24,14 @@ b.bb....x.
 ....d.....
 
 2.
-Nazov: Uloha1
-Typ: pocty
-Rezim: planovaci
+Názov: Uloha1
+Typ: počty
+Režim: plánovací
 Riadkov: 3
-Stlpcov: 5
+Stĺpcov: 5
 Krokov: 6
 Zadanie: a=?,b>3,c<=2,d=1
-Riesitelna: ano
+Riešiteľná: áno
 .y.a......
 b.c.......
 .p..x.....
@@ -39,14 +39,14 @@ b.c.......
 ..........
 
 3.
-Nazov: Uloha1
-Typ: pocty
-Rezim: planovaci
+Názov: Uloha1
+Typ: počty
+Režim: plánovací
 Riadkov: 3
-Stlpcov: 10
+Stĺpcov: 10
 Krokov: 6
 Zadanie: a=?,b>3,c<=2,d=1
-Riesitelna: ano
+Riešiteľná: áno
 .y.a......
 b.c.......
 .p..x.....

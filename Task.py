@@ -388,8 +388,8 @@ class Task:
             if self.type == "cesta":
                 x = 0
 
-            self.text_w_images = TextWithImages(self.parent.canvas, 930, 125, w, self.assign_text2, images[:self.assign_text2.count("_") + 1])
-            self.text_w_images2 = TextWithImages(self.parent.canvas, 930, 345 - x, w, self.obstacles_assign,
+            self.text_w_images = TextWithImages(self.parent.canvas, 930, 125, w - 20, self.assign_text2, images[:self.assign_text2.count("_") + 1])
+            self.text_w_images2 = TextWithImages(self.parent.canvas, 930, 345 - x, w - 20, self.obstacles_assign,
                                                 images[self.assign_text2.count("_"):])
 
             id1 = self.parent.canvas.create_text(930, 70, fill="#0a333f",

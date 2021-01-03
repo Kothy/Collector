@@ -344,6 +344,7 @@ class SolveScreen(Screen):
         if answer != "":
             self.canvas.delete(self.error)
             self.canvas.itemconfig(self.vyber_sadu, state="hidden")
+            self.canvas.itemconfig(self.error, state="hidden")
 
             self.canvas.delete(self.vyber_sadu)
             e_message = "Chyba v súbore sady_uloh/" + name + ".txt\nChyba: " + str(answer)
@@ -354,6 +355,7 @@ class SolveScreen(Screen):
             self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
             return
 
+        self.canvas.delete(self.error)
         lines.append("##!EOF##")
         tasks_set_name = lines.pop(0).split(":")[-1].strip()
         map_name = lines.pop(0).split(":")[-1].strip()
@@ -382,6 +384,7 @@ class SolveScreen(Screen):
         if len(self.tasks_set.tasks) > 0 and self.tasks_set.tasks[0].map_error_message != "":
             self.canvas.delete(self.error)
             self.canvas.itemconfig(self.vyber_sadu, state="hidden")
+            self.canvas.itemconfig(self.error, state="hidden")
 
             error_message = "Chyba súboru mapy/{}/map_settings.txt\n".format(
                 self.tasks_set.get_actual_task().map.name) + self.tasks_set.tasks[0].map_error_message
@@ -391,8 +394,9 @@ class SolveScreen(Screen):
             self.solve_screen_keyboard.hide()
             self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
 
-
             return
+
+        self.canvas.delete(self.error)
 
         if (next_without_solve == "ano" and len(self.tasks_set.tasks) > 1) or self.tasks_set.get_actual_task().solvable == False:
             self.next_task_btn.show()

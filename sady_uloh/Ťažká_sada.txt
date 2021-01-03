@@ -1,23 +1,23 @@
-Nazov: Ťažká sada
+Názov: Ťažká sada
 Mapa: Mapa_Zberatela
 
-# Nastavenie prekazok #
-x: kriz
+# Nastavenie prekážok #
+x: kríž
 y: bod
-z: stvorec
+z: štvorec
 
-# Ulohy #
-Volny prechod: nie
+# Úlohy #
+Voľný prechod: nie
 
 1.
-Nazov: Ťažká úloha
+Názov: Ťažká úloha
 Typ: cesta
-Rezim: planovaci
+Režim: plánovací
 Riadkov: 5
-Stlpcov: 10
+Stĺpcov: 10
 Krokov: 
 Zadanie: bcda
-Riesitelna: nie
+Riešiteľná: nie
 z....b....
 .yc...x..a
 .......x..
@@ -25,14 +25,14 @@ z....b....
 .p.......d
 
 2.
-Nazov: Ľahšia úloha
-Typ: pocty
-Rezim: priamy
+Názov: Ľahšia úloha
+Typ: počty
+Režim: priamy
 Riadkov: 5
-Stlpcov: 8
+Stĺpcov: 8
 Krokov: 12
 Zadanie: a=?,b=1,c=?,d=?
-Riesitelna: nie
+Riešiteľná: nie
 ........
 ...b....
 ..x..z..
