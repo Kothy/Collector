@@ -38,13 +38,12 @@ class Task:
         self.map_name = map_name
         self.char_name = char_name
         self.collectibles = 0
-        img = Image.open("mapy/{}/map.png".format(self.map_name))
-
-        # img = img.resize((900, 480))
-        img = resize_image(img, 899, 479)
-        self.map_bg_w, self.map_bg_h = img.size
-        self.map_bg_img = ImageTk.PhotoImage(img)
         if parse:
+            img = Image.open("mapy/{}/map.png".format(self.map_name))
+            # img = img.resize((900, 480))
+            img = resize_image(img, 899, 479)
+            self.map_bg_w, self.map_bg_h = img.size
+            self.map_bg_img = ImageTk.PhotoImage(img)
             self.parse_assign()
 
     def attach_postfix(self, images, map_name, dir):
