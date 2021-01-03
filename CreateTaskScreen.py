@@ -444,7 +444,7 @@ class CreateTaskScreen(Screen):
     def check_solution(self, task_type, assignment):
         if task_type == 1:
             counts = [self.solution.count(char) for char in 'abcd']
-            for i in range(len(counts)):
+            for i in range(len(assignment)):
                 if assignment[i][1] == '?':
                     continue
                 count = int(assignment[i][1])
@@ -463,7 +463,7 @@ class CreateTaskScreen(Screen):
     def check_partial_solution(self, task_type, assignment):
         if task_type == 1:
             counts = [self.solution.count(char) for char in 'abcd']
-            for i in range(len(counts)):
+            for i in range(len(assignment)):
                 if assignment[i][1] == '?':
                     continue
                 count = int(assignment[i][1])
