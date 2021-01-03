@@ -36,6 +36,7 @@ class SolveScreen(Screen):
         self.actual_regime = None
         self.task_not_draw = True
         self.moving = False
+        self.plan_traj = []
 
     def check_move(self, move, dir, obsta):
         map_name = self.tasks_set.get_actual_task().map.name
@@ -456,7 +457,12 @@ class SolveScreen(Screen):
             actual = self.tasks_set.get_actual_task()
             actual.road.show()
             self.set_actual_mode()
-            print(actual.name, actual.road.number_of_active_road_parts)
+            # print(actual.name, actual.road.number_of_active_road_parts)
+            if actual.actual_regime == "planovaci":
+                actual.road.change_color("basic")
+            #     print("Trajektoria v next:", player.trajectory)
+            #     self.recostruct_road(actual, actual.road)
+
             if self.tasks_set.actual == len(self.tasks_set.tasks) - 1 or (self.tasks_set.next == "nie" and actual.solvable):
                 self.next_task_btn.hide()
 
@@ -468,9 +474,10 @@ class SolveScreen(Screen):
         if self.tasks_set.actual > 0:
             self.next_task_btn.show()
             self.remove_task()
+            player.remove_trajectory()
             self.tasks_set.get_actual_task().road.unshow()
             # self.tasks_set.get_actual_task().road.clear_road()
-            player.remove_trajectory()
+            # self.remove_plan_traj()
             self.tasks_set.prev_task()
             self.draw_task_and_map()
             self.tasks_set.get_actual_task().map.draw_guards()
@@ -479,6 +486,10 @@ class SolveScreen(Screen):
             self.actual_regime = act.actual_regime
             self.set_actual_mode()
             act.road.show()
+            if act.actual_regime == "planovaci":
+                act.road.change_color("basic")
+            #     self.recostruct_road(act, act.road)
+            #     print("Trajectoria v prev: ",player.trajectory)
             if self.tasks_set.actual == 0:
                 self.prev_task_btn.hide()
 
@@ -603,7 +614,6 @@ class SolveScreen(Screen):
         self.canvas.update()
         time.sleep(0.01)
         ignored = False
-
         for i in range(self.tasks_set.get_actual_task().road.number_of_active_road_parts):
             if ignored == True:
                 self.tasks_set.get_actual_task().road.road_parts[i].change_color("ignored")
@@ -773,7 +783,7 @@ class SolveScreen(Screen):
         self.solve_screen_task_window = CanvasObject(self, [self.solve_screen_task_bg])
 
     def set_actual_mode(self):
-        print("Aktualny mod:", self.tasks_set.get_actual_task().actual_regime)
+        # print("Aktualny mod:", self.tasks_set.get_actual_task().actual_regime)
         mode = self.tasks_set.get_actual_task().actual_regime
         if mode == 'priamy':
             text = self.canvas.itemcget(self.task_text_mode, 'text')

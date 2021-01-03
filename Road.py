@@ -98,6 +98,11 @@ class Road(CanvasObject):
             part.selected = False
         self.number_of_active_road_parts = 0
 
+    def change_color(self, color):
+        for part in self.road_parts:
+            if part.move is not None:
+                part.change_color(color)
+
     def clear_wrong_ingnored(self):
         active = self.number_of_active_road_parts
         num = self.number_of_active_road_parts
