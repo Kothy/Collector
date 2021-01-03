@@ -22,7 +22,6 @@ class Task:
         self.name = name
         self.type = typ
         self.mode = mode
-        print(mode)
         self.actual_regime = None
         self.row = row
         self.map_str = map_str
@@ -259,7 +258,6 @@ class Task:
         elif re.fullmatch("Otacanie: (vsetky smery|ziadne|vlavo/vpravo|dole/hore)", lines[4]) is None:
             nums.append(lines[4])
         elif re.fullmatch("Smerovanie: (-|vpravo|hore|dole|vlavo)", lines[5]) is None:
-            print(message.format('5'))
             nums.append(lines[5])
         elif re.fullmatch("Mriezka: (cierna|biela|cervena|zelena|zlta)", lines[6]) is None:
             nums.append(lines[6])
@@ -434,7 +432,6 @@ class TaskSet:
         self.tasks.append(t)
 
     def draw_task_and_map(self):
-        # print("kreslim mapu")
         self.tasks[self.actual].draw()
 
     def remove_task_and_map(self):

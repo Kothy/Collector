@@ -529,12 +529,13 @@ class SolveScreen(Screen):
 
     def clear_road(self, _):
         # print("stlacena metlicka")
+        print("Aktualny rezim", self.tasks_set.get_actual_task().actual_regime)
         player = self.tasks_set.get_player()
         if player.planned_move == True or self.moving:
             print("prva vetva")
             return
 
-        if self.actual_regime == "priamy":
+        if self.tasks_set.get_actual_task().actual_regime == "priamy":
             print("druha vetva")
             player = self.tasks_set.get_player()
             player.reset_game()
