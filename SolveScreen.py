@@ -413,6 +413,8 @@ class SolveScreen(Screen):
         self.parent.root.bind('<Down>', self.move_down)
         self.parent.root.bind('<Left>', self.move_left)
         self.parent.root.bind('<Right>', self.move_right)
+        self.parent.root.bind('<BackSpace>', self.step_back)
+        self.parent.root.bind('<Return>', self.play_moves)
         self.canvas.tag_bind(self.keyboard[0], '<ButtonPress-1>', self.move_down)
         self.canvas.tag_bind(self.keyboard[1], '<ButtonPress-1>', self.move_right)
         self.canvas.tag_bind(self.keyboard[2], '<ButtonPress-1>', self.move_up)
@@ -424,6 +426,8 @@ class SolveScreen(Screen):
         self.parent.root.unbind('<Down>')
         self.parent.root.unbind('<Left>')
         self.parent.root.unbind('<Right>')
+        self.parent.root.unbind("<BackSpace>")
+        self.parent.root.unbind("<Return>")
         self.canvas.tag_unbind(self.keyboard[0], '<ButtonPress-1>')
         self.canvas.tag_unbind(self.keyboard[1], '<ButtonPress-1>')
         self.canvas.tag_unbind(self.keyboard[2], '<ButtonPress-1>')
@@ -474,7 +478,6 @@ class SolveScreen(Screen):
             self.prev_task_btn.show()
             player.remove_trajectory()
             self.remove_task()
-            # self.tasks_set.get_actual_task().road.clear_road()
             self.tasks_set.get_actual_task().road.unshow()
             self.tasks_set.get_actual_task().actual_regime = self.actual_regime
             self.tasks_set.next_task()
@@ -482,14 +485,17 @@ class SolveScreen(Screen):
             actual = self.tasks_set.get_actual_task()
             actual.road.show()
             self.set_actual_mode()
-            # print(actual.name, actual.road.number_of_active_road_parts)
             if actual.actual_regime == "planovaci":
                 actual.road.change_color("basic")
-            #     print("Trajektoria v next:", player.trajectory)
-            #     self.recostruct_road(actual, actual.road)
 
             if self.tasks_set.actual == len(self.tasks_set.tasks) - 1 or (self.tasks_set.next == "nie" and actual.solvable):
                 self.next_task_btn.hide()
+
+            if self.tasks_set.actual != len(self.tasks_set.tasks) - 1 and not actual.solvable:
+                self.next_task_btn.show()
+
+            if self.tasks_set.actual != len(self.tasks_set.tasks) - 1 and not actual.actual_regime == "volna":
+                self.next_task_btn.show()
 
     def prev_task(self):
         player = self.tasks_set.get_player()
@@ -628,6 +634,8 @@ class SolveScreen(Screen):
         self.canvas.itemconfig(self.play, state="hidden")
 
     def play_moves(self, _):
+        if self.tasks_set.get_actual_task().actual_regime != "planovaci":
+            return
         player = self.tasks_set.get_player()
         if player.planned_move == True:
             return

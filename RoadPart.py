@@ -1,5 +1,6 @@
 from CanvasObject import CanvasObject
 from PIL import Image, ImageTk
+from CommonFunctions import resize_image
 
 
 class RoadPart(CanvasObject):
@@ -20,7 +21,7 @@ class RoadPart(CanvasObject):
     def add_obstacle(self, obstacle_img):
         if isinstance(obstacle_img, str):
             img = Image.open(obstacle_img)
-            img = img.resize((30, 30))
+            img = resize_image(img, 30, 30)
             self.obstacle_img = ImageTk.PhotoImage(img)
         else:
             self.obstacle_img = obstacle_img

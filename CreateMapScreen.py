@@ -16,8 +16,8 @@ FILE_TYPES = (("Png files", "*.png"), ("JPG files", "*.jpg"))
 ERROR1 = 'Chyba pri ukladaní mapy: nezadaný názov mapy'
 ERROR2 = 'Chyba pri ukladaní mapy: nepovolený názov mapy'
 ERROR30 = 'Chyba pri ukladaní mapy: názov mapy už existuje'
-ERROR3 = 'Chyba pri ukladaní mapy: nezadaný názov postavičky'
-ERROR4 = 'Chyba pri ukladaní mapy: nepovolený názov postavičky'
+ERROR3 = 'Chyba pri ukladaní mapy: nezadané meno postavičky'
+ERROR4 = 'Chyba pri ukladaní mapy: nepovolené meno postavičky'
 ERROR5 = 'Chyba pri ukladaní mapy: nezadaný obrázok postavičky'
 ERROR6 = 'Chyba pri ukladaní mapy: nezadané pozadie mapy'
 ERROR7 = 'Chyba pri ukladaní mapy: nezadané predmety'
@@ -106,10 +106,10 @@ class CreateMapScreen(Screen):
         elif not char_name.isalnum():
             self.display_error(ERROR4)
 
-        elif ".png" not in char_img and ".jpg" not in char_img:
+        elif ".png" not in char_img.lower() and ".jpg" not in char_img.lower():
             self.display_error(ERROR5)
 
-        elif ".png" not in map_img and ".jpg" not in map_img:
+        elif ".png" not in map_img.lower() and ".jpg" not in map_img.lower():
             self.display_error(ERROR6)
 
         elif len(self.collectibles_list.items) < 1:
