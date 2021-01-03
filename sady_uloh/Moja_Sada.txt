@@ -1,23 +1,23 @@
-Nazov: Moja Sada
+Názov: Moja Sada
 Mapa: Mapa_Zberatela
 
-# Nastavenie prekazok #
-x: stvorec
-y: kriz
+# Nastavenie prekážok #
+x: štvorec
+y: kríž
 z: bod
 
-# Ulohy #
-Volny prechod: nie
+# Úlohy #
+Voľný prechod: nie
 
 1.
-Nazov: Jednotka
-Typ: volna
-Rezim: oba
+Názov: Jednotka
+Typ: voľná
+Režim: oba
 Riadkov: 5
-Stlpcov: 10
+Stĺpcov: 10
 Krokov: 
 Zadanie: 
-Riesitelna: nie
+Riešiteľná: nie
 p........z
 ..........
 ....xx....
@@ -25,14 +25,14 @@ p........z
 y........a
 
 2.
-Nazov: Neriesitelna
-Typ: volna
-Rezim: oba
+Názov: Neriesitelna
+Typ: voľná
+Režim: oba
 Riadkov: 5
-Stlpcov: 10
+Stĺpcov: 10
 Krokov: 
 Zadanie: 
-Riesitelna: nie
+Riešiteľná: nie
 p........z
 ..........
 ....xx....
@@ -40,14 +40,14 @@ p........z
 y........a
 
 3.
-Nazov: Neriesitelna
-Typ: volna
-Rezim: oba
+Názov: Neriesitelna
+Typ: voľná
+Režim: oba
 Riadkov: 5
-Stlpcov: 10
+Stĺpcov: 10
 Krokov: 
 Zadanie: 
-Riesitelna: nie
+Riešiteľná: nie
 p........z
 ..........
 .....xx...

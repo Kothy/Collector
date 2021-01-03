@@ -53,7 +53,7 @@ b.c.......
 
 4.
 Názov: Stvrta
-Typ: volná
+Typ: voľná
 Režim: oba
 Riadkov: 5
 Stĺpcov: 10

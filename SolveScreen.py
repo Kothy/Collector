@@ -264,7 +264,7 @@ class SolveScreen(Screen):
             return False, lines[0]
         if not (lines[1].startswith("Názov: ") and lines[1].split(": ")[1].replace("_","").replace(" ", "").isalnum()):
             return False, lines[1]
-        if re.fullmatch("Typ: (počty|volná|cesta)", lines[2]) is None:
+        if re.fullmatch("Typ: (počty|voľná|cesta)", lines[2]) is None:
             return False, lines[2]
         if re.fullmatch("Režim: (plánovací|priamy|oba)", lines[3]) is None:
             return False, lines[3]

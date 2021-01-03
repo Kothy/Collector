@@ -16,7 +16,7 @@ class TextWithImages:
         self.images = images
         self.objects = []
         self.text_size = 16
-        self.textWithPictures(self.x, self.y, self.text, copy.deepcopy(self.images), self.width)
+        self.textWithPictures(self.x + 15, self.y, self.text, copy.deepcopy(self.images), self.width)
 
     def resize(self, imgName, w, h):
         img = Image.open(imgName)
