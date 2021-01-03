@@ -1,5 +1,5 @@
 Názov: Sada_Uloh_1
-Mapa: Mapa_Zberatela
+Mapa: Mapa m
 
 # Nastavenie prekážok #
 x: bod

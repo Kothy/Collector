@@ -146,12 +146,12 @@ class CreateMapScreen(Screen):
             all_col += ",b,c,d"
 
         text = "Názov: {}\n\n# Nastavenia postavičky #\nMeno: {}\nOtáčanie: {}\nSmerovanie: {}" \
-               "\nMriežka: {} \nTrajektória: {}\n\n# Predmety #\n{}\n\n# Prekážky #\n{}"
+               "\nMriežka: {}\nTrajektória: {}\n\n# Predmety #\n{}\n\n# Prekážky #\n{}"
 
         file_txt = text.format(name, self.character_name.get(),
                            self.rotate_options.checkboxes[self.rotate_options.checked_index].text,
-                           self.rotated_choices.text, self.trajectory_color_choices.text.strip(),
-                               self.path_color_choices.text,all_col, all_obs)
+                           self.rotated_choices.text.strip(), self.trajectory_color_choices.text.strip(),
+                               self.path_color_choices.text.strip(), all_col, all_obs)
 
         with open(dir + "map_settings.txt", "w", encoding="utf-8") as file:
             file.write(file_txt)
