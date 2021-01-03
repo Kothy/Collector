@@ -114,9 +114,9 @@ class CreateMapScreen(Screen):
 
         elif len(self.collectibles_list.items) < 1:
             self.display_error(ERROR7)
-
-        elif len(self.obstacles_list.items) < 1:
-            self.display_error(ERROR8)
+        #
+        # elif len(self.obstacles_list.items) < 1:
+        #     self.display_error(ERROR8)
         else:
             self.canvas.itemconfig(self.saving_error_text, state=tk.HIDDEN)
             threading.Thread(target=self.save_map, args=(self.map_name.get(),)).start()
