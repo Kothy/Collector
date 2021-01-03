@@ -38,6 +38,12 @@ class Task:
         self.map_name = map_name
         self.char_name = char_name
         self.collectibles = 0
+        img = Image.open("mapy/{}/map.png".format(self.map_name))
+
+        # img = img.resize((900, 480))
+        img = resize_image(img, 899, 479)
+        self.map_bg_w, self.map_bg_h = img.size
+        self.map_bg_img = ImageTk.PhotoImage(img)
         if parse:
             self.parse_assign()
 
@@ -325,7 +331,7 @@ class Task:
         lines = self.remove_lines(lines, 2)
         lines.pop(0).split(",")
 
-        self.draw_map_bg()
+        # self.draw_map_bg()
         self.map = Map(self.map_name, self.map_str, self.parent.canvas, self, self.traject_and_grid_color)
 
     def draw_map_bg(self):
@@ -338,9 +344,6 @@ class Task:
 
         self.map_bg_img_id = self.parent.canvas.create_image(460, 300, image=self.map_bg_img, anchor='c')
 
-    def remove_map_bg(self):
-        self.parent.canvas.delete(self.map_bg_img_id)
-
     def __repr__(self):
         return " ".join([str(self.index), self.name, self.type,
                          self.mode, self.row, self.map_str,
@@ -348,6 +351,7 @@ class Task:
                          self.solvable])
 
     def draw(self):
+        self.draw_map_bg()
         w = 340
         self.text_w_images = None
         self.text_w_images2 = None
@@ -384,8 +388,8 @@ class Task:
             if self.type == "cesta":
                 x = 0
 
-            self.text_w_images = TextWithImages(self.parent.canvas, 930, 125, w, self.assign_text2, images[:self.assign_text2.count("_") + 1])
-            self.text_w_images2 = TextWithImages(self.parent.canvas, 930, 345 - x, w, self.obstacles_assign,
+            self.text_w_images = TextWithImages(self.parent.canvas, 930, 125, w - 20, self.assign_text2, images[:self.assign_text2.count("_") + 1])
+            self.text_w_images2 = TextWithImages(self.parent.canvas, 930, 345 - x, w - 20, self.obstacles_assign,
                                                 images[self.assign_text2.count("_"):])
 
             id1 = self.parent.canvas.create_text(930, 70, fill="#0a333f",

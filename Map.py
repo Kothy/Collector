@@ -18,8 +18,12 @@ class Map:
         self.array = []
         self.grid_col = grid_col
         self.rows, self.cols = 0, 0
-        self.width = self.task.map_bg_w - 5
-        self.height = self.task.map_bg_h - 5
+        w, h = self.task.map_bg_w, self.task.map_bg_h
+        # self.width = self.task.map_bg_w - 5
+        # self.height = self.task.map_bg_h - 5
+        self.width = w - 5
+        self.height = h - 5
+
         self.trajectory_col = self.task.trajectory_color
         self.read_map()
 

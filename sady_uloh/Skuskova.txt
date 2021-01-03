@@ -1,23 +1,23 @@
-Nazov: Skuskova
+Názov: Skuskova
 Mapa: Mapa_Zberatela
 
-# Nastavenie prekazok #
-x: kriz
+# Nastavenie prekážok #
+x: kríž
 y: bod
-z: stvorec
+z: štvorec
 
-# Ulohy #
-Volny prechod: ano
+# Úlohy #
+Voľný prechod: áno
 
 1.
-Nazov: U
+Názov: U
 Typ: cesta
-Rezim: oba
+Režim: oba
 Riadkov: 5
-Stlpcov: 10
+Stĺpcov: 10
 Krokov: 
 Zadanie: abcd
-Riesitelna: nie
+Riešiteľná: nie
 .....z....
 .x.c......
 ..b.d.....
