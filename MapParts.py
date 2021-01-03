@@ -39,7 +39,7 @@ class Collectible:
         self.row = i
         self.col = j
         img = Image.open("mapy/{}/collectibles/{}.png".format(self.map.name, self.name))
-        img = resize_image(img, self.map.part_w - 4, self.map.part_h - 4)
+        img = resize_image(img, self.map.part_w - 6, self.map.part_h - 6)
         self.img = img
         self.image = ImageTk.PhotoImage(img)
         self.img_id = 0
@@ -65,7 +65,7 @@ class Obstacle:
         self.row = i
         self.col = j
         img = Image.open("mapy/{}/obstacles/{}.png".format(self.map.name, self.name))
-        img = resize_image(img, self.map.part_w - 4, self.map.part_h - 4)
+        img = resize_image(img, self.map.part_w - 6, self.map.part_h - 6)
         # img_sizes = img.size
         img2 = Image.open("obrazky/guarding.png").resize((self.map.part_w - 4, self.map.part_h - 4))
         self.bg_img = ImageTk.PhotoImage(img2)
