@@ -1,22 +1,22 @@
-Nazov: Sada_Uloh_1
+Názov: Sada_Uloh_1
 Mapa: Mapa_Zberatela
 
-# Nastavenie prekazok #
+# Nastavenie prekážok #
 x: bod
-y: kriz
+y: kríž
 
-# Ulohy #
-Volny prechod: nie
+# Úlohy #
+Voľný prechod: nie
 
 1.
-Nazov: Úloha1
-Typ: pocty
-Rezim: oba
+Názov: Úloha1
+Typ: počty
+Režim: oba
 Riadkov: 5
-Stlpcov: 5
+Stĺpcov: 5
 Krokov: 10
 Zadanie: a=?,b=1,c<=2,d=1
-Riesitelna: ano
+Riešiteľná: áno
 .y.a.
 b.c..
 .p..x
@@ -24,14 +24,14 @@ dc...
 .b...
 
 2.
-Nazov: Uloha1
-Typ: pocty
-Rezim: oba
+Názov: Uloha1
+Typ: počty
+Režim: oba
 Riadkov: 3
-Stlpcov: 5
+Stĺpcov: 5
 Krokov: 6
 Zadanie: a=?,b>3,c<=2,d=1
-Riesitelna: ano
+Riešiteľná: áno
 .y.a......
 b.c.......
 .p..x.....
@@ -39,27 +39,27 @@ b.c.......
 ..........
 
 3.
-Nazov: Uloha1
-Typ: pocty
-Rezim: oba
+Názov: Uloha1
+Typ: počty
+Režim: oba
 Riadkov: 3
-Stlpcov: 10
+Stĺpcov: 10
 Krokov: 6
 Zadanie: a=?,b>3,c<=2,d=1
-Riesitelna: ano
+Riešiteľná: áno
 .y.a......
 b.c.......
 .p..x.....
 
 4.
-Nazov: Stvrta
-Typ: volna
-Rezim: oba
+Názov: Stvrta
+Typ: voľná
+Režim: oba
 Riadkov: 5
-Stlpcov: 10
+Stĺpcov: 10
 Krokov: 
 Zadanie: 
-Riesitelna: ano
+Riešiteľná: áno
 p........y
 ..........
 .....x....
