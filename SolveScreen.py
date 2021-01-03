@@ -547,25 +547,32 @@ class SolveScreen(Screen):
         # print("stlacena metlicka")
         player = self.tasks_set.get_player()
         if player.planned_move == True or self.moving:
+            print("prva vetva")
             return
 
         if self.actual_regime == "priamy":
+            print("druha vetva")
             player = self.tasks_set.get_player()
             player.reset_game()
         else:
+            print("else vetva")
             if len(self.tasks_set.get_actual_task().road.selected_parts) == 1:
+                print("sem")
                 part_index = self.tasks_set.get_actual_task().road.selected_parts[0]
                 part_color = self.tasks_set.get_actual_task().road.road_parts[part_index].color
                 self.tasks_set.get_actual_task().road.remove_all_selected()
                 active = self.tasks_set.get_actual_task().road.number_of_active_road_parts
                 if part_color == "ok" or part_color == "wrong":
+                    print("sem2")
                     for i in range(part_index, active):
                         self.tasks_set.get_actual_task().road.road_parts[i].change_color("basic")
                 return
 
             if self.tasks_set.get_actual_task().road.wrong_ignored_in_road() == True:
+                print("sem3")
                 self.tasks_set.get_actual_task().road.clear_wrong_ingnored()
             else:
+                print("uplny else")
                 self.tasks_set.get_actual_task().road.clear_road()
 
     def road_window_init(self):
@@ -782,12 +789,7 @@ class SolveScreen(Screen):
 
     def set_actual_mode(self):
         mode = self.tasks_set.get_actual_task().actual_regime
-        # print("Aktualny rezim v task:", mode, self.tasks_set.get_actual_task().name)
-        # mode = self.actual_regime
-        # if mode == "planovaci":
-        #     self.canvas.itemconfig(self.task_text_mode, text="plánovací")
-        # if mode == "priamy":
-        #     self.canvas.itemconfig(self.task_text_mode, text="priamy")
+        print("aktualny rezim je: ", mode)
         if mode == 'priamy':
             text = self.canvas.itemcget(self.task_text_mode, 'text')
             text = text.replace("naplánovať", "nájsť")

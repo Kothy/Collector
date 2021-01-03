@@ -22,13 +22,13 @@ class Task:
         self.name = name
         self.type = typ
         self.mode = mode
+        print(mode)
         self.actual_regime = None
         self.row = row
         self.map_str = map_str
         self.col = col
         self.road = Road(self.parent.parent.move_imgs, self.parent.parent)
         self.steps_count = int(steps) if steps != '' else 16
-        # print("Krokov: ", self.steps_count, repr(steps))
         self.assign = assign
         self.col_counts = []
         self.solvable = True if solvable == "ano" else False
@@ -353,16 +353,18 @@ class Task:
         images = self.assign_images
         if self.mode == "oba" or self.mode == "priamy":
             self.parent.canvas.itemconfig(self.parent.parent.play, state="hidden")
-            self.parent.parent.actual_regime = "priamy"
-            self.actual_regime = "priamy"
+            # self.parent.parent.actual_regime = "priamy"
+            # self.actual_regime = "priamy"
         else:
-            self.parent.parent.actual_regime = "planovaci"
-            self.actual_regime = "planovaci"
+            # self.parent.parent.actual_regime = "planovaci"
+            # self.actual_regime = "planovaci"
             self.parent.canvas.itemconfig(self.parent.parent.play, state="normal")
             text2 = self.parent.parent.canvas.itemcget(self.parent.parent.task_text_mode, 'text')
             text2 = text2.replace("nájsť", "naplánovať")
             text2 = text2.replace("priamy", "plánovací")
             self.parent.parent.canvas.itemconfig(self.parent.parent.task_text_mode, text=text2)
+
+        self.parent.parent.actual_regime = self.actual_regime
 
         if self.mode == "oba":
             self.parent.canvas.itemconfig(self.parent.parent.swap_mode_btn, state="normal")
