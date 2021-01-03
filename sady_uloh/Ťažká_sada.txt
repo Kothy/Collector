@@ -1,4 +1,4 @@
-Nazov: Tazka sada
+Nazov: Ťažká sada
 Mapa: Mapa_Zberatela
 
 # Nastavenie prekazok #
@@ -10,7 +10,7 @@ z: stvorec
 Volny prechod: nie
 
 1.
-Nazov: Tazka uloha
+Nazov: Ťažká úloha
 Typ: cesta
 Rezim: planovaci
 Riadkov: 5
@@ -25,13 +25,13 @@ z....b....
 .p.......d
 
 2.
-Nazov: Lahsia uloha
+Nazov: Ľahšia úloha
 Typ: pocty
 Rezim: priamy
 Riadkov: 5
 Stlpcov: 8
 Krokov: 12
-Zadanie: a?,b=1,c?,d?
+Zadanie: a=?,b=1,c=?,d=?
 Riesitelna: nie
 ........
 ...b....

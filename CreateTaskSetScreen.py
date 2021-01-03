@@ -200,6 +200,9 @@ class CreateTaskSetScreen(Screen):
         if set_name == '':
             self.set_error_text('Chyba: Pred uložením zadaj názov sady úloh')
             return
+        if path.exists(os.getcwd() + '/sady_uloh/' + set_name + '.txt'):
+            self.set_error_text('Chyba: Sada s rovnakým názvom už existuje')
+            return
         for char in set_name:
             if (char not in '0123456789' and char not in ' aáäbcčdďeéfghiíjklĺľmnňoóôpqrŕsštťuúvwxyýzž' and
                 char not in 'aáäbcčdďeéfghiíjklĺľmnňoóôpqrŕsštťuúvwxyýzž'.upper()):
@@ -217,12 +220,22 @@ class CreateTaskSetScreen(Screen):
         if btn_text == 'Menu':
             self.parent.main_menu_screen_init()
 
+    def obstacles_options_change_allowed(self):
+        if self.task_list.is_empty():
+            self.set_error_text('')
+            return True
+        self.set_error_text('Chyba: Zoznam úloh je neprázdny')
+        return False
+
     def set_error_text(self, text):
         self.canvas.itemconfig(self.error_text, text=text)
 
     def map_folder_is_valid(self, folder_name):
         for subpath in ('/map.png', '/character.png', '/obstacles', '/collectibles/a.png'):
             if not path.exists(os.getcwd()+ '/mapy/' + folder_name + subpath):
+                return False
+        with open('mapy/' + folder_name + '/map_settings.txt', 'r', encoding='utf8') as file:
+            if check_map_file(file.read(), folder_name) != '':
                 return False
         return True
 

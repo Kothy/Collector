@@ -26,7 +26,8 @@ class Task:
         self.row = row
         self.map_str = map_str
         self.col = col
-        self.road = Road(self.parent.parent.move_imgs, self.parent.parent)
+        if parse:
+            self.road = Road(self.parent.parent.move_imgs, self.parent.parent)
         self.steps_count = int(steps) if steps != '' else 16
         self.assign = assign
         self.col_counts = []

@@ -46,6 +46,8 @@ class GuardMode(CanvasObject):
     def selected(self, _):
         if self.border is not None:
             return
+        if not self.parent.parent.parent.obstacles_options_change_allowed():
+            return
         self.parent.mode_clicked(self.index)
         self.border = self.canvas.create_rectangle(self.x - 20, self.y - 20, self.x + 20, self.y + 20,
                                                    outline='darkviolet', width=3)
