@@ -199,7 +199,7 @@ class Player:
             self.steps_count += 1
             if self.map.task.actual_regime == "priamy":
                 self.map.task.check_answer()
-            print("zobral som collectible", colectible)
+            # print("zobral som collectible", colectible)
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -252,7 +252,7 @@ class Player:
             self.steps_count += 1
             if self.map.task.actual_regime == "priamy":
                 self.map.task.check_answer()
-            print("zobral som collectible", colectible)
+            # print("zobral som collectible", colectible)
             return "ok", colectible
         else:
             return "wrong", obsta
@@ -280,7 +280,7 @@ class Player:
             self.steps_count += 1
             if self.map.task.actual_regime == "priamy":
                 self.map.task.check_answer()
-            print("zobral som collectible", colectible)
+            # print("zobral som collectible", colectible)
             return "ok", colectible
         else:
             return "wrong", obsta
