@@ -22,7 +22,9 @@ class Task:
         self.name = name
         self.type = typ
         self.mode = mode
-        self.actual_regime = None
+        self.actual_regime = "priamy"
+        if self.mode == "planovaci":
+            self.actual_regime = "planovaci"
         self.row = row
         self.map_str = map_str
         self.col = col

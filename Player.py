@@ -178,7 +178,7 @@ class Player:
         self.map.canvas.itemconfig(self.img_id, state="normal")
 
     def move_down(self):
-        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
+        if self.map.task.actual_regime == "planovaci" and self.planned_move == False:
             # self.map.task.parent.parent.road.add_move("basic", "down")
             self.map.task.road.add_move("basic", "down")
             return None, None
@@ -197,14 +197,15 @@ class Player:
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part("ok", "down")
             self.steps_count += 1
-            if self.map.task.parent.parent.actual_regime == "priamy":
+            if self.map.task.actual_regime == "priamy":
                 self.map.task.check_answer()
+            print("zobral som collectible", colectible)
             return "ok", colectible
         else:
             return "wrong", obsta
 
     def move_up(self):
-        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
+        if self.map.task.actual_regime == "planovaci" and self.planned_move == False:
             # self.map.task.parent.parent.road.add_move("basic", "up")
             self.map.task.road.add_move("basic", "up")
             return None, None
@@ -222,14 +223,15 @@ class Player:
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'up')
             self.steps_count += 1
-            if self.map.task.parent.parent.actual_regime == "priamy":
+            print("zobral som collectible", colectible)
+            if self.map.task.actual_regime == "priamy":
                 self.map.task.check_answer()
             return "ok", colectible
         else:
             return "wrong", obsta
 
     def move_right(self):
-        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
+        if self.map.task.actual_regime == "planovaci" and self.planned_move == False:
             # self.map.task.parent.parent.road.add_move("basic", "right")
             self.map.task.road.add_move("basic", "right")
             return None, None
@@ -248,14 +250,15 @@ class Player:
             colectible = self.remove_draw_add_road_part('ok', 'right')
 
             self.steps_count += 1
-            if self.map.task.parent.parent.actual_regime == "priamy":
+            if self.map.task.actual_regime == "priamy":
                 self.map.task.check_answer()
+            print("zobral som collectible", colectible)
             return "ok", colectible
         else:
             return "wrong", obsta
 
     def move_left(self):
-        if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
+        if self.map.task.actual_regime == "planovaci" and self.planned_move == False:
             # self.map.task.parent.parent.road.add_move("basic", "left")
             self.map.task.road.add_move("basic", "left")
             return None, None
@@ -275,8 +278,9 @@ class Player:
             colectible = self.remove_draw_add_road_part('ok', 'left')
 
             self.steps_count += 1
-            if self.map.task.parent.parent.actual_regime == "priamy":
+            if self.map.task.actual_regime == "priamy":
                 self.map.task.check_answer()
+            print("zobral som collectible", colectible)
             return "ok", colectible
         else:
             return "wrong", obsta

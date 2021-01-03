@@ -773,6 +773,7 @@ class SolveScreen(Screen):
         self.solve_screen_task_window = CanvasObject(self, [self.solve_screen_task_bg])
 
     def set_actual_mode(self):
+        print("Aktualny mod:", self.tasks_set.get_actual_task().actual_regime)
         mode = self.tasks_set.get_actual_task().actual_regime
         if mode == 'priamy':
             text = self.canvas.itemcget(self.task_text_mode, 'text')
