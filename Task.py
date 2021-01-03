@@ -269,7 +269,7 @@ class Task:
         elif re.fullmatch("Smerovanie: (-|vpravo|hore|dole|vľavo)", lines[5]) is None:
             nums.append(lines[5])
         elif re.fullmatch("Mriežka: (čierna|biela|červená|zelená|žltá)", lines[6]) is None:
-            nums.append(lines[6])
+            nums.append(repr(lines[6]))
         elif re.fullmatch("Trajektória: (čierna|biela|červená|zelená|žltá)", lines[7]) is None:
             nums.append(lines[7])
         elif lines[8] != "":
