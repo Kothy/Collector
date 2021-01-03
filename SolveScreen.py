@@ -197,11 +197,6 @@ class SolveScreen(Screen):
         for i in range(3, len(lines2)):
             tasks.append(lines2[i].split("\n"))
 
-        # print(sett)
-        # print(obs)
-        # print(tasks_sett)
-        # print(tasks)
-
         if len(sett) != 3:
             return message
 
@@ -213,9 +208,6 @@ class SolveScreen(Screen):
 
         if not (sett[0].startswith("Nazov: ") and sett[0].split(": ")[1].replace("_", "").replace(" ", "").isalnum()):
             nums.append(sett[0])
-            # print(repr(sett[0].strip()))
-            # print("blaaaaaaaaaaaaaaaaaaa")
-
 
         elif re.fullmatch("Mapa: [a-zA-Z0-9_]{1,15}", sett[1]) is None:
             nums.append(sett[1])
@@ -251,9 +243,6 @@ class SolveScreen(Screen):
             if check == False:
                 nums.append(line)
 
-                # print(tasks[i], check, no)
-
-        # print("tieto riadky su zle: ", nums)
         if len(nums) == 0:
             return ""
         else:
@@ -267,7 +256,6 @@ class SolveScreen(Screen):
             return False, "Chyba v počte riadkov"
 
         if lines[0] == "":
-            print(lines)
             return False, "Nový riadok navyše."
 
         if re.fullmatch("[0-9]{1,2}\.", lines[0]) is None:
@@ -283,7 +271,6 @@ class SolveScreen(Screen):
         if re.fullmatch("Stlpcov: [0-9]{1,2}", lines[5]) is None:
             return False, lines[5]
         if re.fullmatch("Krokov: {0,1}[0-9]{0,2}", lines[6]) is None:
-            # print("tu")
             return False, lines[6]
         if lines[7].startswith("Zadanie: "):  #(a|b|c|d)(|>|<|=|<=|>=)[0-9]{1,2}
             if "pocty" in lines[2]:
@@ -292,7 +279,6 @@ class SolveScreen(Screen):
 
                 for i in range(len(ass)):
                     if re.fullmatch("((a|b|c|d)=\?)|((a|b|c|d)(>|<|=|<=|>=)[0-9]{1,2})", ass[i]) is None:
-                        print(ass[i])
                         return False, lines[7]
 
                 assign = lines[7].split(": ")[1]
@@ -324,7 +310,6 @@ class SolveScreen(Screen):
         if re.fullmatch("", lines[-1]) is None:
             return False, lines[-1]
 
-        # print("".join(lines[9:]))
         player_count = 0
         for i in range(9, len(lines)):
             for char in lines[i]:
@@ -354,7 +339,6 @@ class SolveScreen(Screen):
 
         answer = self.check_task_file(lines, "sady_uloh/" + name + ".txt")
 
-        # print("Subor je v poriadku: ", answer)
         if answer != "":
             self.choose_taskset_menu()
             messagebox.showerror(title="Chyba", message="Chyba v súbore sady_uloh/" + name + ".txt\nChyba: " + str(answer))
@@ -789,7 +773,6 @@ class SolveScreen(Screen):
 
     def set_actual_mode(self):
         mode = self.tasks_set.get_actual_task().actual_regime
-        print("aktualny rezim je: ", mode)
         if mode == 'priamy':
             text = self.canvas.itemcget(self.task_text_mode, 'text')
             text = text.replace("naplánovať", "nájsť")

@@ -364,6 +364,9 @@ class Task:
             text2 = text2.replace("priamy", "plánovací")
             self.parent.parent.canvas.itemconfig(self.parent.parent.task_text_mode, text=text2)
 
+        if self.actual_regime== "planovaci":
+            self.parent.canvas.itemconfig(self.parent.parent.play, state="normal")
+
         self.parent.parent.actual_regime = self.actual_regime
 
         if self.mode == "oba":
