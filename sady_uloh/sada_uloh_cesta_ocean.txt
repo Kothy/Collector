@@ -1,36 +1,36 @@
-Nazov: Sada_Uloh_1
+Názov: Sada_Uloh_1
 Mapa: ocean
 
-# Nastavenie prekazok #
-x: stvorec
+# Nastavenie prekážok #
+x: štvorec
 y: bod
 
-# Ulohy #
-Volny prechod: ano
+# Úlohy #
+Voľný prechod: áno
 
 1.
-Nazov: Prva
+Názov: Prva
 Typ: cesta
-Rezim: oba
+Režim: oba
 Riadkov: 4
-Stlpcov: 5
+Stĺpcov: 5
 Krokov: 10
 Zadanie: bca
-Riesitelna: ano
+Riešiteľná: áno
 .y.a.
 .....
 b....
 pc..x
 
 2.
-Nazov: Druha
+Názov: Druha
 Typ: cesta
-Rezim: oba
+Režim: oba
 Riadkov: 5
-Stlpcov: 5
+Stĺpcov: 5
 Krokov: 8
 Zadanie: abcbbb
-Riesitelna: ano
+Riešiteľná: áno
 .y...
 c....
 bbbb.
@@ -38,14 +38,14 @@ a....
 .p.x.
 
 3.
-Nazov: Tretia
+Názov: Tretia
 Typ: cesta
-Rezim: planovaci
+Režim: plánovací
 Riadkov: 5
-Stlpcov: 7
+Stĺpcov: 7
 Krokov: 10
 Zadanie: acbaa
-Riesitelna: ano
+Riešiteľná: áno
 ..y.ap.
 .b.....
 .c.....
@@ -53,14 +53,14 @@ aa...x.
 .......
 
 4.
-Nazov: Stvrta
+Názov: Stvrta
 Typ: cesta
-Rezim: oba
+Režim: oba
 Riadkov: 5
-Stlpcov: 8
+Stĺpcov: 8
 Krokov: 15
 Zadanie: abca
-Riesitelna: ano
+Riešiteľná: áno
 ..y.ap..
 .b......
 .c......

@@ -7,7 +7,6 @@ from Road import Road
 from ClickableList import ClickableList
 from Task import TaskSet
 import time
-from tkinter import messagebox
 import re
 import copy
 from os import path
@@ -37,6 +36,7 @@ class SolveScreen(Screen):
         self.task_not_draw = True
         self.moving = False
         self.plan_traj = []
+        self.error = 0
 
     def check_move(self, move, dir, obsta):
         map_name = self.tasks_set.get_actual_task().map.name
@@ -330,7 +330,7 @@ class SolveScreen(Screen):
         return True, None
 
     def draw_task_assignment(self, name):
-        self.canvas.itemconfig(self.task_text_set_choice, state="hidden")
+        self.canvas.itemconfig(self.vyber_sadu, state="hidden")
 
         with open("sady_uloh/" + name + ".txt", "r", encoding="utf-8") as file:
             full = file.read()
@@ -342,8 +342,16 @@ class SolveScreen(Screen):
         answer = self.check_task_file(lines, "sady_uloh/" + name + ".txt")
 
         if answer != "":
-            self.choose_taskset_menu()
-            messagebox.showerror(title="Chyba", message="Chyba v súbore sady_uloh/" + name + ".txt\nChyba: " + str(answer))
+            self.canvas.delete(self.error)
+            self.canvas.itemconfig(self.vyber_sadu, state="hidden")
+
+            self.canvas.delete(self.vyber_sadu)
+            e_message = "Chyba v súbore sady_uloh/" + name + ".txt\nChyba: " + str(answer)
+            self.error = self.canvas.create_text(1095, 285, fill="#0a333f",
+                                                 font=('Comic Sans MS', 14, 'italic bold'), anchor='center',
+                                                 width=320, text=e_message)
+            self.solve_screen_keyboard.hide()
+            self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
             return
 
         lines.append("##!EOF##")
@@ -372,9 +380,18 @@ class SolveScreen(Screen):
              lines = self.read_task(lines, map_name)
 
         if len(self.tasks_set.tasks) > 0 and self.tasks_set.tasks[0].map_error_message != "":
-            self.choose_taskset_menu()
-            error_message = "Chyba súboru mapy/{}/map_settings.txt\n".format(self.tasks_set.get_actual_task().map.name) + self.tasks_set.tasks[0].map_error_message
-            messagebox.showerror(title="Chyba", message=error_message)
+            self.canvas.delete(self.error)
+            self.canvas.itemconfig(self.vyber_sadu, state="hidden")
+
+            error_message = "Chyba súboru mapy/{}/map_settings.txt\n".format(
+                self.tasks_set.get_actual_task().map.name) + self.tasks_set.tasks[0].map_error_message
+            self.error = self.canvas.create_text(1095, 285, fill="#0a333f",
+                                                 font=('Comic Sans MS', 14, 'italic bold'), anchor='center',
+                                                 width=320, text=error_message)
+            self.solve_screen_keyboard.hide()
+            self.clickeble_list = ClickableList(20, 70, 880, 460, self.canvas, self)
+
+
             return
 
         if (next_without_solve == "ano" and len(self.tasks_set.tasks) > 1) or self.tasks_set.get_actual_task().solvable == False:
@@ -436,7 +453,7 @@ class SolveScreen(Screen):
         self.next_task_btn.bind(self.next_task)
         self.prev_task_btn.bind(self.prev_task)
 
-    def choose_taskset_menu(self):
+    def choose_taskset_menu(self, vyber=True):
         self.canvas.delete("all")
         self.parent.background_set()
         self.parent.solve_screen_init()
@@ -733,36 +750,16 @@ class SolveScreen(Screen):
         self.task_text_collect = self.canvas.create_text(930, 70, fill="#0a333f",
                                                          font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
                                                          width=330, text='{} chce pozbierat')
-        # self.task_text_collectibles = [
-        #     self.canvas.create_text(1095, 110, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'), anchor='n',
-        #                             width=330, text='práve 5 aaa, najviac 6 ccc'),
-        #     self.canvas.create_text(1095, 150, fill="#0a333f", font=('Comic Sans MS', 15, 'italic bold'), anchor='n',
-        #                             width=330, text='najviac 6 bbb a 0 ddd')]
-
-        # self.task_text_steps = self.canvas.create_text(930, 220, fill="#0a333f",
-        #                                                font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
-        #                                                width=330, text='s použítim najviac {} krokov.')
-        # self.task_text_path_info = self.canvas.create_text(930, 185, fill="#0a333f",
-        #                                                    font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
-        #                                                    width=330, text='(v tomto počte aj poradí)')
-        # self.task_text_obstacle = self.canvas.create_text(930, 255, fill="#0a333f",
-        #                                                   font=('Comic Sans MS', 17, 'italic bold'), anchor='nw',
-        #                                                   width=330, text='Musí sa ale vyhnúť políčkam, ktoré ohrozuje')
-        # self.task_text_obstacles = self.canvas.create_text(1095, 330, fill="#0a333f",
-        #                                                    font=('Comic Sans MS', 15, 'italic bold'), anchor='n',
-        #                                                    width=330, text='Liska alebo Voda')
         #
         self.task_text_mode = self.canvas.create_text(930, 370, fill="#114c32",
                                                       font=('Comic Sans MS', 17, 'italic bold'), anchor='nw', width=330,
                                                       text='{}\n"Pomôžeš mi, prosím, naplánovať cestu?"\n\n\tRežim: priamy')
 
-        self.task_text_set_choice = self.canvas.create_text(1095, 285, fill="#0a333f",
+        self.vyber_sadu = self.canvas.create_text(1095, 285, fill="#0a333f",
                                                             font=('Comic Sans MS', 20, 'italic bold'), anchor='center',
                                                             width=330, text='Vyber sadu úloh')
 
-        # task_text_collectibles_obj = CanvasObject(self, self.task_text_collectibles)
         self.solve_screen_task_collectibles = CanvasObject(self, [self.task_text_collect])
-        # self.solve_screen_task_obstacles = CanvasObject(self, [self.task_text_obstacle, self.task_text_obstacles])
 
         image = Image.open('obrazky/swap_mode.png')
         image = image.resize((32, 32), Image.ANTIALIAS)

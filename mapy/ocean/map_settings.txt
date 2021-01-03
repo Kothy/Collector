@@ -2,7 +2,7 @@ Názov: ocean
 
 # Nastavenia postavičky #
 Meno: Nemo
-Otáčanie: vlavo/vpravo
+Otáčanie: vľavo/vpravo
 Smerovanie: vľavo
 Mriežka: červená
 Trajektória: biela
