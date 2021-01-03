@@ -482,7 +482,7 @@ class SolveScreen(Screen):
             self.draw_task_and_map()
             self.tasks_set.get_actual_task().map.draw_guards()
             act = self.tasks_set.get_actual_task()
-            print(act.name, act.road.number_of_active_road_parts)
+            # print(act.name, act.road.number_of_active_road_parts)
             self.actual_regime = act.actual_regime
             self.set_actual_mode()
             act.road.show()
@@ -821,7 +821,6 @@ class SolveScreen(Screen):
         task.map.player.reset_game()
         task.map.player.remove_trajectory()
         self.tasks_set.get_actual_task().road.clear_road()
-
 
     def show_common(self):
 
