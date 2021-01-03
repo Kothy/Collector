@@ -77,7 +77,9 @@ class SolveScreen(Screen):
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("down")
             return
-        if self.road.number_of_active_road_parts >= 16:
+        active_parts = self.road.number_of_active_road_parts
+        actual = self.tasks_set.get_actual_task()
+        if active_parts >= 16 or active_parts >= actual.steps_count:
             playsound(WRONG_SOUND, 3)
             return
         move, obsta = player.move_down()
@@ -90,7 +92,9 @@ class SolveScreen(Screen):
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("up")
             return
-        if self.road.number_of_active_road_parts >=16:
+        active_parts = self.road.number_of_active_road_parts
+        actual = self.tasks_set.get_actual_task()
+        if active_parts >= 16 or active_parts >= actual.steps_count:
             playsound(WRONG_SOUND, 3)
             return
         move, obsta = player.move_up()
@@ -103,7 +107,9 @@ class SolveScreen(Screen):
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("right")
             return
-        if self.road.number_of_active_road_parts >=16:
+        active_parts = self.road.number_of_active_road_parts
+        actual = self.tasks_set.get_actual_task()
+        if active_parts >= 16 or active_parts >= actual.steps_count:
             playsound(WRONG_SOUND, 3)
             return
         move, obsta = player.move_right()
@@ -116,7 +122,9 @@ class SolveScreen(Screen):
         if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("left")
             return
-        if self.road.number_of_active_road_parts >= 16:
+        active_parts = self.road.number_of_active_road_parts
+        actual = self.tasks_set.get_actual_task()
+        if active_parts >= 16 or active_parts >= actual.steps_count:
             playsound(WRONG_SOUND, 3)
             return
         move, obsta = player.move_left()
@@ -155,8 +163,6 @@ class SolveScreen(Screen):
         row = lines.pop(0).split(":")[1].strip()
         col = lines.pop(0).split(":")[1].strip()
         steps = lines.pop(0).split(":")[1].strip()
-        if steps == "":
-            steps = 15
         assign = lines.pop(0).split(":")[1].strip()
         solvable = lines.pop(0).split(":")[1].strip()
         map_string = ""
@@ -254,10 +260,14 @@ class SolveScreen(Screen):
             return nums[0]
 
     def check_task_full_assignment(self, lines, map_name):
-        if len(lines) < 10 and not len(lines) == lines.count(""):
+        if len(lines) > 0 and len(lines) == lines.count(""):
+            return True, ""
 
+        if len(lines) < 10:
             return False, "Chyba v počte riadkov"
+
         if lines[0] == "":
+            print(lines)
             return False, "Nový riadok navyše."
 
         if re.fullmatch("[0-9]{1,2}\.", lines[0]) is None:
@@ -459,8 +469,8 @@ class SolveScreen(Screen):
             self.draw_task_and_map()
             actual = self.tasks_set.get_actual_task()
             self.set_actual_mode()
-            print("Aktualny rezim: ",self.tasks_set.get_actual_task().actual_regime)
-            if self.tasks_set.actual == len(self.tasks_set.tasks) - 1 or self.tasks_set.next == "nie" and actual.solvable:
+
+            if self.tasks_set.actual == len(self.tasks_set.tasks) - 1 or (self.tasks_set.next == "nie" and actual.solvable):
                 self.next_task_btn.hide()
 
     def prev_task(self):

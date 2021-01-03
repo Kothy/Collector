@@ -15,7 +15,7 @@ Typ: cesta
 Rezim: planovaci
 Riadkov: 5
 Stlpcov: 10
-Krokov: 15
+Krokov: 
 Zadanie: bcda
 Riesitelna: nie
 z....b....

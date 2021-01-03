@@ -15,7 +15,7 @@ Typ: cesta
 Rezim: oba
 Riadkov: 5
 Stlpcov: 10
-Krokov: 15
+Krokov: 
 Zadanie: abcd
 Riesitelna: nie
 .....z....
