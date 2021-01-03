@@ -231,6 +231,13 @@ class MapCreator(CanvasObject):
     def get_map_repr(self):
         return '\n'.join([''.join(line) for line in self.field])
 
+    def get_char_position(self):
+        for i in range(self.rows):
+            for j in range(self.cols):
+                if self.field[i][j] == 'p':
+                    return i,j
+        return None
+
 
 class MapCreatorPart(CanvasObject):
 

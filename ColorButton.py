@@ -62,6 +62,6 @@ class ColorButton(CanvasObject):
         else:
             self.change_text("-")
 
-
-
-
+    def to_the_front(self):
+        self.canvas.tag_raise(self.btn_bg, 'all')
+        self.canvas.tag_raise(self.text_obj, 'all')
