@@ -39,34 +39,34 @@ class SolveScreen(Screen):
 
     def check_move(self, move, dir, obsta):
         map_name = self.tasks_set.get_actual_task().map.name
-        active = self.road.number_of_active_road_parts
+        active = self.tasks_set.get_actual_task().road.number_of_active_road_parts
         if self.actual_regime == "priamy" and move == "wrong":
-            self.road.add_move(move, dir)
+            self.tasks_set.get_actual_task().road.add_move(move, dir)
 
             if obsta == "x" or obsta == "y" or obsta == "z":
-                self.road.road_parts[active].add_obstacle("mapy/{}/obstacles/{}.png".format(map_name, obsta))
+                self.tasks_set.get_actual_task().road.road_parts[active].add_obstacle("mapy/{}/obstacles/{}.png".format(map_name, obsta))
             elif obsta == "guarding":
-                self.road.road_parts[active].add_obstacle("obrazky/guarding.png")
+                self.tasks_set.get_actual_task().road.road_parts[active].add_obstacle("obrazky/guarding.png")
             else:
-                self.road.road_parts[active].add_obstacle("obrazky/guarding.png")
+                self.tasks_set.get_actual_task().road.road_parts[active].add_obstacle("obrazky/guarding.png")
 
-            self.road.number_of_active_road_parts -= 1
+            self.tasks_set.get_actual_task().road.number_of_active_road_parts -= 1
 
         elif self.actual_regime == "priamy" and move == "ok" and obsta is not None:
-            active = self.road.number_of_active_road_parts
-            self.road.road_parts[active - 1].add_obstacle("mapy/{}/collectibles/{}.png".format(map_name, obsta))
+            active = self.tasks_set.get_actual_task().road.number_of_active_road_parts
+            self.tasks_set.get_actual_task().road.road_parts[active - 1].add_obstacle("mapy/{}/collectibles/{}.png".format(map_name, obsta))
 
     def check_changed(self, index, removed=False):
-        rp = self.road.road_parts[index]
-        active = self.road.number_of_active_road_parts
+        rp = self.tasks_set.get_actual_task().road.road_parts[index]
+        active = self.tasks_set.get_actual_task().road.number_of_active_road_parts
         if rp.color == "ok" or rp.color == "wrong":
             for i in range(index, active):
-                self.road.road_parts[i].change_color("basic")
-        self.road.selected_parts = []
+                self.tasks_set.get_actual_task().road.road_parts[i].change_color("basic")
+        self.tasks_set.get_actual_task().road.selected_parts = []
 
     def change_direction(self, direction):
-        for part in self.road.selected_parts:
-            rp = self.road.road_parts[part]
+        for part in self.tasks_set.get_actual_task().road.selected_parts:
+            rp = self.tasks_set.get_actual_task().road.road_parts[part]
             rp.change_direction(direction)
             self.check_changed(part)
 
@@ -74,10 +74,10 @@ class SolveScreen(Screen):
         player = self.tasks_set.get_player()
         if player.planned_move == True or self.moving:
             return
-        if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
+        if len(self.tasks_set.get_actual_task().road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("down")
             return
-        active_parts = self.road.number_of_active_road_parts
+        active_parts = self.tasks_set.get_actual_task().road.number_of_active_road_parts
         actual = self.tasks_set.get_actual_task()
         if active_parts >= 16 or active_parts >= actual.steps_count:
             playsound(WRONG_SOUND, 3)
@@ -89,10 +89,10 @@ class SolveScreen(Screen):
         player = self.tasks_set.get_player()
         if player.planned_move == True or self.moving:
             return
-        if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
+        if len(self.tasks_set.get_actual_task().road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("up")
             return
-        active_parts = self.road.number_of_active_road_parts
+        active_parts = self.tasks_set.get_actual_task().road.number_of_active_road_parts
         actual = self.tasks_set.get_actual_task()
         if active_parts >= 16 or active_parts >= actual.steps_count:
             playsound(WRONG_SOUND, 3)
@@ -104,10 +104,10 @@ class SolveScreen(Screen):
         player = self.tasks_set.get_player()
         if player.planned_move == True or self.moving:
             return
-        if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
+        if len(self.tasks_set.get_actual_task().road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("right")
             return
-        active_parts = self.road.number_of_active_road_parts
+        active_parts = self.tasks_set.get_actual_task().road.number_of_active_road_parts
         actual = self.tasks_set.get_actual_task()
         if active_parts >= 16 or active_parts >= actual.steps_count:
             playsound(WRONG_SOUND, 3)
@@ -119,10 +119,10 @@ class SolveScreen(Screen):
         player = self.tasks_set.get_player()
         if player.planned_move == True or self.moving:
             return
-        if len(self.road.selected_parts) == 1 and self.actual_regime == "planovaci":
+        if len(self.tasks_set.get_actual_task().road.selected_parts) == 1 and self.actual_regime == "planovaci":
             self.change_direction("left")
             return
-        active_parts = self.road.number_of_active_road_parts
+        active_parts = self.tasks_set.get_actual_task().road.number_of_active_road_parts
         actual = self.tasks_set.get_actual_task()
         if active_parts >= 16 or active_parts >= actual.steps_count:
             playsound(WRONG_SOUND, 3)
@@ -135,7 +135,7 @@ class SolveScreen(Screen):
         if player.planned_move == True or self.moving:
             return
         if self.actual_regime == "planovaci":
-            self.road.remove_last_part()
+            self.tasks_set.get_actual_task().road.remove_last_part()
             return
         self.tasks_set.step_back()
 
@@ -383,8 +383,6 @@ class SolveScreen(Screen):
              lines = self.read_task(lines, map_name)
 
         if len(self.tasks_set.tasks) > 0 and self.tasks_set.tasks[0].map_error_message != "":
-
-            # self.tasks_set.get_actual_task().remove_map_bg()
             self.choose_taskset_menu()
             error_message = "Chyba súboru mapy/{}/map_settings.txt\n".format(self.tasks_set.get_actual_task().map.name) + self.tasks_set.tasks[0].map_error_message
             messagebox.showerror(title="Chyba", message=error_message)
@@ -392,6 +390,9 @@ class SolveScreen(Screen):
 
         if (next_without_solve == "ano" and len(self.tasks_set.tasks) > 1) or self.tasks_set.get_actual_task().solvable == False:
             self.next_task_btn.show()
+
+        if len(self.tasks_set.tasks) == 1:
+            self.next_task_btn.hide()
 
         self.canvas.itemconfig(self.task_text_mode, state="normal")
         self.draw_task_and_map()
@@ -463,13 +464,15 @@ class SolveScreen(Screen):
             self.prev_task_btn.show()
             player.remove_trajectory()
             self.remove_task()
-            self.road.clear_road()
+            # self.tasks_set.get_actual_task().road.clear_road()
+            self.tasks_set.get_actual_task().road.unshow()
             self.tasks_set.get_actual_task().actual_regime = self.actual_regime
             self.tasks_set.next_task()
             self.draw_task_and_map()
             actual = self.tasks_set.get_actual_task()
+            actual.road.show()
             self.set_actual_mode()
-
+            print(actual.name, actual.road.number_of_active_road_parts)
             if self.tasks_set.actual == len(self.tasks_set.tasks) - 1 or (self.tasks_set.next == "nie" and actual.solvable):
                 self.next_task_btn.hide()
 
@@ -481,14 +484,17 @@ class SolveScreen(Screen):
         if self.tasks_set.actual > 0:
             self.next_task_btn.show()
             self.remove_task()
-            self.road.clear_road()
+            self.tasks_set.get_actual_task().road.unshow()
+            # self.tasks_set.get_actual_task().road.clear_road()
             player.remove_trajectory()
             self.tasks_set.prev_task()
             self.draw_task_and_map()
             self.tasks_set.get_actual_task().map.draw_guards()
             act = self.tasks_set.get_actual_task()
+            print(act.name, act.road.number_of_active_road_parts)
             self.actual_regime = act.actual_regime
             self.set_actual_mode()
+            act.road.show()
             if self.tasks_set.actual == 0:
                 self.prev_task_btn.hide()
 
@@ -537,8 +543,6 @@ class SolveScreen(Screen):
                                                   [screen_keys_bg_border, Keyboard(self, keyboard),
                                                    self.back, self.clear])
 
-
-
     def clear_road(self, _):
         # print("stlacena metlicka")
         player = self.tasks_set.get_player()
@@ -549,20 +553,20 @@ class SolveScreen(Screen):
             player = self.tasks_set.get_player()
             player.reset_game()
         else:
-            if len(self.road.selected_parts) == 1:
-                part_index = self.road.selected_parts[0]
-                part_color = self.road.road_parts[part_index].color
-                self.road.remove_all_selected()
-                active = self.road.number_of_active_road_parts
+            if len(self.tasks_set.get_actual_task().road.selected_parts) == 1:
+                part_index = self.tasks_set.get_actual_task().road.selected_parts[0]
+                part_color = self.tasks_set.get_actual_task().road.road_parts[part_index].color
+                self.tasks_set.get_actual_task().road.remove_all_selected()
+                active = self.tasks_set.get_actual_task().road.number_of_active_road_parts
                 if part_color == "ok" or part_color == "wrong":
                     for i in range(part_index, active):
-                        self.road.road_parts[i].change_color("basic")
+                        self.tasks_set.get_actual_task().road.road_parts[i].change_color("basic")
                 return
 
-            if self.road.wrong_ignored_in_road() == True:
-                self.road.clear_wrong_ingnored()
+            if self.tasks_set.get_actual_task().road.wrong_ignored_in_road() == True:
+                self.tasks_set.get_actual_task().road.clear_wrong_ingnored()
             else:
-                self.road.clear_road()
+                self.tasks_set.get_actual_task().road.clear_road()
 
     def road_window_init(self):
         image = Image.new('RGBA', (900, 90), (41, 175, 200, 100))
@@ -587,9 +591,11 @@ class SolveScreen(Screen):
                 self.move_imgs[move_type].append(
                     ImageTk.PhotoImage(image))  # obrazky v poli v poradi: right, up, left, down
                 image = image.rotate(90)
+
+        # print(self.move_imgs)
         self.road = Road(self.move_imgs, self)
 
-        self.solve_screen_road = CanvasObject(self, [self.solve_screen_road_bg, self.road, self.play])
+        self.solve_screen_road = CanvasObject(self, [self.solve_screen_road_bg, self.play])
         self.solve_screen_road.show()
         self.canvas.itemconfig(self.play, state="hidden")
 
@@ -599,39 +605,39 @@ class SolveScreen(Screen):
             return
         player.planned_move = True
         player.remove_trajectory()
-        for i in range(self.road.number_of_active_road_parts):
-            self.road.road_parts[i].change_color("basic")
+        for i in range(self.tasks_set.get_actual_task().road.number_of_active_road_parts):
+            self.tasks_set.get_actual_task().road.road_parts[i].change_color("basic")
 
         self.canvas.update()
         time.sleep(0.01)
         ignored = False
 
-        for i in range(self.road.number_of_active_road_parts):
+        for i in range(self.tasks_set.get_actual_task().road.number_of_active_road_parts):
             if ignored == True:
-                self.road.road_parts[i].change_color("ignored")
+                self.tasks_set.get_actual_task().road.road_parts[i].change_color("ignored")
                 continue
 
             move = None
             obsta = None
-            if self.road.road_parts[i].direction == "down":
+            if self.tasks_set.get_actual_task().road.road_parts[i].direction == "down":
                 move, obsta = player.move_down()
-            if self.road.road_parts[i].direction == "up":
+            if self.tasks_set.get_actual_task().road.road_parts[i].direction == "up":
                 move, obsta = player.move_up()
-            if self.road.road_parts[i].direction == "right":
+            if self.tasks_set.get_actual_task().road.road_parts[i].direction == "right":
                 move, obsta = player.move_right()
-            if self.road.road_parts[i].direction == "left":
+            if self.tasks_set.get_actual_task().road.road_parts[i].direction == "left":
                 move, obsta = player.move_left()
             if move is not None:
-                self.road.road_parts[i].change_color(move)
+                self.tasks_set.get_actual_task().road.road_parts[i].change_color(move)
                 map_name = self.tasks_set.get_actual_task().map.name
                 if move == "wrong":
-                    self.road.road_parts[i].change_color("wrong")
+                    self.tasks_set.get_actual_task().road.road_parts[i].change_color("wrong")
                     if obsta == "x" or obsta == "y" or obsta == "z":
-                        self.road.road_parts[i].add_obstacle("mapy/{}/obstacles/{}.png".format(map_name, obsta))
+                        self.tasks_set.get_actual_task().road.road_parts[i].add_obstacle("mapy/{}/obstacles/{}.png".format(map_name, obsta))
                     elif obsta == "guarding":
-                        self.road.road_parts[i].add_obstacle("obrazky/guarding.png")
+                        self.tasks_set.get_actual_task().road.road_parts[i].add_obstacle("obrazky/guarding.png")
                     else:
-                        self.road.road_parts[i].add_obstacle("obrazky/guarding.png")
+                        self.tasks_set.get_actual_task().road.road_parts[i].add_obstacle("obrazky/guarding.png")
                     ignored = True
 
                 elif move == "ok" and obsta is not None:
@@ -663,9 +669,9 @@ class SolveScreen(Screen):
                             playsound(WRONG_SOUND, 3)
 
 
-                    self.road.road_parts[i].add_obstacle("mapy/{}/collectibles/{}.png".format(map_name, obsta))
+                    self.tasks_set.get_actual_task().road.road_parts[i].add_obstacle("mapy/{}/collectibles/{}.png".format(map_name, obsta))
             else:
-                self.road.road_parts[i].change_color("ok")
+                self.tasks_set.get_actual_task().road.road_parts[i].change_color("ok")
 
             self.canvas.update()
             time.sleep(0.6)
@@ -814,14 +820,14 @@ class SolveScreen(Screen):
         task = self.tasks_set.get_actual_task()
         task.map.player.reset_game()
         task.map.player.remove_trajectory()
-        self.road.clear_road()
+        self.tasks_set.get_actual_task().road.clear_road()
 
     def show_common(self):
 
         starting_canvas_items = [self.menu_btn,
                                  self.solve_screen_map_bg,
                                  self.solve_screen_keyboard,
-                                 self.solve_screen_road_bg, self.road,
+                                 self.solve_screen_road_bg, #self.road,
                                  self.solve_screen_task_bg#, self.task_text_set_choice
                                  ]
 

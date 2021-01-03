@@ -12,10 +12,6 @@ class Road(CanvasObject):
     def create_road_parts(self):
         self.road_parts = [RoadPart(i, self) for i in range(16)]
         self.number_of_active_road_parts = 0
-        # print(self.move_imgs)
-        # for i in range(16):           # len test, nechavam to tu, aby si videla, ako to cca vyzera
-        #     self.add_move('basic', ['left', 'right', 'up', 'down'][i%4])
-        #     self.road_parts[i].add_obstacle(self.move_imgs['ok'][i%4])        # tu by mal byt spracovany obrazok danej
 
     def add_move(self, move_type, direction):
         if self.number_of_active_road_parts > 15:
@@ -34,7 +30,6 @@ class Road(CanvasObject):
             if part.color == "wrong":
                 return True
         return False
-
 
     def count_active_parts(self):
         count = 0
@@ -64,6 +59,10 @@ class Road(CanvasObject):
         for part in self.road_parts:
             part.hide()
 
+    def unshow(self):
+        for part in self.road_parts:
+            part.unshow()
+
     def show(self):
         for part in self.road_parts:
             part.show()
@@ -86,6 +85,10 @@ class Road(CanvasObject):
                 self.road_parts[self.number_of_active_road_parts - 1].add_obstacle(obs)
 
         self.selected_parts = []
+
+    def show_active(self):
+        for i in range(self.number_of_active_road_parts):
+            self.road_parts[i].show()
 
     def clear_road(self):
         for part in self.road_parts:

@@ -84,10 +84,18 @@ class RoadPart(CanvasObject):
             self.move = None
             self.remove_obstacle()
 
+    def unshow(self):
+        if self.move is not None:
+            self.canvas.itemconfig(self.move, state="hidden")
+            if self.obstacle is not None:
+                self.canvas.itemconfig(self.obstacle, state="hidden")
+
     def show(self):
         if self.move_img is None:
             return
         self.move = self.canvas.create_image(25 + self.index * 50, 558, image=self.move_img, anchor='nw')
+        if self.obstacle is not None:
+            self.obstacle = self.canvas.create_image(25 + self.index * 50, 600, image=self.obstacle_img, anchor='nw')
         self.canvas.tag_bind(self.move, "<Button-1>", self.clicked)
 
     def remove(self, rem_from_arr=True):

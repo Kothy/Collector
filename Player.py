@@ -137,7 +137,8 @@ class Player:
 
     def remove_draw_add_road_part(self, part_mode, direction):
         if not self.planned_move:
-            self.map.task.parent.parent.road.add_move(part_mode, direction)
+            # self.map.task.parent.parent.road.add_move(part_mode, direction)
+            self.map.task.road.add_move(part_mode, direction)
         self.remove()
         self.draw()
         colectible = self.check_collectible(self.row, self.col)
@@ -178,7 +179,8 @@ class Player:
 
     def move_down(self):
         if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
-            self.map.task.parent.parent.road.add_move("basic", "down")
+            # self.map.task.parent.parent.road.add_move("basic", "down")
+            self.map.task.road.add_move("basic", "down")
             return None, None
         wrong_move, obsta = self.check_guarding_obstacle(self.row + 1, self.col)
         if wrong_move:
@@ -203,7 +205,8 @@ class Player:
 
     def move_up(self):
         if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
-            self.map.task.parent.parent.road.add_move("basic", "up")
+            # self.map.task.parent.parent.road.add_move("basic", "up")
+            self.map.task.road.add_move("basic", "up")
             return None, None
         wrong_move, obsta = self.check_guarding_obstacle(self.row - 1, self.col)
         if wrong_move:
@@ -227,7 +230,8 @@ class Player:
 
     def move_right(self):
         if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
-            self.map.task.parent.parent.road.add_move("basic", "right")
+            # self.map.task.parent.parent.road.add_move("basic", "right")
+            self.map.task.road.add_move("basic", "right")
             return None, None
         wrong_move, obsta = self.check_guarding_obstacle(self.row, self.col + 1)
         if wrong_move:
@@ -252,7 +256,8 @@ class Player:
 
     def move_left(self):
         if self.map.task.parent.parent.actual_regime == "planovaci" and self.planned_move == False:
-            self.map.task.parent.parent.road.add_move("basic", "left")
+            # self.map.task.parent.parent.road.add_move("basic", "left")
+            self.map.task.road.add_move("basic", "left")
             return None, None
         wrong_move, obsta = self.check_guarding_obstacle(self.row, self.col - 1)
         if wrong_move:
@@ -309,7 +314,8 @@ class Player:
                 self.col = self.start_col
             if plan == False:
                 self.map.canvas.delete(t)
-                self.map.task.parent.parent.road.remove_last_part()
+                # self.map.task.parent.parent.road.remove_last_part()
+                self.map.task.road.remove_last_part()
 
         if plan == True:
             for traj in self.trajectory_lines:

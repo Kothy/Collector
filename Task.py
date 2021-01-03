@@ -6,6 +6,7 @@ from CommonFunctions import resize_image
 from CommonFunctions import playsound
 from MapParts import Collectible
 import re
+from Road import Road
 
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
@@ -25,7 +26,7 @@ class Task:
         self.row = row
         self.map_str = map_str
         self.col = col
-
+        self.road = Road(self.parent.parent.move_imgs, self.parent.parent)
         self.steps_count = int(steps) if steps != '' else 16
         # print("Krokov: ", self.steps_count, repr(steps))
         self.assign = assign
@@ -152,7 +153,8 @@ class Task:
     def check_path_answer(self, play=True):
         answer = "".join(self.map.player.coll_path) == self.assign and self.steps_count >= self.map.player.steps_count
         if answer:
-            answer = not self.parent.parent.road.wrong_in_road()
+            # answer = not self.parent.parent.road.wrong_in_road()
+            answer = not self.road.wrong_in_road()
         if answer:
             # print("spravne")
             self.parent.parent.show_next_task_button()
@@ -196,7 +198,8 @@ class Task:
         answer = False not in answers and self.steps_count >= self.map.player.steps_count
 
         if answer:
-            answer = not self.parent.parent.road.wrong_in_road()
+            # answer = not self.parent.parent.road.wrong_in_road()
+            answer = not self.road.wrong_in_road()
         if answer:
             if play:
                 playsound(CORRECT_ANS_SOUND, 2)
