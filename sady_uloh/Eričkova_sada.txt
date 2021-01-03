@@ -1,0 +1,54 @@
+Názov: Eričkova sada
+Mapa: Cesta
+
+# Nastavenie prekážok #
+x: štvorec
+y: bod
+z: kríž
+
+# Úlohy #
+Voľný prechod: nie
+
+1.
+Názov: Deti idú na výlet
+Typ: počty
+Režim: oba
+Riadkov: 5
+Stĺpcov: 10
+Krokov: 11
+Zadanie: a=1,b>0,c<2
+Riešiteľná: áno
+.....yc...
+.....b....
+....z...x.
+pay.......
+..c.......
+
+2.
+Názov: Deti s loptou nie
+Typ: voľná
+Režim: priamy
+Riadkov: 5
+Stĺpcov: 10
+Krokov: 16
+Zadanie: 
+Riešiteľná: áno
+..........
+......a...
+.....p...b
+......a...
+..........
+
+3.
+Názov: Škola bus
+Typ: cesta
+Režim: plánovací
+Riadkov: 3
+Stĺpcov: 5
+Krokov: 16
+Zadanie: cb
+Riešiteľná: áno
+.z...
+b.pb.
+..c..
+
