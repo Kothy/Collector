@@ -370,7 +370,7 @@ class Task:
             text2 = text2.replace("priamy", "plánovací")
             self.parent.parent.canvas.itemconfig(self.parent.parent.task_text_mode, text=text2)
 
-        if self.actual_regime== "planovaci":
+        if self.actual_regime == "planovaci":
             self.parent.canvas.itemconfig(self.parent.parent.play, state="normal")
 
         self.parent.parent.actual_regime = self.actual_regime
@@ -409,6 +409,9 @@ class Task:
             if self.type == "pocty":
                 self.parent.canvas.itemconfig(id3, state="hidden")
 
+        else:
+            self.text_w_images = TextWithImages(self.parent.canvas, 1010, 200, w - 20, "Žiadne zadanie.",[])
+
         self.parent.canvas.itemconfig(self.parent.parent.task_name_text, text=str(self.index + 1) + ". " + self.name)
         self.parent.canvas.itemconfig(self.parent.parent.task_name_text, state="normal")
         self.map.draw_map()
@@ -418,7 +421,7 @@ class Task:
         self.map.remove()
         if self.text_w_images is not None:
             self.text_w_images.remove()
-        if self.text_w_images is not None:
+        if self.text_w_images2 is not None:
             self.text_w_images2.remove()
         for id in self.assign_ids:
             self.parent.canvas.delete(id)

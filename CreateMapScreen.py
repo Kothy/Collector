@@ -13,15 +13,15 @@ from CommonFunctions import *
 MAP_NAME_LENGTH = 15
 CHARACTER_NAME_LENGTH = 10
 FILE_TYPES = (("Png files", "*.png"), ("JPG files", "*.jpg"))
-ERROR1 = 'Chyba pri ukladaní mapy: nezadaný názov mapy'
-ERROR2 = 'Chyba pri ukladaní mapy: nepovolený názov mapy'
-ERROR30 = 'Chyba pri ukladaní mapy: názov mapy už existuje'
-ERROR3 = 'Chyba pri ukladaní mapy: nezadané meno postavičky'
-ERROR4 = 'Chyba pri ukladaní mapy: nepovolené meno postavičky'
-ERROR5 = 'Chyba pri ukladaní mapy: nezadaný obrázok postavičky'
-ERROR6 = 'Chyba pri ukladaní mapy: nezadané pozadie mapy'
-ERROR7 = 'Chyba pri ukladaní mapy: nezadané predmety'
-ERROR8 = 'Chyba pri ukladaní mapy: nezadané prekážky'
+ERROR1 = 'Chyba pri ukladaní mapy: Nezadaný názov mapy'
+ERROR2 = 'Chyba pri ukladaní mapy: Nepovolený názov mapy'
+ERROR30 = 'Chyba pri ukladaní mapy: Názov mapy už existuje'
+ERROR3 = 'Chyba pri ukladaní mapy: Nezadané meno postavičky'
+ERROR4 = 'Chyba pri ukladaní mapy: Nepovolené meno postavičky'
+ERROR5 = 'Chyba pri ukladaní mapy: Nezadaný obrázok postavičky'
+ERROR6 = 'Chyba pri ukladaní mapy: Nezadané pozadie mapy'
+ERROR7 = 'Chyba pri ukladaní mapy: Nezadané predmety'
+ERROR8 = 'Chyba pri ukladaní mapy: Nezadané prekážky'
 MOVE = - 15
 
 
