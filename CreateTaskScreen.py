@@ -81,7 +81,7 @@ class CreateTaskScreen(Screen):
         if self.task is not None:
             self.set_name.set(self.task.name)
 
-        self.set_name.trace("w", self.set_name_text_changed)
+        self.set_name.trace("w", self.task_name_text_changed)
 
         self.name_input_obj = CanvasObject(self, [task_name_text, name_entry_window], hidden=False)
 
@@ -275,7 +275,7 @@ class CreateTaskScreen(Screen):
     def task_bar_changed(self):
         self.set_error_text('')
 
-    def set_name_text_changed(self, *args):
+    def task_name_text_changed(self, *args):
         if len(self.set_name.get()) > self.SET_NAME_LENGTH:
             self.set_name.set(self.set_name.get()[:-1])
         if len(self.set_name.get()) > 0:
@@ -444,7 +444,7 @@ class CreateTaskScreen(Screen):
     def check_solution(self, task_type, assignment):
         if task_type == 1:
             counts = [self.solution.count(char) for char in 'abcd']
-            for i in range(4):
+            for i in range(len(counts)):
                 if assignment[i][1] == '?':
                     continue
                 count = int(assignment[i][1])
@@ -463,7 +463,7 @@ class CreateTaskScreen(Screen):
     def check_partial_solution(self, task_type, assignment):
         if task_type == 1:
             counts = [self.solution.count(char) for char in 'abcd']
-            for i in range(4):
+            for i in range(len(counts)):
                 if assignment[i][1] == '?':
                     continue
                 count = int(assignment[i][1])

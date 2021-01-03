@@ -21,10 +21,10 @@ class MapCreator(CanvasObject):
         self.options = self.parent.parent.screen.obstacle_options.get_options()
 
     def read_map_grid_color(self):
-        with open('mapy/' + self.folder + '/map_settings.txt', 'r') as file:
+        with open('mapy/' + self.folder + '/map_settings.txt', 'r', encoding='utf8') as file:
             line = file.readlines()[6].strip().split(':')
             color = line[1].strip()
-        return {'cierna': 'black', 'biela': 'white', 'cervena': 'red', 'zelena': 'green', 'zlta': 'yellow'}[color]
+        return {'čierna': 'black', 'biela': 'white', 'červená': 'red', 'zelená': 'green', 'žltá': 'yellow'}[color]
 
     def load_imgs(self):
         self.imgs = {'character': [], 'collectible': [], 'obstacle': []}
