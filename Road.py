@@ -92,6 +92,7 @@ class Road(CanvasObject):
 
     def clear_road(self):
         for part in self.road_parts:
+            part.remove()
             part.deselect()
             part.hide()
             part.selected = False

@@ -10,6 +10,7 @@ class Blank:
         self.col = j
         self.guarded = False
         self.guards = []
+        self.img_id = 0
 
     def draw(self): pass
 
@@ -41,6 +42,7 @@ class Collectible:
         img = resize_image(img, self.map.part_w - 4, self.map.part_h - 4)
         self.img = img
         self.image = ImageTk.PhotoImage(img)
+        self.img_id = 0
 
     def draw(self):
         self.img_id = self.map.canvas.create_image(self.x, self.y, image=self.image, anchor='c')

@@ -680,12 +680,14 @@ class SolveScreen(Screen):
         # print("Odpoved je:", answer)
         if answer:
             playsound(CORRECT_ANS_SOUND, 2)
+
+        # player.draw_full_trajectory()
         player.reset_game(plan=True)
 
         player.planned_move = False
 
     def move_img_smoothly(self, img, x1, y1, x2, y2):
-        player =  self.tasks_set.get_player()
+        player = self.tasks_set.get_player()
         edge_len = math.hypot(x1 - x2,y1 - y2)
         start_x = x1
         start_y = y1
@@ -817,10 +819,12 @@ class SolveScreen(Screen):
             self.canvas.itemconfig(self.play, state="normal")
             self.actual_regime = "planovaci"
             self.tasks_set.get_actual_task().actual_regime = "planovaci"
+
         task = self.tasks_set.get_actual_task()
         task.map.player.reset_game()
         task.map.player.remove_trajectory()
         self.tasks_set.get_actual_task().road.clear_road()
+
 
     def show_common(self):
 

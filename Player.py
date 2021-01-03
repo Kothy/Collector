@@ -334,15 +334,14 @@ class Player:
             row, col, xx, yy, _, obj, rotation = self.trajectory[i]
             t = self.map.canvas.create_line(x, y, xx, yy, fill=self.map.trajectory_col, width=10)
             self.trajectory_lines.append(t)
-
             x = xx
             y = yy
-
         t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.trajectory_col, width=10)
         self.trajectory_lines.append(t)
 
-
     def reset_game(self, plan=False):
+        if plan:
+            self.draw_full_trajectory()
         while len(self.trajectory) > 0:
             self.step_back(plan=plan, move=False)
 
