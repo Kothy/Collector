@@ -1,15 +1,15 @@
-Nazov: Mapa_Zberatela
+Názov: Mapa_Zberatela
 
-# Nastavenia postavicky #
+# Nastavenia postavičky #
 Meno: Emilos
-Otacanie: ziadne
-Smerovanie: -
-Mriezka: zlta
-Trajektoria: biela
+Otáčanie: všetky smery
+Smerovanie: vľavo
+Mriežka: žltá
+Trajektória: biela
 
 # Predmety #
 a,b,c,d
 
-# Prekazky #
+# Prekážky #
 x,y,z
 

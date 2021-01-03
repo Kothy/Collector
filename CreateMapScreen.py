@@ -78,7 +78,7 @@ class CreateMapScreen(Screen):
     def display_error(self, text):
         self.canvas.itemconfig(self.saving_error_text, text=text)
         self.canvas.itemconfig(self.saving_error_text, state=tk.NORMAL)
-        print(len(text))
+        # print(len(text))
         if 30 < len(text) < 40:
             self.canvas.itemconfig(self.saving_error_text, font=('Comic Sans MS', 16, 'italic bold'))
         elif 40 <= len(text) < 50:
@@ -94,7 +94,7 @@ class CreateMapScreen(Screen):
         if map_name == "":
             self.display_error(ERROR1)
 
-        elif not map_name.isalnum():
+        elif not map_name.replace("_", "").replace(" ", "").isalnum():
             self.display_error(ERROR2)
 
         elif self.check_if_exist_map_name(map_name):
@@ -145,15 +145,15 @@ class CreateMapScreen(Screen):
         elif len(self.collectibles_list.items) == 4:
             all_col += ",b,c,d"
 
-        text = "Nazov: {}\n\n# Nastavenia postavicky #\nMeno: {}\nOtacanie: {}\nSmerovanie: {}" \
-               "\nMriezka: {} \nTrajektoria: {}\n\n# Predmety #\n{}\n\n# Prekazky #\n{}"
+        text = "Názov: {}\n\n# Nastavenia postavičky #\nMeno: {}\nOtáčanie: {}\nSmerovanie: {}" \
+               "\nMriežka: {} \nTrajektória: {}\n\n# Predmety #\n{}\n\n# Prekážky #\n{}"
 
-        file_txt = text.format(name, strip_accents(self.character_name.get()),
-                           strip_accents(self.rotate_options.checkboxes[self.rotate_options.checked_index].text),
-                           strip_accents(self.rotated_choices.text), strip_accents(self.trajectory_color_choices.text).strip(),
-                               strip_accents(self.path_color_choices.text),all_col, all_obs)
+        file_txt = text.format(name, self.character_name.get(),
+                           self.rotate_options.checkboxes[self.rotate_options.checked_index].text,
+                           self.rotated_choices.text, self.trajectory_color_choices.text.strip(),
+                               self.path_color_choices.text,all_col, all_obs)
 
-        with open(dir + "map_settings.txt", "w") as file:
+        with open(dir + "map_settings.txt", "w", encoding="utf-8") as file:
             file.write(file_txt)
         self.save_images(name)
 

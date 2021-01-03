@@ -1,48 +1,48 @@
-Nazov: Sada_Uloh_1
+Názov: Sada_Uloh_1
 Mapa: Mapa_Zberatela
 
-# Nastavenie prekazok #
-x: kriz
+# Nastavenie prekážok #
+x: kríž
 y: bod
 
-# Ulohy #
-Volny prechod: ano
+# Úlohy #
+Voľný prechod: áno
 
 1.
-Nazov: Uloha 1
+Názov: Uloha 1
 Typ: cesta
-Rezim: oba
+Režim: oba
 Riadkov: 3
-Stlpcov: 5
+Stĺpcov: 5
 Krokov:
 Zadanie: cba
-Riesitelna: ano
+Riešiteľná: áno
 .y.a.
 b.c..
 p...x
 
 2.
-Nazov: Uloha 2
+Názov: Uloha 2
 Typ: cesta
-Rezim: oba
+Režim: oba
 Riadkov: 3
-Stlpcov: 6
+Stĺpcov: 6
 Krokov: 6
-Zadanie: abcb
-Riesitelna: ano
+Zadanie: abcbaaaaa
+Riešiteľná: áno
 .y.cb.
 ba....
 .p.x..
 
 3.
-Nazov: Uloha 3
+Názov: Uloha 3
 Typ: cesta
-Rezim: oba
+Režim: oba
 Riadkov: 3
-Stlpcov: 6
+Stĺpcov: 6
 Krokov: 12
 Zadanie: babccaaadd
-Riesitelna: ano
+Riešiteľná: áno
 payaad
 bba..d
 .cc.x.

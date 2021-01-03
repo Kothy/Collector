@@ -2,6 +2,7 @@ from PIL import Image
 import re
 import pygame
 import threading
+import unicodedata
 
 
 pygame.init()
@@ -62,22 +63,23 @@ def check_map_file(lines, map_name):
 
     message = "Chyba: {}"
     nums = []
-    if re.fullmatch("Nazov: [a-zA-Z0-9_]{1,15}", lines[0]) is None:
+    if not (lines[0].startswith("Názov: ") and lines[0].split(": ")[1].replace("_", "").replace(" ", "").isalnum()):
+        # if re.fullmatch("Názov: [a-zA-Z0-9_]{1,15}", lines[0]) is None:
         nums.append(lines[0])
     elif lines[1] != "":
         nums.append(lines[1])
-    elif lines[2] != "# Nastavenia postavicky #":
+    elif lines[2] != "# Nastavenia postavičky #":
         nums.append(lines[2])
-    elif re.fullmatch("Meno: [a-zA-Z0-9_]{1,10}", lines[3]) is None:
+    elif not (lines[3].startswith("Meno: ") and lines[3].split(": ")[1].replace("_", "").replace(" ", "").isalnum()):
+        # elif re.fullmatch("Meno: [a-zA-Z0-9_]{1,10}", lines[3]) is None:
         nums.append(lines[3])
-    elif re.fullmatch("Otacanie: (vsetky smery|ziadne|vlavo/vpravo|dole/hore)", lines[4]) is None:
+    elif re.fullmatch("Otáčanie: (všetky smery|žiadne|vľavo/vpravo|dole/hore)", lines[4]) is None:
         nums.append(lines[4])
-    elif re.fullmatch("Smerovanie: (-|vpravo|hore|dole|vlavo)", lines[5]) is None:
-        print(message.format('5'))
+    elif re.fullmatch("Smerovanie: (-|vpravo|hore|dole|vľavo)", lines[5]) is None:
         nums.append(lines[5])
-    elif re.fullmatch("Mriezka: (cierna|biela|cervena|zelena|zlta)", lines[6]) is None:
+    elif re.fullmatch("Mriežka: (čierna|biela|červená|zelená|žltá)", lines[6]) is None:
         nums.append(lines[6])
-    elif re.fullmatch("Trajektoria: (cierna|biela|cervena|zelena|zlta)", lines[7]) is None:
+    elif re.fullmatch("Trajektória: (čierna|biela|červená|zelená|žltá)", lines[7]) is None:
         nums.append(lines[7])
     elif lines[8] != "":
         nums.append(lines[8])
@@ -87,7 +89,7 @@ def check_map_file(lines, map_name):
         nums.append(lines[10])
     elif lines[11] != "":
         nums.append(lines[11])
-    elif lines[12] != "# Prekazky #":
+    elif lines[12] != "# Prekážky #":
         nums.append(lines[12])
     elif re.fullmatch("(x,y,z|x,y|x)", lines[13]) is None:
         nums.append(lines[13])
@@ -122,3 +124,8 @@ def playsound_thread(path, volume):
     pygame.mixer.music.load(path)
     pygame.mixer.music.set_volume(volume)
     pygame.mixer.music.play()
+
+
+def strip_accents(s):
+   return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')

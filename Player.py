@@ -1,6 +1,7 @@
 from MapParts import *
 from PIL import ImageOps
 from CommonFunctions import playsound
+import copy
 
 WRONG_SOUND = "sounds/wrong_sound.mp3"
 COLLECTION_SOUND = 'sounds/Collection.mp3'
@@ -18,6 +19,7 @@ class Player:
         self.start_row = i
         self.start_col = j
         self.trajectory_lines = []
+        self.plan_traj = []
         self.coll_collected = {}
         self.trajectory = []
         self.steps_count = 0
@@ -223,7 +225,7 @@ class Player:
             self.draw_trajectory()
             colectible = self.remove_draw_add_road_part('ok', 'up')
             self.steps_count += 1
-            print("zobral som collectible", colectible)
+            # print("zobral som collectible", colectible)
             if self.map.task.actual_regime == "priamy":
                 self.map.task.check_answer()
             return "ok", colectible
@@ -289,6 +291,17 @@ class Player:
         while self.trajectory_lines:
             self.map.canvas.delete(self.trajectory_lines.pop(0))
 
+    def remove_plan_traj(self):
+        for id in self.trajectory_lines:
+            self.map.canvas.itemconfig(id, state="hidden")
+            self.map.canvas.delete(id)
+        self.plan_traj = []
+
+    def show_plan_traj(self):
+        print("Plan traj:", self.plan_traj)
+        for id in self.plan_traj:
+            self.map.canvas.itemconfig(id, state="normal")
+
     def step_back(self, plan=False, move=True):
         if len(self.trajectory) > 0:
             row, col, x, y, t, obj, rotation = self.trajectory.pop(-1)
@@ -310,7 +323,10 @@ class Player:
             self.x = x
             self.y = y
             if len(self.trajectory_lines) > 0:
-                self.map.canvas.delete(self.trajectory_lines.pop(-1))
+                if self.map.task.actual_regime == "priamy":
+                    self.map.canvas.delete(self.trajectory_lines.pop(-1))
+                else:
+                    self.map.canvas.itemconfig(self.trajectory_lines[-1], state="hidden")
             self.remove()
             self.draw()
             if len(self.trajectory) == 0:
@@ -326,6 +342,9 @@ class Player:
                 self.map.canvas.tag_raise(traj)
             self.map.canvas.tag_raise(self.img_id)
 
+    def raise_img(self):
+        self.map.canvas.tag_raise(self.img_id)
+
     def draw_trajectory(self):
         row, col, x, y, _, obj, rotation = self.trajectory[-1]
         t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.trajectory_col, width=10)
@@ -336,6 +355,17 @@ class Player:
         x, y = self.start_x, self.start_y
         for i in range(len(self.trajectory)):
             row, col, xx, yy, _, obj, rotation = self.trajectory[i]
+            t = self.map.canvas.create_line(x, y, xx, yy, fill=self.map.trajectory_col, width=10)
+            self.trajectory_lines.append(t)
+            x = xx
+            y = yy
+        t = self.map.canvas.create_line(x, y, self.x, self.y, fill=self.map.trajectory_col, width=10)
+        self.trajectory_lines.append(t)
+
+    def draw_full_trajectory2(self, traj):
+        x, y = self.start_x, self.start_y
+        for i in range(len(traj)):
+            row, col, xx, yy, _, obj, rotation = traj[i]
             t = self.map.canvas.create_line(x, y, xx, yy, fill=self.map.trajectory_col, width=10)
             self.trajectory_lines.append(t)
             x = xx
