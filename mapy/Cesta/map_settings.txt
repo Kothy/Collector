@@ -1,14 +1,14 @@
-Nazov: Cesta
+Názov: Cesta
 
-# Nastavenia postavicky #
+# Nastavenia postavičky #
 Meno: Autobus
-Otacanie: vlavo/vpravo
+Otáčanie: vľavo/vpravo
 Smerovanie: vpravo
-Mriezka: cervena
-Trajektoria: biela
+Mriežka: červená
+Trajektória: biela
 
 # Predmety #
 a,b,c
 
-# Prekazky #
+# Prekážky #
 x,y,z

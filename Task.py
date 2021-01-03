@@ -3,7 +3,7 @@ from PIL import Image, ImageTk
 from Map import Map
 import copy
 from CommonFunctions import resize_image
-from CommonFunctions import playsound
+from CommonFunctions import playsound, strip_accents
 from MapParts import Collectible
 import re
 from Road import Road
@@ -249,22 +249,23 @@ class Task:
 
         message = "Chyba: {}"
         nums = []
-
-        if re.fullmatch("Nazov: [a-zA-Z0-9_]{1,15}", lines[0]) is None:
+        if not (lines[0].startswith("Názov: ") and lines[0].split(": ")[1].replace("_","").replace(" ", "").isalnum()):
+        # if re.fullmatch("Názov: [a-zA-Z0-9_]{1,15}", lines[0]) is None:
             nums.append(lines[0])
         elif lines[1] != "":
             nums.append(lines[1])
-        elif lines[2] != "# Nastavenia postavicky #":
+        elif lines[2] != "# Nastavenia postavičky #":
             nums.append(lines[2])
-        elif re.fullmatch("Meno: [a-zA-Z0-9_]{1,10}", lines[3]) is None:
+        elif not (lines[3].startswith("Meno: ") and lines[3].split(": ")[1].replace("_", "").replace(" ", "").isalnum()):
+        # elif re.fullmatch("Meno: [a-zA-Z0-9_]{1,10}", lines[3]) is None:
             nums.append(lines[3])
-        elif re.fullmatch("Otacanie: (vsetky smery|ziadne|vlavo/vpravo|dole/hore)", lines[4]) is None:
+        elif re.fullmatch("Otáčanie: (všetky smery|žiadne|vľavo/vpravo|dole/hore)", lines[4]) is None:
             nums.append(lines[4])
-        elif re.fullmatch("Smerovanie: (-|vpravo|hore|dole|vlavo)", lines[5]) is None:
+        elif re.fullmatch("Smerovanie: (-|vpravo|hore|dole|vľavo)", lines[5]) is None:
             nums.append(lines[5])
-        elif re.fullmatch("Mriezka: (cierna|biela|cervena|zelena|zlta)", lines[6]) is None:
+        elif re.fullmatch("Mriežka: (čierna|biela|červená|zelená|žltá)", lines[6]) is None:
             nums.append(lines[6])
-        elif re.fullmatch("Trajektoria: (cierna|biela|cervena|zelena|zlta)", lines[7]) is None:
+        elif re.fullmatch("Trajektória: (čierna|biela|červená|zelená|žltá)", lines[7]) is None:
             nums.append(lines[7])
         elif lines[8] != "":
             nums.append(lines[8])
@@ -274,7 +275,7 @@ class Task:
             nums.append(lines[10])
         elif lines[11] != "":
             nums.append(lines[11])
-        elif lines[12] != "# Prekazky #":
+        elif lines[12] != "# Prekážky #":
             nums.append(lines[12])
         elif re.fullmatch("(x,y,z|x,y|x)", lines[13]) is None:
             nums.append(lines[13])
@@ -296,7 +297,7 @@ class Task:
 
     def read_map_file(self):
 
-        with open("mapy/" + self.map_name + "/map_settings.txt") as file:
+        with open("mapy/" + self.map_name + "/map_settings.txt","r", encoding="utf=8") as file:
             full = file.read()
 
         lines = full.split("\n")
@@ -312,11 +313,12 @@ class Task:
             self.parent.parent.canvas.itemconfig(self.parent.parent.task_text_mode,
                                                  text=text.format(self.char_name + ": "))
 
-        self.char_rotation = lines.pop(0).split(":")[1].strip()  # ziadne, vlavo/vpravo, dole/hore, vsetky smery
-        self.routing = lines.pop(0).split(":")[1].strip()  # vpravo, vlavo, hore, dole, -
+        self.char_rotation = strip_accents(lines.pop(0).split(":")[1].strip())  # ziadne, vlavo/vpravo, dole/hore, vsetky smery
+        self.routing = strip_accents(lines.pop(0).split(":")[1].strip())  # vpravo, vlavo, hore, dole, -
 
-        self.traject_and_grid_color = self.translate_color(lines.pop(0).split(":")[1].strip())
-        self.trajectory_color = self.translate_color(lines.pop(0).split(":")[1].strip())
+        col = lines.pop(0).split(":")[1].strip()
+        self.traject_and_grid_color = self.translate_color(strip_accents(col))
+        self.trajectory_color = self.translate_color(strip_accents(lines.pop(0).split(":")[1].strip()))
 
         lines = self.remove_lines(lines, 2)
         self.collectibles = len(lines.pop(0).split(","))

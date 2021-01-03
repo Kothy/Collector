@@ -12,7 +12,7 @@ import re
 import copy
 from os import path
 import math
-from CommonFunctions import playsound
+from CommonFunctions import playsound, strip_accents
 
 
 COLLECTION_SOUND = 'sounds/Collection.mp3'
@@ -171,7 +171,7 @@ class SolveScreen(Screen):
             map_string += lines.pop(0) + "\n"
 
         lines = self.remove_lines(lines, 1)
-        self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name.replace(" ", "_"), "", solvable)
+        self.tasks_set.add_task(name, typ, regime, row, col, steps, assign, map_string, map_name, "", solvable)
         return lines
 
     def check_task_file(self, lines, filename):
@@ -207,14 +207,15 @@ class SolveScreen(Screen):
         if len(tasks_sett) != 3:
             return message
 
-        if not (sett[0].startswith("Nazov: ") and sett[0].split(": ")[1].replace("_", "").replace(" ", "").isalnum()):
+        if not (sett[0].startswith("Názov: ") and sett[0].split(": ")[1].replace("_", "").replace(" ", "").isalnum()):
             nums.append(sett[0])
 
-        elif re.fullmatch("Mapa: [a-zA-Z0-9_]{1,15}", sett[1]) is None:
+        # elif re.fullmatch("Mapa: [a-zA-Z0-9_]{1,15}", sett[1]) is None:
+        elif not (sett[1].startswith("Mapa: ") and sett[1].split(": ")[1].replace("_", "").replace(" ","").isalnum()):
             nums.append(sett[1])
         elif re.fullmatch("", sett[2]) is None:
             nums.append(sett[2])
-        elif obs[0] != "# Nastavenie prekazok #":
+        elif obs[0] != "# Nastavenie prekážok #":
             nums.append(obs[0])
 
         map_name = sett[1].split(": ")[1]
@@ -223,16 +224,16 @@ class SolveScreen(Screen):
             nums.append("Neexistujúca mapa")
 
         for i in range(1, len(obs) - 1):
-            if re.fullmatch("([xyz]): (stvorec|kriz|bod)", obs[i]) is None:
+            if re.fullmatch("([xyz]): (štvorec|kríž|bod)", obs[i]) is None:
                 nums.append(obs[i])
 
         if re.fullmatch("", obs[-1]) is None:
             nums.append(obs[-1])
 
-        if tasks_sett[0] != "# Ulohy #":
+        if tasks_sett[0] != "# Úlohy #":
             nums.append(tasks_sett[0])
 
-        if re.fullmatch("Volny prechod: (nie|ano)", tasks_sett[1]) is None:
+        if re.fullmatch("Voľný prechod: (nie|áno)", tasks_sett[1]) is None:
             nums.append(tasks_sett[1])
 
         if tasks_sett[2] != "":
@@ -261,20 +262,20 @@ class SolveScreen(Screen):
 
         if re.fullmatch("[0-9]{1,2}\.", lines[0]) is None:
             return False, lines[0]
-        if not (lines[1].startswith("Nazov: ") and lines[1].split(": ")[1].replace("_","").replace(" ", "").isalnum()):
+        if not (lines[1].startswith("Názov: ") and lines[1].split(": ")[1].replace("_","").replace(" ", "").isalnum()):
             return False, lines[1]
-        if re.fullmatch("Typ: (pocty|volna|cesta)", lines[2]) is None:
+        if re.fullmatch("Typ: (počty|volná|cesta)", lines[2]) is None:
             return False, lines[2]
-        if re.fullmatch("Rezim: (planovaci|priamy|oba)", lines[3]) is None:
+        if re.fullmatch("Režim: (plánovací|priamy|oba)", lines[3]) is None:
             return False, lines[3]
         if re.fullmatch("Riadkov: [0-9]{1,2}", lines[4]) is None:
             return False, lines[4]
-        if re.fullmatch("Stlpcov: [0-9]{1,2}", lines[5]) is None:
+        if re.fullmatch("Stĺpcov: [0-9]{1,2}", lines[5]) is None:
             return False, lines[5]
         if re.fullmatch("Krokov: {0,1}[0-9]{0,2}", lines[6]) is None:
             return False, lines[6]
         if lines[7].startswith("Zadanie: "):  #(a|b|c|d)(|>|<|=|<=|>=)[0-9]{1,2}
-            if "pocty" in lines[2]:
+            if "počty" in lines[2]:
                 assign = lines[7].split(": ")[1]
                 ass = assign.split(",")
 
@@ -301,7 +302,7 @@ class SolveScreen(Screen):
 
         if not lines[7].startswith("Zadanie: "):
             return False, lines[7]
-        if re.fullmatch("Riesitelna: (ano|nie)", lines[8]) is None:
+        if re.fullmatch("Riešiteľná: (áno|nie)", lines[8]) is None:
             return False, lines[8]
 
         for i in range(9, len(lines) - 1):
@@ -348,6 +349,9 @@ class SolveScreen(Screen):
         lines.append("##!EOF##")
         tasks_set_name = lines.pop(0).split(":")[-1].strip()
         map_name = lines.pop(0).split(":")[-1].strip()
+
+        for i in range(len(lines)):
+            lines[i] = strip_accents(lines[i])
 
         lines = self.remove_lines(lines, 2)
         obstacles = []

@@ -1,14 +1,14 @@
-Nazov: ocean
+Názov: ocean
 
-# Nastavenia postavicky #
+# Nastavenia postavičky #
 Meno: Nemo
-Otacanie: vlavo/vpravo
-Smerovanie: vlavo
-Mriezka: cervena
-Trajektoria: biela
+Otáčanie: vlavo/vpravo
+Smerovanie: vľavo
+Mriežka: červená
+Trajektória: biela
 
 # Predmety #
 a,b,c
 
-# Prekazky #
+# Prekážky #
 x,y
