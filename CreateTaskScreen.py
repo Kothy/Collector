@@ -9,6 +9,7 @@ from Task import Task
 from MapCreator import  MapCreator
 from CommonFunctions import resize_image
 import tkinter as tk
+import time
 
 class CreateTaskScreen(Screen):
 
@@ -29,9 +30,13 @@ class CreateTaskScreen(Screen):
         self.map_sizes_init()
         self.map_init()
         self.task_bar_init()
+        self.check_solution_obj_init()
+        self.no_solution_obj_init()
+        self.time_out_obj_init()
         self.objects = [self.panel_obj, self.background_obj, self.name_input_obj, self.task_type_obj,
                         self.add_to_map_obj, self.cols_input_obj, self.rows_input_obj, self.map_obj,
-                        self.task_bar_obj, self.error_text]
+                        self.task_bar_obj, self.error_text, self.check_solution_obj, self.no_solution_obj,
+                        self.time_out_obj]
 
     def panel_init(self):
         task_name_text = self.canvas.create_text(650, 25, fill="#0a333f",
@@ -54,7 +59,7 @@ class CreateTaskScreen(Screen):
         right_bg = self.canvas.create_image(765, 60, image=self.right_bg_img, anchor='nw')
         right_bg_border = self.canvas.create_rectangle(765, 60, 665 + 570, 540, outline='#b6e5da', width=2)
 
-        image = Image.new('RGBA', (665 + 570 - 45, 75), (141, 202, 73, 100))
+        image = Image.new('RGBA', (665 + 570 - 45, 75), (41, 175, 200, 100))
         self.bottom_bg_img = ImageTk.PhotoImage(image)
         bottom_bg = self.canvas.create_image(45, 560, image=self.bottom_bg_img, anchor='nw')
         bottom_bg_border = self.canvas.create_rectangle(45, 560, 665 + 570, 635, outline='#b6e5da', width=4)
@@ -190,8 +195,6 @@ class CreateTaskScreen(Screen):
             self.map.redraw(int(self.task.row), int(self.task.col))
             self.map.load_field(self.task.map_str)
 
-        ## TO DO
-
         self.map_obj = CanvasObject(self, [self.map], False)
 
     def task_bar_init(self):
@@ -206,6 +209,61 @@ class CreateTaskScreen(Screen):
             self.task_bar.fill(self.task.assign, self.task.type)
 
         self.task_bar_obj = CanvasObject(self, [task_bar_text, assignment_line, self.task_bar], False)
+
+    def check_solution_obj_init(self):
+        image = Image.new('RGBA', (1300, 700), (152, 214, 214, 120))
+        self.check_bg_img = ImageTk.PhotoImage(image)
+        background = self.canvas.create_image(0, 0, image=self.check_bg_img, anchor='nw')
+
+        image = Image.open('obrazky/bg.jpg')
+        image = image.resize((600, 300), Image.ANTIALIAS)
+        self.check_bg2_img = ImageTk.PhotoImage(image)
+        background2 = self.canvas.create_image(650, 325, image=self.check_bg2_img, anchor='c')
+        bg2_border = self.canvas.create_rectangle(350, 175, 950, 475, outline='#b6e5da', width=4)
+
+        text = self.canvas.create_text(650, 320, fill="#0a333f",
+                                                 font=('Comic Sans MS', 30, 'italic bold'), anchor='center',
+                                                 width=330, text='Kontrolujem riešiteľnosť...')
+
+        self.check_solution_obj = CanvasObject(self, [background, background2, bg2_border, text])
+
+    def no_solution_obj_init(self):
+        background = self.canvas.create_image(0, 0, image=self.check_bg_img, anchor='nw')
+        background2 = self.canvas.create_image(650, 325, image=self.check_bg2_img, anchor='c')
+        bg2_border = self.canvas.create_rectangle(350, 175, 950, 475, outline='#b6e5da', width=4)
+
+        no_solution = self.canvas.create_text(650, 275, fill="darkred",
+                                              font=('Comic Sans MS', 30, 'italic bold'), anchor='center',
+                                              width=630, text='Úloha nemá riešenie.\nNapriek tomu uložiť?')
+
+        yes_button = ColorButton(self, 550, 400, 100, 50, 'green', 'Áno', 20)
+        no_button = ColorButton(self, 750, 400, 100, 50, 'red', 'Nie', 20)
+
+        yes_button.bind_clicked()
+        no_button.bind_clicked()
+
+        self.no_solution_obj = CanvasObject(self, [background, background2, bg2_border, no_solution, yes_button, no_button])
+
+    def time_out_obj_init(self):
+        background = self.canvas.create_image(0, 0, image=self.check_bg_img, anchor='nw')
+        background2 = self.canvas.create_image(650, 325, image=self.check_bg2_img, anchor='c')
+        bg2_border = self.canvas.create_rectangle(350, 175, 950, 475, outline='#b6e5da', width=4)
+
+        no_solution = self.canvas.create_text(650, 255, fill="darkred",
+                                              font=('Comic Sans MS', 23, 'italic bold'), anchor='center',
+                                              width=630, text='Kontrola trvá príliš dlho.\nProsím, uveď, či je úloha riešiteľná:')
+
+        yes_button = ColorButton(self, 530, 350, 180, 50, 'green', 'Riešiteľná', 20)
+        no_button = ColorButton(self, 770, 350, 180, 50, 'red', 'Neriešiteľná', 20)
+        check_button = ColorButton(self, 650, 420, 300, 50, 'light_blue', 'Neviem, pozriem sa', 20)
+
+        yes_button.bind_clicked()
+        no_button.bind_clicked()
+        check_button.bind_clicked()
+
+        self.time_out_obj = CanvasObject(self, [background, background2, bg2_border, no_solution,
+                                                yes_button, no_button, check_button])
+
 
     def error_text_init(self):
         self.error_text = self.canvas.create_text(780, 505, fill="darkred",
@@ -260,6 +318,15 @@ class CreateTaskScreen(Screen):
             self.task_mode_btn.change_text('plánovací')
         elif text == 'plánovací':
             self.task_mode_btn.change_text('oba')
+        elif text == 'Áno' or text == 'Neriešiteľná':
+            self.parent.close_task_screen(self.task_to_save)
+        elif text == 'Nie' or text == 'Neviem, pozriem sa':
+            self.no_solution_obj.hide()
+            self.time_out_obj.hide()
+        elif text == 'Riešiteľná':
+            self.task_to_save.solvable = True
+            self.parent.close_task_screen(self.task_to_save)
+
 
     def create_task(self):
         name = self.set_name.get()
@@ -295,11 +362,35 @@ class CreateTaskScreen(Screen):
             if assignment == '':
                 self.set_error_text('Chyba: Pridaj do zadania aspoň 1 predmet')
                 return
-
+        solvable = 'ano'
+        if task_type != 0:
+            self.check_solution_obj.to_the_front()
+            self.check_solution_obj.show()
+            self.canvas.update()
+            self.time = time.time()
+            solution_found = self.is_solvable(task_type, assignment)
+            if not solution_found:
+                self.check_solution_obj.hide()
+                self.no_solution_obj.to_the_front()
+                self.no_solution_obj.parts[-1].to_the_front()
+                self.no_solution_obj.parts[-2].to_the_front()
+                self.no_solution_obj.show()
+                solvable = 'nie'
+            elif solution_found == 'timed-out':
+                self.check_solution_obj.hide()
+                self.time_out_obj.to_the_front()
+                self.time_out_obj.parts[-1].to_the_front()
+                self.time_out_obj.parts[-2].to_the_front()
+                self.time_out_obj.parts[-3].to_the_front()
+                self.time_out_obj.show()
+                solvable = 'nie'
         task = Task(self.parent, None if self.task is None else self.task.index, name, task_type,
                     self.task_mode_btn.text, rows, cols,
-                    self.set_steps.get(), assignment, self.map.get_map_repr(), None, None, True, False)
-        self.parent.close_task_screen(task)
+                    self.set_steps.get(), assignment, self.map.get_map_repr(), None, None, solvable, False)
+        if solvable == 'ano':
+            self.parent.close_task_screen(task)
+        else:
+            self.task_to_save = task
 
     def options_changed(self, index):
         self.task_bar.set_bar(index)
@@ -307,6 +398,84 @@ class CreateTaskScreen(Screen):
             self.steps_obj.hide()
         else:
             self.steps_obj.show()
+
+    def is_solvable(self, task_type, assignment):
+        map_counts = [self.map.get_map_repr().count(char) for char in 'abcd']
+        parsed_assignment = assignment
+        if task_type == 1:
+            parsed_assignment = [[collectible[1], collectible[2]] for collectible in assignment.split(',')]
+        else:
+            counts = [assignment.count(char) for char in 'abcd']
+            for i in range(4):
+                if counts[i] > map_counts[i]:
+                    return False
+        char_pos = self.map.get_char_position()
+        self.solution = []
+        self.map_field_copy = [self.map.field[i].copy() for i in range(len(self.map.field))]
+        steps = int(self.set_steps.get()) if self.set_steps.get() != '' else 16
+        return self.find_solution(char_pos[0], char_pos[1], steps, task_type, parsed_assignment)
+
+    def find_solution(self, i0, j0, steps, task_type, assignment):
+        if steps == 0:
+            return self.check_solution(task_type, assignment)
+        if time.time() - self.time > 4:
+            return 'timed-out'
+        if not self.check_partial_solution(task_type, assignment):
+            return False
+        for i, j in ((i0-1, j0), (i0, j0+1), (i0+1, j0), (i0, j0-1)):
+            if i < 0 or i >= self.map.rows or j < 0 or j >= self.map.cols:
+                continue
+            item = self.map_field_copy[i][j]
+            if self.map.grid_parts[i][j].is_guarded() or (item is not None and item in 'xyz'):
+                continue
+            added = False
+            if item is not None and item in 'abcd':
+                added = True
+                self.map_field_copy[i][j] = '.'
+                self.solution.append(item)
+            solution = self.find_solution(i, j, steps-1, task_type, assignment)
+            if solution:
+                return solution
+            if added:
+                self.solution = self.solution[:-1]
+                self.map_field_copy[i][j] = item
+        return False
+
+    def check_solution(self, task_type, assignment):
+        if task_type == 1:
+            counts = [self.solution.count(char) for char in 'abcd']
+            for i in range(4):
+                if assignment[i][1] == '?':
+                    continue
+                count = int(assignment[i][1])
+                if assignment[i][0] == '=' and counts[i] != count:
+                    return False
+                if assignment[i][0] == '<' and counts[i] >= count:
+                    return False
+                if assignment[i][0] == '>' and counts[i] <= count:
+                    return False
+            return True
+        else:
+            if ''.join(self.solution).startswith(assignment):
+                return True
+        return False
+
+    def check_partial_solution(self, task_type, assignment):
+        if task_type == 1:
+            counts = [self.solution.count(char) for char in 'abcd']
+            for i in range(4):
+                if assignment[i][1] == '?':
+                    continue
+                count = int(assignment[i][1])
+                if assignment[i][0] == '=' and counts[i] > count:
+                    return False
+                if assignment[i][0] == '<' and counts[i] >= count:
+                    return False
+            return True
+        else:
+            if assignment.startswith(''.join(self.solution)):
+                return True
+        return False
 
     def set_error_text(self, text):
         self.canvas.itemconfig(self.error_text, text=text)

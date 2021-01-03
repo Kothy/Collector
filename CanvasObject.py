@@ -30,3 +30,7 @@ class CanvasObject:
             else:
                 self.canvas.delete(part)
         self.parts = []
+
+    def to_the_front(self):
+        for part in self.parts:
+            self.canvas.tag_raise(part, 'all')
