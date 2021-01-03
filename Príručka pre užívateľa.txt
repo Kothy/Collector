@@ -1,0 +1,56 @@
+Príručka pre používateľa:
+
+Menu ponúka 3 možnosti:
+1. Riešenia sady úloh
+2. Vytvorenie mapy
+3. Vytvorenie sady úloh
+
+Vytvorenie mapy:
+Pre vytvorenie mapy je potrebné:
+- zadať jedinečný názov mapy
+- vybrať obrázok a zvoliť meno postavičky, ktorú bude hráč ovládať
+- určiť, či sa má pri pohybe obrázok otáčať v smere pohybu, a ak áno,
+určiť, aká je orientácia nahrávaného obrázku
+- zvoliť farbu vykresľovanej trajektórie, po ktorej prejde postavička
+- zvoliť farbu mriežky, ktorá vyznačuje políčka mapy
+- vybrať obrázok pozadia mapy
+- vybrať predmety na zbieranie v mape (1-4)
+- vybrať prekážky na mape (0-3)
+
+Vytvorenie sady úloh:
+Pre vytvorenie sady úloh je potrebné:
+- zadať jedinečný názov sady
+- zvoliť priečinok s mapou z ponuky (zobrazí sa náhľad mapy a jej predmetov na zbieranie)
+- nastaviť režimy stráženia prekážok mapy (nastavenia nemožno meniť po pridaní úloh)
+- pridať aspoň jednu úlohu
+- vybrať spôsob prechodu medzi úlohami
+Poznámka:
+- úlohy je možné vymieňať, mazať, posúvať vyššie/nižšie v zozname (v tomto poradí sa budú riešiť)
+
+Vytváranie úlohy:
+Pre vytvorenie úlohy je potrebné:
+- zadať názov úlohy
+- zvoliť počet riadkov a stĺpcov mapy (vykreslí mriežku) - zmena počtov "vyčistí" mapu
+- zvoliť režim riešenia úlohy (priamy/plánovací/oba - používateľ si môže medzi nimi prepínať)
+- zvoliť typ úlohy (voľná - bez zadania / počty - obmedzenie na počty zbieraných predmetov / cesta - daná postupnosť predmetov)
+- ak nie je typ úlohy voľný, treba vytvoriť zadanie, ktoré vyžaduje zozbierať aspoň 1 predmet a je možné zvoliť maximálny povolený
+počet krokov (celkové maximum je 16)
+- umiestniť do mapy postavičku (povinne) a iné objekty (objekty sa z mapy mažú pravým tlačidlom myšky)
+Poznámka:
+- pri ukladaní úlohy sa robí kontrola riešiteľnosti, keďže však môže postavička navštíviť viac-krát to isté políčko, niekedy
+je kontrola príliš zdĺhavá - vtedy skončí a užívateľ má uviesť, či je úloha riešiteľná
+
+Riešenie úloh:
+- na začiatku je potrebné vybrať jednu z ponúknutých sád úloh, čo načíta prvú úlohu sady
+- postavička sa dá ovládať klikaním na tlačidlá v pravom dolnom rohu alebo šípkami na klávesnici
+- v ovládacom paneli v pravom dolnom rohu sa nachádza aj backspace (krok späť) a metlička (inteligentné mazanie)
+- pri pohybe postavičky sa vyhodnocujú jej pohyby a prehrávajú zvuky
+- ak je pohyb OK, vykonávaná šípka zozelenie, ak postavička narazí, vykonávaná šípka na ceste sčervenie a objaví sa pod ňou
+prekážka, ktorá bráni v pohybe a ďalšie šípky vyblednú (nevykonali sa)
+Funkcie metličky:
+- ak je vyznačený krok na ceste, zmaže tento krok
+- ak nie je nič vyznačené, ale na ceste je červená šípka, zmaže túto šípku a všetky po nej (chybná časť cesty)
+- inak zmaže celú cestu
+Poznámka:
+- ak je prechod na ďalšiu úlohu podmienený, tlačidlo prechodu na ďalšiu úlohu sa zobrazí až po úspešnom vyriešení úlohy
+(v prípade, že je úloha neriešiteľná, tak je toto tlačidlo vždy zobrazené bez ohľadu na nastavenie prechodu)

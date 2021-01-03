@@ -39,7 +39,7 @@ class TaskBar(CanvasObject):
 
     def count_bar_init(self):
         collectibles_count = len(self.bar_imgs)
-        dx = 780 // (collectibles_count - 1)
+        dx = 780 // (collectibles_count - 1) if collectibles_count != 1 else 780
         self.count_bar = CanvasObject(self, [CountBarItem(self, self.bar_imgs[i], 340 + i*dx, 597, i)
                                              for i in range(collectibles_count)])
 
